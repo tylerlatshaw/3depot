@@ -1,0 +1,87 @@
+import { type LucideProps } from "lucide-react";
+
+export type Links = {
+    name: string;
+    href: string;
+    icon?: React.FC<LucideProps>;
+};
+
+export const FILAMENT_STATUS = {
+    IN_STOCK: "in stock",
+    LOW_STOCK: "low stock",
+    EMPTY: "empty",
+    DISCARDED: "discarded",
+    ARCHIVED: "archived",
+} as const;
+
+export type FilamentStatus =
+    (typeof FILAMENT_STATUS)[keyof typeof FILAMENT_STATUS];
+
+export const FILAMENT_STATUS_ORDER: FilamentStatus[] = [
+    FILAMENT_STATUS.IN_STOCK,
+    FILAMENT_STATUS.LOW_STOCK,
+    FILAMENT_STATUS.EMPTY,
+    FILAMENT_STATUS.DISCARDED,
+    FILAMENT_STATUS.ARCHIVED,
+];
+
+export type ScanActions =
+    | "created"
+    | "log weight"
+    | "change status"
+    | "change info"
+    | "removed";
+
+export type FilamentHistoryItem = {
+    id: string;
+    dateCreated: string;
+    dateModified: string;
+    action: ScanActions;
+    weight?: number;
+    notes?: string;
+};
+
+export type FilamentHistory = {
+    filamentId: Filament["id"];
+    scanHistory: FilamentHistoryItem[];
+};
+
+export type FilamentHistoryFlattened = {
+    filamentId: Filament["id"];
+    historyId: string;
+    dateCreated: string;
+    dateModified: string;
+    action: ScanActions;
+    weight?: number;
+    notes?: string;
+};
+
+export type Filament = {
+    uuid: string;
+    id: string;
+
+    brand: string;
+    color: string;
+    colorCode: string;
+    tags: string[];
+    material: string;
+
+    status: FilamentStatus;
+    percentRemaining: number;
+    remainingWeight: number;
+    startingWeight: number;
+    spoolWeight: number;
+    lastScanned: string;
+    datePurchased?: string;
+
+    swatch: boolean;
+    swatchImageUrl?: string;
+    notes?: string;
+
+    dateCreated: string;
+    dateModified: string;
+};
+
+export type FilamentWithHistory = Filament & {
+    scanHistory: FilamentHistoryItem[];
+};

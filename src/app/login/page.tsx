@@ -32,7 +32,7 @@ export default function LoginPage() {
                 return;
             }
 
-            window.location.href = "/server-page";
+            window.location.href = "/dashboard";
         } catch (err: unknown) {
             console.error("Google login error:", err);
 

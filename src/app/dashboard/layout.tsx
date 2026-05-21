@@ -1,0 +1,77 @@
+/* eslint-disable react-hooks/error-boundaries */
+import { cookies } from "next/headers";
+import { DarkModeToggle } from "@/components/global/dark-mode-toggle";
+import Link from "next/link";
+import { redirect, RedirectType } from 'next/navigation';
+import DashboardLinkMenu from "@/components/global/dashboard-link-menu";
+import { adminAuth } from "@/lib/firebase-admin";
+
+export default async function DashboardLayout({
+    children,
+}: Readonly<{
+    children: React.ReactNode;
+}>) {
+    const cookieStore = await cookies();
+    const session = cookieStore.get("session")?.value;
+
+    if (!session) {
+        redirect('/login', RedirectType.replace);
+    }
+
+    try {
+        const decoded = await adminAuth.verifySessionCookie(session, true);
+
+        const workshopName = decoded.name ? decoded.name.split(" ")[0] + "'s Workshop" : "Workshop";
+
+        return (
+            <div className="flex h-screen overflow-hidden">
+
+                {/* Sidebar */}
+                <div className="flex flex-col w-64 h-full bg-menu border-r border-accent">
+
+                    {/* Logo */}
+                    <div className="h-[86px] p-4 border-b-2 border-accent">
+                        <Link
+                            href={"/dashboard"}
+                            className="group flex items-center justify-center gap-2"
+                        >
+                            <div className="bg-primary aspect-square rounded-lg p-2">
+                                <span className="text-3xl logo text-white">
+                                    3D
+                                </span>
+                            </div>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-2xl logo group-hover:text-primary transition-colors">
+                                    3Depot
+                                </span>
+                                <span className="text-xs font-light uppercase group-hover:text-primary transition-colors">
+                                    {workshopName}
+                                </span>
+                            </div>
+                        </Link>
+                    </div>
+
+                    {/* Links */}
+                    <div className="grow p-4 border-b-2 border-accent">
+                        <div className="flex flex-col gap-2 w-full">
+                            <DashboardLinkMenu />
+                        </div>
+                    </div>
+
+                    {/* Footer */}
+                    <div className="p-4">
+                        <DarkModeToggle />
+                    </div>
+                </div>
+
+                {/* Main Content */}
+                <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                    {children}
+                </div>
+            </div>
+
+        );
+    } catch {
+        return <div>Invalid session</div>;
+    };
+}

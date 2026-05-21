@@ -1,0 +1,255 @@
+import { Filament } from "@/lib/types";
+import { Chip } from "../ui/chip";
+import { Progress } from "../ui/progress";
+import dayjs from "dayjs";
+import { getContrastingColor, getStatusChipColor, getStatusTextColor, hexToRgba } from "@/utilities/color-functions";
+import { QrCodeIcon, ReceiptIcon, ScanLineIcon, SlidersHorizontalIcon, SpoolIcon, XIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import Link from "next/link";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+
+export default function FilamentCard({ filament }: { filament: Filament }) {
+
+    const {
+        brand,
+        id,
+        color,
+        colorCode,
+        remainingWeight,
+        lastScanned,
+        percentRemaining,
+        status,
+        startingWeight,
+        tags,
+        swatchImageUrl,
+        material,
+        datePurchased
+    } = filament;
+
+    const chipVariantColor = getStatusChipColor(status);
+    const statusTextColor = getStatusTextColor(percentRemaining);
+
+    const statusTextColorMap = {
+        foreground: "text-foreground",
+        warning: "text-warning",
+        danger: "text-danger",
+    } as const;
+
+    const statusBgColorMap = {
+        foreground: "bg-primary", // Using primary as a default for "foreground" status
+        warning: "bg-warning",
+        danger: "bg-danger",
+    } as const;
+
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+
+                {/* Filament Card */}
+                <div className="group hover:ring hover:ring-primary flex flex-col gap-2 bg-card rounded-xl px-4 py-4 pb-8 cursor-pointer">
+
+                    {/* Color Info Row */}
+                    <div className="flex flex-row items-center gap-2 w-full">
+                        <div className="p-2">
+                            <div className={`h-14 w-14 rounded-full`} style={{ backgroundColor: colorCode }}></div>
+                        </div>
+
+                        <div className="flex flex-col w-full gap-1">
+                            <div className="flex flex-row w-full items-start">
+                                <div className="grow">
+                                    <span className="text-lg font-semibold leading-none">{brand + " " + color}</span>
+                                </div>
+
+                                <Chip variant={chipVariantColor}>{status}</Chip>
+                            </div>
+
+                            <div className="flex flex-row text-xs font-light uppercase">
+                                {
+                                    tags.length > 0 && tags.join(" • ")
+                                }
+                            </div>
+
+                        </div>
+                    </div>
+
+                    {/* Stats Row */}
+                    <div className="mt-4 flex flex-row items-center gap-4 w-full text-sm font-medium">
+                        <span className="flex gap-1 grow">
+                            <span>{id}</span>
+                            <span>&#x2022;</span>
+                            <span>Last Scan:</span>
+                            <span className="font-light">{dayjs(lastScanned).format("M/D/YY h:mm A")}</span>
+                        </span>
+                        <span className={`flex flex-row gap-2 font-semibold ${statusTextColorMap[statusTextColor]}`}>
+                            <span>{remainingWeight} g</span>
+                            <span>/</span>
+                            <span>{startingWeight} g</span>
+                        </span>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="flex flex-row items-center gap-4 w-full">
+                        <Progress
+                            value={percentRemaining}
+                            className="h-2 rounded-full bg-accent"
+                            indicatorClassName={statusBgColorMap[statusTextColor]}
+                        />
+                        <span className={`text-sm font-semibold ${statusTextColorMap[statusTextColor]}`}>{percentRemaining}%</span>
+                    </div>
+
+                </div>
+            </DialogTrigger>
+
+            {/* Expanded Info Modal */}
+            <DialogContent className="w-full lg:w-1/2 text-base" showCloseButton={false}>
+                <DialogHeader className="w-full">
+                    <DialogDescription className={swatchImageUrl ? "grid grid-cols-5 w-full" : "grid grid-cols-1 w-full"}>
+
+                        <DialogTitle className="sr-only">{brand + " " + color}</DialogTitle>
+
+                        {
+                            swatchImageUrl && <>
+                                <div className="flex w-full justify-center col-span-2">
+                                    <img
+                                        src={swatchImageUrl}
+                                        alt={`${brand} ${color} swatch`}
+                                        className="rounded-l-lg object-cover"
+                                    />
+
+                                    <div className="rounded-l-lg absolute inset-x-0 bottom-0 h-2/5 w-2/5 bg-gradient-to-t from-black/80 to-transparent" />
+
+                                    <div className="absolute flex items-end inset-x-0 bottom-0 h-1/3 w-2/5">
+                                        <div
+                                            className="relative flex flex-row items-center justify-between m-3 mb-4 rounded-lg p-3 w-full"
+                                            style={{ backgroundColor: hexToRgba(colorCode, 0.5), border: `2px solid ${getContrastingColor(colorCode)}` }}
+                                        >
+                                            <div className="flex flex-col gap-1" style={{ color: getContrastingColor(colorCode) }}>
+                                                <span className="text-sm font-light uppercase">Color</span>
+                                                <span className="text-lg font-bold leading-none">{color}</span>
+                                            </div>
+
+                                            <div className="rounded-full h-12 w-12" style={{ background: colorCode, border: `2px solid ${getContrastingColor(colorCode)}` }}>&nbsp;</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </>
+                        }
+
+                        <div className={swatchImageUrl ? "col-span-3" : "col-span-1"}>
+                            <div className="flex flex-col w-full gap-6 items-center p-8 pb-4">
+
+                                <div className="flex flex-col gap-1 w-full">
+                                    <div className="flex flex-row w-full items-start justify-center">
+                                        <div className="grow">
+                                            <span className="text-sm font-light uppercase">{brand}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-row w-full items-start">
+                                        <div className="grow">
+                                            <span className="text-2xl font-bold leading-none">{brand + " " + color}</span>
+                                        </div>
+
+                                        <Chip variant={chipVariantColor}>{status}</Chip>
+                                    </div>
+                                </div>
+
+                                <hr className="border border-accent w-full" />
+
+                                <div className="flex flex-col w-full gap-2">
+                                    <div className="flex flex-row items-center gap-2 w-full text-sm font-medium">
+                                        <span className="flex gap-1 grow uppercase text-base font-lighter">
+                                            <span>Remaining:</span>
+                                        </span>
+                                        <span className={`flex flex-row gap-2 font-semibold ${statusTextColorMap[statusTextColor]}`}>
+                                            <span>{remainingWeight} g</span>
+                                            <span>/</span>
+                                            <span>{startingWeight} g</span>
+                                        </span>
+                                    </div>
+
+                                    <div className="flex flex-row items-center gap-4 w-full">
+                                        <Progress
+                                            value={percentRemaining}
+                                            className="h-3 rounded-full bg-accent"
+                                            indicatorClassName={statusBgColorMap[statusTextColor]}
+                                        />
+                                        <span className={`text-sm font-semibold ${statusTextColorMap[statusTextColor]}`}>{percentRemaining}%</span>
+                                    </div>
+                                </div>
+
+                                <hr className="border border-accent w-full" />
+
+                                <div className="grid grid-cols-2 w-full">
+                                    <div className="col-span-1 flex flex-col gap-6 w-full">
+                                        <div className="flex flex-col">
+                                            <div className="flex gap-1 items-center text-sm font-light uppercase">
+                                                <QrCodeIcon size={16} strokeWidth={1} />
+                                                <span>ID</span>
+                                            </div>
+                                            <span className="font-bold">{id}</span>
+                                        </div>
+
+                                        <div className="flex flex-col">
+                                            <div className="flex gap-1 items-center text-sm font-light uppercase">
+                                                <ReceiptIcon size={20} strokeWidth={1} />
+                                                <span>Purchased</span>
+                                            </div>
+                                            <span className="font-bold">{datePurchased ? dayjs(datePurchased).format("M/D/YYYY") : "N/A"}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="col-span-1 flex flex-col gap-6 w-full">
+                                        <div className="flex flex-col">
+                                            <div className="flex gap-1 items-center text-sm font-light uppercase">
+                                                <SpoolIcon size={20} strokeWidth={1} />
+                                                <span>Material</span>
+                                            </div>
+                                            <span className="font-bold">{material}</span>
+                                        </div>
+
+                                        <div className="flex flex-col">
+                                            <div className="flex gap-1 items-center text-sm font-light uppercase">
+                                                <ScanLineIcon size={16} strokeWidth={1} />
+                                                <span>Last Scanned</span>
+                                            </div>
+                                            <span className="font-bold">{lastScanned ? dayjs(lastScanned).format("M/D/YYYY") : "N/A"}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr className="border border-accent w-full" />
+
+                                <div className="flex flex-row gap-4 w-full items-start justify-between">
+                                    <Button variant={"default"} size={"lg"} asChild>
+                                        <Link href={`/dashboard/scan?id=${id}`} className="flex flex-row items-center gap-2">
+                                            <ScanLineIcon />
+                                            <span>Log Weight</span>
+                                        </Link>
+                                    </Button>
+
+                                    <Button variant={"outline"} size={"lg"} asChild className="hover:bg-foreground/10">
+                                        <Link href={`/dashboard/edit/${id}`} className="flex flex-row items-center gap-2">
+                                            <SlidersHorizontalIcon />
+                                            <span>Edit Filament</span>
+                                        </Link>
+                                    </Button>
+                                </div>
+
+                                <DialogClose asChild>
+                                    <div className="absolute top-4 right-4 rounded-full focus:outline-none p-0">
+                                        <XIcon className="size-6" />
+                                    </div>
+                                </DialogClose>
+                            </div>
+                        </div>
+
+                    </DialogDescription>
+                </DialogHeader>
+                {/* <DialogFooter>
+                    <DialogAction>Continue</DialogAction>
+                </DialogFooter> */}
+            </DialogContent>
+        </Dialog>
+    );
+}
