@@ -85,3 +85,13 @@ export type Filament = {
 export type FilamentWithHistory = Filament & {
     scanHistory: FilamentHistoryItem[];
 };
+
+export type SanitizedFilamentIdResult =
+    | {
+        success: true;
+        value: string;
+    }
+    | {
+        success: false;
+        error: string;
+    };
