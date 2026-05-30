@@ -1,5 +1,14 @@
 import { Links } from "./types";
-import { BarChart4Icon, ClockFadingIcon, LayoutDashboard, PackageIcon, ScanLineIcon, SettingsIcon } from "lucide-react";
+import {
+    BarChart4Icon,
+    ClockFadingIcon,
+    LayersIcon,
+    LayoutDashboard,
+    PackageIcon,
+    ScanLineIcon,
+    SettingsIcon,
+    TagIcon,
+} from "lucide-react";
 
 export const dashboardLinks: Links[] = [
     {
@@ -29,7 +38,20 @@ export const dashboardLinks: Links[] = [
     },
     {
         name: "Settings",
-        href: "/dashboard/settings",
+        href: "/dashboard/settings/brands",
         icon: SettingsIcon
+    },
+];
+
+export const settingsLinks: Links[] = [
+    {
+        name: "Brands",
+        href: "/dashboard/settings/brands",
+        icon: TagIcon,
+    },
+    {
+        name: "Materials",
+        href: "/dashboard/settings/materials",
+        icon: LayersIcon,
     },
 ];

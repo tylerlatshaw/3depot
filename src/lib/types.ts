@@ -95,3 +95,33 @@ export type SanitizedFilamentIdResult =
         success: false;
         error: string;
     };
+
+export type EntryFormatOptions =
+    | "camera"
+    | "manual";
+
+export type EntryModeOptions =
+    | "entry"
+    | "matched"
+    | "unmatched";
+
+
+export type FormActions = "logWeight" | "changeInfo" | "history" | "archive";
+
+export type Brands = {
+    uuid: string;
+    id: string;
+    dateCreated: string;
+    dateModified: string;
+    name: string;
+    spoolWeight: number;
+    brandColor: string
+};
+
+export type Materials = {
+    uuid: string;
+    id: string;
+    dateCreated: string;
+    dateModified: string;
+    name: string;
+}

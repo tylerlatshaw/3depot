@@ -16,13 +16,13 @@ import { ButtonGroup } from "../ui/button-group";
 import { sanitizeFilamentId } from "@/utilities/scan-functions";
 import { cn } from "@/lib/utils";
 
-type ManualContainerProps = {
+type Props = {
     onFilamentIdSubmit: (filamentId: string) => void;
 };
 
 export default function ManualContainer({
     onFilamentIdSubmit,
-}: ManualContainerProps) {
+}: Props) {
     const [filamentId, setFilamentId] = useState("");
     const [error, setError] = useState("");
 
@@ -78,7 +78,7 @@ export default function ManualContainer({
 
                 <div className="flex flex-col gap-2">
                     <FieldDescription>
-                        Format: XX-XX or XXXX-XXXX-XXXX
+                        Format: XX-XX or XX-XX-XXXX
                     </FieldDescription>
 
                     <div className="min-h-6">

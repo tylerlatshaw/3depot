@@ -8,15 +8,18 @@ import { usePathname } from "next/navigation";
 export default function DashboardLinkMenu() {
 
     const path = usePathname();
+    const settingsPath = "/dashboard/settings";
 
     return <>
         {
             dashboardLinks.map((link) => {
                 const Icon = link.icon ?? LinkIcon;
+                const isActive = path === link.href || (link.href.includes(settingsPath) && path.includes(settingsPath));
+
                 return <Link
                     href={link.href}
                     key={link.name}
-                    className={`group flex flex-row gap-2 p-3 rounded-md hover:bg-primary hover:text-foreground w-full ${path === link.href ? "bg-primary/40" : ""}`}
+                    className={`group flex flex-row gap-2 p-3 rounded-md hover:bg-primary hover:text-foreground w-full ${isActive ? "bg-primary/40" : ""}`}
                 >
                     <Icon />
                     <span className="grow font-semibold">

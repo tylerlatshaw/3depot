@@ -1,7 +1,6 @@
 import DashboardContainer from "@/components/dashboard/dashboard-container";
 import PageHeader from "@/components/global/page-header";
-import { Filament, FilamentWithHistory } from "@/lib/types";
-import { flattenFilamentHistory } from "@/utilities/filament-functions";
+import { FilamentWithHistory } from "@/lib/types";
 import { cookies } from "next/headers";
 
 export default async function DashboardPage() {

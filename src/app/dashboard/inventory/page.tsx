@@ -27,7 +27,7 @@ export default async function InventoryPage() {
         <div className="flex min-h-0 flex-1 flex-col">
             <PageHeader pageName="Inventory" />
 
-            <div className="min-h-0 flex-1 overflow-y-auto px-8 py-4">
+            <div className="px-8 py-4 h-full overflow-y-auto">
                 <InventoryContainer inventory={result.data} />
             </div>
         </div>

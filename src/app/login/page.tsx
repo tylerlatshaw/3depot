@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { Button } from "@/components/ui/button";
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false);
@@ -76,9 +77,9 @@ export default function LoginPage() {
         <main style={{ padding: 24, maxWidth: 480 }}>
             <h1>Sign in</h1>
 
-            <button onClick={handleGoogleLogin} disabled={loading} className="logo">
+            <Button onClick={handleGoogleLogin} disabled={loading} className="logo">
                 {loading ? "Signing in..." : "Continue with Google"}
-            </button>
+            </Button>
 
             {error ? (
                 <p style={{ color: "crimson", marginTop: 12 }}>{error}</p>
