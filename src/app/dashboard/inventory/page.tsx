@@ -1,6 +1,6 @@
 import PageHeader from "@/components/global/page-header";
 import InventoryContainer from "@/components/inventory/inventory-container";
-import { Filament } from "@/lib/types";
+import { getFilament } from "@/lib/data/get-filament";
 import { cookies } from "next/headers";
 
 export default async function InventoryPage() {
@@ -11,24 +11,14 @@ export default async function InventoryPage() {
         return <div>Not authorized</div>;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/get-filament`, {
-        cache: "no-store",
-        headers: {
-            Cookie: `session=${session}`,
-        },
-    });
-
-    const result: {
-        success: boolean;
-        data: Filament[];
-    } = await response.json();
+    const inventory = await getFilament();
 
     return (
         <div className="flex min-h-0 flex-1 flex-col">
             <PageHeader pageName="Inventory" />
 
             <div className="px-8 py-4 h-full overflow-y-auto">
-                <InventoryContainer inventory={result.data} />
+                <InventoryContainer inventory={inventory} />
             </div>
         </div>
 

@@ -1,6 +1,6 @@
 import DashboardContainer from "@/components/dashboard/dashboard-container";
 import PageHeader from "@/components/global/page-header";
-import { FilamentWithHistory } from "@/lib/types";
+import { getFilamentWithHistory } from "@/lib/data/get-filament-with-history";
 import { cookies } from "next/headers";
 
 export default async function DashboardPage() {
@@ -11,17 +11,7 @@ export default async function DashboardPage() {
         return <div>Not authorized</div>;
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/get-filament-with-history`, {
-        cache: "no-store",
-        headers: {
-            Cookie: `session=${session}`,
-        },
-    });
-
-    const result: {
-        success: boolean;
-        data: FilamentWithHistory[];
-    } = await response.json();
+    const inventory = await getFilamentWithHistory();
 
     return (
         <div className="flex min-h-0 flex-1 flex-col">
@@ -29,7 +19,7 @@ export default async function DashboardPage() {
 
             <div className="min-h-0 flex-1 overflow-y-auto px-8 py-4">
 
-                <DashboardContainer inventory={result.data} />
+                <DashboardContainer inventory={inventory} />
 
             </div>
         </div>
