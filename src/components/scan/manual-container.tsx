@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRightIcon } from "lucide-react";
 
 import {
@@ -26,6 +26,12 @@ export default function ManualContainer({
     const [filamentId, setFilamentId] = useState("");
     const [error, setError] = useState("");
 
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        inputRef.current?.focus();
+    }, []);
+
     function handleSubmit() {
         const sanitized = sanitizeFilamentId(filamentId);
 
@@ -48,6 +54,7 @@ export default function ManualContainer({
                 <ButtonGroup>
                     <Input
                         id="filament-id"
+                        ref={inputRef}
                         value={filamentId}
                         aria-invalid={!!error}
                         onChange={(event) => {
