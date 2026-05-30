@@ -7,9 +7,6 @@ import { cn } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "../ui/button";
-import LogWeight from "./log-weight";
-import HistoryTable from "./history-table";
-import AddEditFilament from "./add-edit-filament";
 
 type Props = {
     selectedFilament: Filament;
