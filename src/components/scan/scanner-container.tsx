@@ -4,18 +4,18 @@ import { sanitizeFilamentId } from "@/utilities/scan-functions";
 import { Scanner } from "@yudiel/react-qr-scanner";
 import { useState } from "react";
 
+type Props = {
+    onFilamentIdSubmit: (filamentId: string) => void;
+};
+
 type ScanData = {
     rawValue: string;
     format: string;
 };
 
-type ScannerContainerProps = {
-    onFilamentIdSubmit: (filamentId: string) => void;
-};
-
 export default function ScannerContainer({
     onFilamentIdSubmit,
-}: ScannerContainerProps) {
+}: Props) {
     const [scannedCode, setScannedCode] = useState<ScanData>();
     const [error, setError] = useState("");
 
@@ -67,12 +67,6 @@ export default function ScannerContainer({
             {error && (
                 <span className="text-danger">
                     {error}
-                </span>
-            )}
-
-            {scannedCode && (
-                <span className="text-info">
-                    {scannedCode.rawValue}
                 </span>
             )}
         </div>

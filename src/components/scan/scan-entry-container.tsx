@@ -6,49 +6,87 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import {
     KeyboardIcon,
     ScanLineIcon,
+    Undo2Icon,
 } from "lucide-react";
 
 import ScannerContainer from "./scanner-container";
 import ManualContainer from "./manual-container";
+import ActionSelector from "./action-selector";
 
 import {
+    EntryFormatOptions,
+    EntryModeOptions,
     Filament,
+    FormActions,
 } from "@/lib/types";
 
-type EntryFormatOptions =
-    | "camera"
-    | "manual";
+import { AnimatePresence, motion } from "framer-motion";
+import { Button } from "../ui/button";
+import { useSearchParams } from "next/navigation";
+import LogWeight from "./log-weight";
+import AddEditContainer from "./add-edit-form/add-edit-container";
+import HistoryTable from "./history-table";
 
-type EntryModeOptions =
-    | "entry"
-    | "matched"
-    | "unmatched";
-
-type ScanEntryContainerProps = {
+type Props = {
     inventory: Filament[];
 };
 
-export default function ScanEntryContainer({
-    inventory,
-}: ScanEntryContainerProps) {
-    const [entryFormat, setEntryFormat] = useState<EntryFormatOptions>("camera");
-    const [entryMode, setEntryMode] = useState<EntryModeOptions>("entry");
-    const [selectedFilament, setSelectedFilament] = useState<Filament | null>(null);
-    const [newFilamentId, setNewFilamentId] = useState("");
+const validActions: FormActions[] = [
+    "logWeight",
+    "changeInfo",
+    "history",
+    "archive",
+];
 
-    function handleFilamentIdSubmit(
-        filamentId: string
-    ) {
-        const existingFilament =
-            inventory.find(
-                (item) =>
-                    item.id === filamentId
-            );
+export default function ScanEntryContainer({ inventory }: Props) {
+    const params = useSearchParams();
+
+    const idParam = params.get("id");
+    const actionParam = params.get("action");
+
+    const initialAction: FormActions | null =
+        actionParam && validActions.includes(actionParam as FormActions)
+            ? (actionParam as FormActions)
+            : null;
+
+    const initialSelectedFilament =
+        idParam
+            ? inventory.find((item) => item.id === idParam) ?? null
+            : null;
+
+    const initialEntryMode: EntryModeOptions =
+        idParam
+            ? initialSelectedFilament
+                ? "matched"
+                : "unmatched"
+            : "entry";
+
+    const [entryFormat, setEntryFormat] =
+        useState<EntryFormatOptions>("manual");
+
+    const [entryMode, setEntryMode] =
+        useState<EntryModeOptions>(initialEntryMode);
+
+    const [selectedFilament, setSelectedFilament] =
+        useState<Filament | null>(initialSelectedFilament);
+
+    const [newFilamentId, setNewFilamentId] =
+        useState(idParam && !initialSelectedFilament ? idParam : "");
+
+    const [selectedAction, setSelectedAction] =
+        useState<FormActions | null>(initialAction);
+
+    function handleFilamentIdSubmit(filamentId: string) {
+        const existingFilament = inventory.find(
+            (item) => item.id === filamentId
+        );
+
+        setSelectedAction(null);
 
         if (existingFilament) {
             setSelectedFilament(existingFilament);
             setNewFilamentId("");
-            setEntryMode("matched")
+            setEntryMode("matched");
             return;
         }
 
@@ -57,73 +95,141 @@ export default function ScanEntryContainer({
         setEntryMode("unmatched");
     }
 
-    if (entryMode === "entry")
-        return (
-            <div className="flex w-full flex-col items-center justify-center gap-12">
+    return (
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={entryMode}
+                initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
+                className="flex flex-col items-center w-full h-full"
+            >
+                {entryMode === "entry" && (
+                    <div className="flex flex-col items-center justify-center w-full h-full gap-12">
+                        <Field>
+                            <ToggleGroup
+                                type="single"
+                                value={entryFormat}
+                                onValueChange={(value: EntryFormatOptions) => {
+                                    if (value) setEntryFormat(value);
+                                }}
+                                variant="default"
+                                spacing={0}
+                                size="lg"
+                                className="rounded-lg bg-card p-4"
+                            >
+                                <ToggleGroupItem
+                                    value="camera"
+                                    className="rounded-lg py-6"
+                                >
+                                    <div className="flex flex-row items-center justify-center gap-3 px-3 py-4 text-xl">
+                                        <ScanLineIcon size={16} />
+                                        <span>Camera</span>
+                                    </div>
+                                </ToggleGroupItem>
 
-                <Field>
-                    <ToggleGroup
-                        type="single"
-                        value={entryFormat}
-                        onValueChange={(value: EntryFormatOptions) =>
-                            setEntryFormat(value)
-                        }
-                        variant="default"
-                        spacing={0}
-                        size="lg"
-                        className="rounded-lg bg-card p-4"
-                    >
-                        <ToggleGroupItem
-                            value="camera"
-                            className="rounded-lg py-6"
-                        >
-                            <div className="flex flex-row items-center justify-center gap-3 px-3 py-4 text-xl">
-                                <ScanLineIcon size={16} />
-                                <span>
-                                    Camera
-                                </span>
-                            </div>
-                        </ToggleGroupItem>
+                                <ToggleGroupItem
+                                    value="manual"
+                                    className="rounded-lg py-6"
+                                >
+                                    <div className="flex flex-row items-center justify-center gap-3 px-3 py-4 text-xl">
+                                        <KeyboardIcon size={16} />
+                                        <span>Manual</span>
+                                    </div>
+                                </ToggleGroupItem>
+                            </ToggleGroup>
+                        </Field>
 
-                        <ToggleGroupItem
-                            value="manual"
-                            className="rounded-lg py-6"
-                        >
-                            <div className="flex flex-row items-center justify-center gap-3 px-3 py-4 text-xl">
-                                <KeyboardIcon size={16} />
-                                <span>
-                                    Manual
-                                </span>
-                            </div>
-                        </ToggleGroupItem>
-                    </ToggleGroup>
-                </Field>
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={entryFormat}
+                                initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }}
+                            >
+                                <div className="aspect-square min-h-[345px] max-w-76">
+                                    {entryFormat === "camera" ? (
+                                        <ScannerContainer
+                                            onFilamentIdSubmit={handleFilamentIdSubmit}
+                                        />
+                                    ) : (
+                                        <ManualContainer
+                                            onFilamentIdSubmit={handleFilamentIdSubmit}
+                                        />
+                                    )}
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+                )}
 
-                <div className="aspect-square max-w-76">
+                {entryMode === "matched" && selectedFilament && (
+                    <div className="flex h-full w-full flex-col gap-8">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={selectedAction ?? "actionSelector"}
+                                initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: -12, scale: 0.98 }}
+                                transition={{ duration: 0.2, ease: "easeOut" }}
+                                className="flex h-full w-full"
+                            >
+                                {!selectedAction && (
+                                    <div className="flex h-full w-full flex-col items-center justify-center">
+                                        <ActionSelector
+                                            selectedFilament={selectedFilament}
+                                            setEntryMode={setEntryMode}
+                                            selectedAction={selectedAction}
+                                            setSelectedAction={setSelectedAction}
+                                        />
+                                    </div>
+                                )}
 
-                    {entryFormat === "camera" ? (
-                        <ScannerContainer onFilamentIdSubmit={handleFilamentIdSubmit} />
-                    ) : (
-                        <ManualContainer onFilamentIdSubmit={handleFilamentIdSubmit} />
-                    )}
+                                {selectedAction === "logWeight" && (
+                                    <div className="flex flex-1 items-center justify-center">
+                                        <LogWeight
+                                            selectedFilament={selectedFilament}
+                                            setEntryMode={setEntryMode}
+                                        />
+                                    </div>
+                                )}
 
-                </div>
-            </div>
-        );
+                                {selectedAction === "history" && (
+                                    <div className="flex flex-1 items-center justify-center">
+                                        <HistoryTable
+                                            selectedFilament={selectedFilament}
+                                            setEntryMode={setEntryMode}
+                                        />
+                                    </div>
+                                )}
 
-    if (entryMode === "matched")
-        return (
-            <div className="flex w-full flex-col items-center justify-center gap-12">
-                <span>{selectedFilament?.id}</span>
-            </div>
-        );
+                                {selectedAction === "changeInfo" && (
+                                    <AddEditContainer
+                                        selectedFilament={selectedFilament}
+                                        setEntryMode={setEntryMode}
+                                    />
+                                )}
 
-    if (entryMode === "unmatched")
-        return (
-            <div className="flex w-full flex-col items-center justify-center gap-12">
-                <span>{newFilamentId}</span>
-            </div>
-        );
+                                {selectedAction === "archive" && (
+                                    <div className="flex flex-col gap-4">
+                                        <span>Archive</span>
+                                    </div>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
+                )}
 
-    return null;
+                {entryMode === "unmatched" && (
+                    <div className="flex flex-col items-center justify-center w-full h-full">
+                        <AddEditContainer newFilamentId={newFilamentId}
+                            setEntryMode={setEntryMode}
+                        />
+                    </div>
+                )}
+            </motion.div>
+        </AnimatePresence>
+    );
 }

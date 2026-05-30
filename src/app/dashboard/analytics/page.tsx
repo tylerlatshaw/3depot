@@ -12,7 +12,7 @@ export default async function AnalyticsPage() {
     return (<>
         <PageHeader pageName="Analytics" />
 
-        <div className="px-8 py-4">
+        <div className="px-8 py-4 h-full overflow-y-auto">
             Page content
         </div>
     </>

@@ -30,13 +30,13 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
     const statusTextColor = getStatusTextColor(percentRemaining);
 
     const statusTextColorMap = {
-        foreground: "text-foreground",
+        foreground: "text-success",
         warning: "text-warning",
         danger: "text-danger",
     } as const;
 
     const statusBgColorMap = {
-        foreground: "bg-primary", // Using primary as a default for "foreground" status
+        foreground: "bg-success",
         warning: "bg-warning",
         danger: "bg-danger",
     } as const;
@@ -94,7 +94,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                             className="h-2 rounded-full bg-accent"
                             indicatorClassName={statusBgColorMap[statusTextColor]}
                         />
-                        <span className={`text-sm font-semibold ${statusTextColorMap[statusTextColor]}`}>{percentRemaining}%</span>
+                        <span className={`text-sm font-semibold tabular-nums ${statusTextColorMap[statusTextColor]}`}>{percentRemaining.toFixed(0)}%</span>
                     </div>
 
                 </div>
@@ -174,7 +174,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                                             className="h-3 rounded-full bg-accent"
                                             indicatorClassName={statusBgColorMap[statusTextColor]}
                                         />
-                                        <span className={`text-sm font-semibold ${statusTextColorMap[statusTextColor]}`}>{percentRemaining}%</span>
+                                        <span className={`text-sm font-semibold tabular-nums ${statusTextColorMap[statusTextColor]}`}>{percentRemaining.toFixed(0)}%</span>
                                     </div>
                                 </div>
 
@@ -222,14 +222,14 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
 
                                 <div className="flex flex-row gap-4 w-full items-start justify-between">
                                     <Button variant={"default"} size={"lg"} asChild>
-                                        <Link href={`/dashboard/scan?id=${id}`} className="flex flex-row items-center gap-2">
+                                        <Link href={`/dashboard/scan?id=${id}&action=logWeight`} className="flex flex-row items-center gap-2">
                                             <ScanLineIcon />
                                             <span>Log Weight</span>
                                         </Link>
                                     </Button>
 
-                                    <Button variant={"outline"} size={"lg"} asChild className="hover:bg-foreground/10">
-                                        <Link href={`/dashboard/edit/${id}`} className="flex flex-row items-center gap-2">
+                                    <Button variant={"outline"} size={"lg"} asChild>
+                                        <Link href={`/dashboard/scan?id=${id}&action=changeInfo`} className="flex flex-row items-center gap-2">
                                             <SlidersHorizontalIcon />
                                             <span>Edit Filament</span>
                                         </Link>
@@ -237,7 +237,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                                 </div>
 
                                 <DialogClose asChild>
-                                    <div className="absolute top-4 right-4 rounded-full focus:outline-none p-0">
+                                    <div className="absolute top-4 right-4 rounded-full focus:outline-none p-0 cursor-pointer">
                                         <XIcon className="size-6" />
                                     </div>
                                 </DialogClose>
@@ -246,9 +246,6 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
 
                     </DialogDescription>
                 </DialogHeader>
-                {/* <DialogFooter>
-                    <DialogAction>Continue</DialogAction>
-                </DialogFooter> */}
             </DialogContent>
         </Dialog>
     );

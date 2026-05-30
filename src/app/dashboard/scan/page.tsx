@@ -26,7 +26,7 @@ export default async function ScanPage() {
     return (<>
         <PageHeader pageName="Scan" />
 
-        <div className="flex h-[calc(100vh-192px)] items-center justify-center px-8 py-4">
+        <div className="flex h-[calc(100vh-86px)] px-8 py-4 overflow-y-auto">
             <ScanEntryContainer inventory={result.data} />
         </div>
     </>

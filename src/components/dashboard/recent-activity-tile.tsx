@@ -75,7 +75,7 @@ export default function RecentActivityTile({
                 <span>Recent Activity</span>
             </div>
 
-            <Button variant={"outline"} asChild className="hover:bg-foreground/10">
+            <Button variant={"outline"} asChild>
                 <Link href="/dashboard/recent-activity" className="flex flex-row items-center gap-2">
                     <span>View All</span>
                     <ArrowRightIcon />
@@ -84,14 +84,14 @@ export default function RecentActivityTile({
         </div>
 
         {
-            recentActivity.length > 0 && <div className="grid grid-cols-1 gap-4">
+            recentActivity.length > 0 && <div className="grid grid-cols-1 gap-2 divide-y divide-accent">
                 {
                     recentActivity.map(x => {
                         if (x.filament === undefined) return null;
 
                         const actionInfo = actionMap[x.action];
 
-                        return <div className="flex flex-row gap-3 items-center justify-center w-full p-2" key={x.historyId}>
+                        return <div className="flex flex-row gap-3 items-center justify-center w-full p-2 pb-3" key={x.historyId}>
 
                             <div className={`h-14 w-14 rounded-full`} style={{ backgroundColor: x.filament.colorCode }}></div>
 
@@ -106,7 +106,7 @@ export default function RecentActivityTile({
                                 </div>
                             </div>
 
-                            <div className="flex flex-row gap-4">
+                            <div className="flex flex-col text-right">
                                 <span className={`font-bold ${actionInfo.textColor}`}>
                                     {actionInfo.display}
                                 </span>
