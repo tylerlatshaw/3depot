@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
     try {
         // Verify token with Firebase Admin
-        const decoded = await adminAuth.verifyIdToken(idToken);
+        await adminAuth.verifyIdToken(idToken);
 
         // Create session cookie (more secure than storing raw token)
         const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
@@ -32,6 +32,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ success: true });
     } catch (err) {
+        console.error(err);
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 }

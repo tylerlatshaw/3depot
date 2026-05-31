@@ -1,8 +1,8 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Slot } from "radix-ui";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 const chipVariants = cva(
   "px-2 py-1 rounded-2xl text-xs font-medium uppercase tracking-wider",
@@ -20,7 +20,7 @@ const chipVariants = cva(
       variant: "default",
     },
   }
-)
+);
 
 function Chip({
   className,

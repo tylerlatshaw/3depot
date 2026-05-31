@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { Progress as ProgressPrimitive } from "radix-ui"
+import * as React from "react";
+import { Progress as ProgressPrimitive } from "radix-ui";
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils";
 
 type ProgressProps =
   React.ComponentProps<typeof ProgressPrimitive.Root> & {
@@ -36,7 +36,7 @@ function Progress({
         }}
       />
     </ProgressPrimitive.Root>
-  )
+  );
 }
 
-export { Progress }
+export { Progress };

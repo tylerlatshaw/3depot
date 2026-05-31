@@ -99,7 +99,7 @@ export default function QueryTiles({
                 title="Low Stock"
                 value={
                     inventory.filter(
-                        x => x.percentRemaining < 20
+                        x => x.status === "low stock"
                     ).length
                 }
                 subtitle="Remaining weight below 20%"

@@ -54,6 +54,14 @@
   font-weight: 700;
 }
 
+.sign-in-button {
+  font-family: var(--font-roboto), sans-serif;
+  background-color: #F2F2F2;
+  border: 0;
+  color: #1F1F1F;
+  font-size: 14px;
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;

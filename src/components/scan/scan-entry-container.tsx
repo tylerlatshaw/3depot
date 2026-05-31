@@ -6,7 +6,6 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import {
     KeyboardIcon,
     ScanLineIcon,
-    Undo2Icon,
 } from "lucide-react";
 
 import ScannerContainer from "./scanner-container";
@@ -21,11 +20,12 @@ import {
 } from "@/lib/types";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Button } from "../ui/button";
 import { useSearchParams } from "next/navigation";
 import LogWeight from "./log-weight";
 import AddEditContainer from "./add-edit-form/add-edit-container";
 import HistoryTable from "./history-table";
+import ArchiveFilament from "./archive-filament";
+import { SetPageTitle } from "../global/set-page-title";
 
 type Props = {
     inventory: Filament[];
@@ -107,6 +107,8 @@ export default function ScanEntryContainer({ inventory }: Props) {
             >
                 {entryMode === "entry" && (
                     <div className="flex flex-col items-center justify-center w-full h-full gap-12">
+                        <SetPageTitle title="Scan" />
+
                         <Field>
                             <ToggleGroup
                                 type="single"
@@ -213,8 +215,11 @@ export default function ScanEntryContainer({ inventory }: Props) {
                                 )}
 
                                 {selectedAction === "archive" && (
-                                    <div className="flex flex-col gap-4">
-                                        <span>Archive</span>
+                                    <div className="flex flex-1 items-center justify-center">
+                                        <ArchiveFilament
+                                            selectedFilament={selectedFilament}
+                                            setEntryMode={setEntryMode}
+                                        />
                                     </div>
                                 )}
                             </motion.div>

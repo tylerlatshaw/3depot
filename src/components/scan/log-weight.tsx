@@ -95,7 +95,7 @@ export default function LogWeight({
                     />
 
                     <span className={`text-sm font-semibold tabular-nums ${statusTextColorMap[statusTextColor]}`}>
-                        {updatedPercent.toFixed(1)}%
+                        {updatedPercent.toFixed(0)}%
                     </span>
                 </div>
 

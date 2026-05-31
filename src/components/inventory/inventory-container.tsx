@@ -3,17 +3,41 @@
 import { useState } from "react";
 import { FilterIcon, SearchIcon } from "lucide-react";
 import { Field } from "../ui/field";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "../ui/input-group";
+import {
+    InputGroup,
+    InputGroupAddon,
+    InputGroupInput,
+} from "../ui/input-group";
 import FilamentCard from "./filament-card";
-import { Filament, FILAMENT_STATUS_ORDER } from "@/lib/types";
+import {
+    Filament,
+    FILAMENT_STATUS,
+    FILAMENT_STATUS_ORDER,
+} from "@/lib/types";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
-export default function InventoryContainer({ inventory }: { inventory: Filament[] }) {
+export default function InventoryContainer({
+    inventory,
+}: {
+    inventory: Filament[];
+}) {
     const [selectedStatus, setSelectedStatus] = useState("all");
     const [searchText, setSearchText] = useState("");
+    const [showArchived, setShowArchived] = useState(false);
+
+    const visibleInventory = showArchived
+        ? inventory
+        : inventory.filter(
+            (item) =>
+                item.status !== FILAMENT_STATUS.ARCHIVED
+        );
 
     const inventoryStatuses = [
-        ...new Set(inventory.map((item) => item.status)),
+        ...new Set(
+            visibleInventory.map((item) => item.status)
+        ),
     ];
 
     const statusArray = [
@@ -23,25 +47,35 @@ export default function InventoryContainer({ inventory }: { inventory: Filament[
         ),
     ];
 
-    const normalizedSearch = searchText.trim().toLowerCase();
+    const normalizedSearch =
+        searchText.trim().toLowerCase();
 
-    const filteredInventory = inventory.filter((item) => {
-        const matchesStatus =
-            selectedStatus === "all" || item.status === selectedStatus;
+    const filteredInventory = visibleInventory.filter(
+        (item) => {
+            const matchesStatus =
+                selectedStatus === "all" ||
+                item.status === selectedStatus;
 
-        const matchesSearch =
-            !normalizedSearch ||
-            item.brand.toLowerCase().includes(normalizedSearch) ||
-            item.color.toLowerCase().includes(normalizedSearch) ||
-            item.id.toLowerCase().includes(normalizedSearch);
+            const matchesSearch =
+                !normalizedSearch ||
+                item.brand
+                    .toLowerCase()
+                    .includes(normalizedSearch) ||
+                item.color
+                    .toLowerCase()
+                    .includes(normalizedSearch) ||
+                item.id
+                    .toLowerCase()
+                    .includes(normalizedSearch);
 
-        return matchesStatus && matchesSearch;
-    });
+            return matchesStatus && matchesSearch;
+        }
+    );
 
     return (
         <div className="flex flex-col gap-6 pt-2">
             <div className="flex flex-row items-center gap-4">
-                <div className="grow min-w-0 flex flex-row items-center gap-2">
+                <div className="flex min-w-0 grow flex-row items-center gap-2">
                     <FilterIcon />
 
                     <div className="no-scrollbar overflow-x-auto whitespace-nowrap">
@@ -61,7 +95,7 @@ export default function InventoryContainer({ inventory }: { inventory: Filament[
                                     key={status}
                                     value={status}
                                     aria-label={`Toggle ${status}`}
-                                    className="uppercase data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground data-[state=on]:!border-primary"
+                                    className="uppercase data-[state=on]:!border-primary data-[state=on]:!bg-primary data-[state=on]:!text-primary-foreground"
                                 >
                                     {status}
                                 </ToggleGroupItem>
@@ -70,21 +104,54 @@ export default function InventoryContainer({ inventory }: { inventory: Filament[
                     </div>
                 </div>
 
-                <span className="text-accent">|</span>
-
                 <Field className="group w-64">
                     <InputGroup className="border border-accent bg-card">
                         <InputGroupInput
                             id="input-search-box"
                             placeholder="Bambu"
                             value={searchText}
-                            onChange={(event) => setSearchText(event.target.value)}
+                            onChange={(event) =>
+                                setSearchText(
+                                    event.target.value
+                                )
+                            }
                         />
+
                         <InputGroupAddon align="inline-start">
                             <SearchIcon />
                         </InputGroupAddon>
                     </InputGroup>
                 </Field>
+
+                <span className="text-accent">|</span>
+
+                <div className="flex items-center gap-2 whitespace-nowrap">
+                    <Checkbox
+                        id="show-archived"
+                        checked={showArchived}
+                        onCheckedChange={(checked) => {
+                            const nextValue =
+                                checked === true;
+
+                            setShowArchived(nextValue);
+
+                            if (
+                                !nextValue &&
+                                selectedStatus ===
+                                FILAMENT_STATUS.ARCHIVED
+                            ) {
+                                setSelectedStatus("all");
+                            }
+                        }}
+                    />
+
+                    <Label
+                        htmlFor="show-archived"
+                        className="text-sm font-light"
+                    >
+                        Show Archived
+                    </Label>
+                </div>
 
                 <span className="text-accent">|</span>
 
@@ -100,7 +167,10 @@ export default function InventoryContainer({ inventory }: { inventory: Filament[
 
             <div className="grid grid-cols-3 gap-6">
                 {filteredInventory.map((filament) => (
-                    <FilamentCard key={filament.id} filament={filament} />
+                    <FilamentCard
+                        key={filament.id}
+                        filament={filament}
+                    />
                 ))}
             </div>
         </div>

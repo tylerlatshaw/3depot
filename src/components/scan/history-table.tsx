@@ -121,7 +121,7 @@ export default function HistoryTable({
                             <TableCell>
                                 {item.weight ? `${item.weight} g` : "—"}
                             </TableCell>
-                        </TableRow>
+                        </TableRow>;
                     })}
                 </TableBody>
             </Table>

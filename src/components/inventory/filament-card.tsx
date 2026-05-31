@@ -7,6 +7,7 @@ import { QrCodeIcon, ReceiptIcon, ScanLineIcon, SlidersHorizontalIcon, SpoolIcon
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import Image from "next/image";
 
 export default function FilamentCard({ filament }: { filament: Filament }) {
 
@@ -51,7 +52,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                     {/* Color Info Row */}
                     <div className="flex flex-row items-center gap-2 w-full">
                         <div className="p-2">
-                            <div className={`h-14 w-14 rounded-full`} style={{ backgroundColor: colorCode }}></div>
+                            <div className={"h-14 w-14 rounded-full"} style={{ backgroundColor: colorCode }}></div>
                         </div>
 
                         <div className="flex flex-col w-full gap-1">
@@ -110,10 +111,12 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                         {
                             swatchImageUrl && <>
                                 <div className="flex w-full justify-center col-span-2">
-                                    <img
+                                    <Image
                                         src={swatchImageUrl}
                                         alt={`${brand} ${color} swatch`}
                                         className="rounded-l-lg object-cover"
+                                        width={1024}
+                                        height={1024}
                                     />
 
                                     <div className="rounded-l-lg absolute inset-x-0 bottom-0 h-2/5 w-2/5 bg-gradient-to-t from-black/80 to-transparent" />
