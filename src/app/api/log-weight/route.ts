@@ -2,7 +2,7 @@ import { firestore } from "firebase-admin";
 import { NextResponse } from "next/server";
 
 function getFilamentStatus(percentRemaining: number) {
-    if (percentRemaining >= 50) return "in stock";
+    if (percentRemaining >= 40) return "in stock";
     if (percentRemaining >= 20) return "low stock";
     return "empty";
 }

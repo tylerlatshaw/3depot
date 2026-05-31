@@ -12,7 +12,7 @@ export default function LowStockTile({
 }) {
 
     const lowStock = inventory.filter(x => {
-        return x.status === "low stock";
+        return x.status === "low stock" || x.status === "empty";
     });
 
     return (<>
