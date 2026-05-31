@@ -8,15 +8,9 @@ type Props = {
     onFilamentIdSubmit: (filamentId: string) => void;
 };
 
-type ScanData = {
-    rawValue: string;
-    format: string;
-};
-
 export default function ScannerContainer({
     onFilamentIdSubmit,
 }: Props) {
-    const [scannedCode, setScannedCode] = useState<ScanData>();
     const [error, setError] = useState("");
 
     return (
@@ -30,17 +24,11 @@ export default function ScannerContainer({
                     const sanitized = sanitizeFilamentId(rawValue);
 
                     if (!sanitized.success) {
-                        setScannedCode(undefined);
                         setError(sanitized.error);
                         return;
                     }
 
                     setError("");
-
-                    setScannedCode({
-                        rawValue: sanitized.value,
-                        format: result[0].format,
-                    });
 
                     onFilamentIdSubmit(sanitized.value);
                 }}

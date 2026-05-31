@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "../ui/button";
+import { SetPageTitle } from "../global/set-page-title";
 
 type Props = {
     selectedFilament: Filament;
@@ -53,8 +54,8 @@ export default function ActionSelector({
             action: "history"
         },
         {
-            title: "Archive Spool",
-            subtitle: "Permanently remove a filament",
+            title: "Archive Filament",
+            subtitle: "Remove a filament from use",
             icon: Trash2Icon,
             iconColor: "danger",
             action: "archive"
@@ -70,7 +71,7 @@ export default function ActionSelector({
     }: ActionTileProps) {
         return (
             <div onClick={() => setSelectedAction(action)}
-                className="group hover:ring hover:ring-primary flex flex-row gap-6 items-center justify-center rounded-lg bg-card p-6 w-full cursor-pointer"
+                className={cn("group hover:ring flex flex-row gap-6 items-center justify-center rounded-lg bg-card p-6 w-full cursor-pointer", iconColor === "danger" ? "hover:ring-danger" : "hover:ring-primary")}
             >
                 <div className="bg-foreground/5 rounded-lg p-4">
                     <Icon className={`h-8 w-8 text-${iconColor}`} />
@@ -88,7 +89,9 @@ export default function ActionSelector({
         );
     }
 
-    return (
+    return (<>
+        <SetPageTitle title={selectedFilament.brand + " " + selectedFilament.color} />
+
         <AnimatePresence mode="wait">
             <motion.div
                 key={`${selectedAction}`}
@@ -141,5 +144,5 @@ export default function ActionSelector({
                 </div>
             </motion.div>
         </AnimatePresence>
-    );
+    </>);
 }

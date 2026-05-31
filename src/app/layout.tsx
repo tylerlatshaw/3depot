@@ -1,4 +1,4 @@
-import { Barlow, Public_Sans } from "next/font/google";
+import { Barlow, Public_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/global/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
@@ -15,6 +15,12 @@ const publicSans = Public_Sans({
   variable: "--font-public-sans"
 });
 
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-roboto"
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -23,7 +29,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${barlow.variable} ${publicSans.variable} h-full antialiased`}
+      className={`${barlow.variable} ${publicSans.variable} ${roboto.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">

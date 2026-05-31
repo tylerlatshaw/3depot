@@ -12,8 +12,8 @@ export default function LowStockTile({
 }) {
 
     const lowStock = inventory.filter(x => {
-        return x.status === "low stock"
-    })
+        return x.status === "low stock";
+    });
 
     return (<>
         <div className="flex flex-row gap-3 items-center uppercase text-danger font-semibold h-10">
@@ -27,7 +27,7 @@ export default function LowStockTile({
                     lowStock.map(x => {
                         return <div key={x.id} className="pb-1">
                             <FilamentProgressCard inventory={x} />
-                        </div>
+                        </div>;
                     })
                 }
             </div>

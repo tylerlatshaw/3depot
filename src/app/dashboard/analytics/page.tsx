@@ -1,4 +1,5 @@
 import PageHeader from "@/components/global/page-header";
+import { SetPageTitle } from "@/components/global/set-page-title";
 import { cookies } from "next/headers";
 
 export default async function AnalyticsPage() {
@@ -10,11 +11,17 @@ export default async function AnalyticsPage() {
     }
 
     return (<>
-        <PageHeader pageName="Analytics" />
+        <div className="flex min-w-0 flex-1 flex-col">
+            <PageHeader />
+            <main className="min-h-0 flex-1 overflow-auto">
+                <SetPageTitle title="Analytics" />
 
-        <div className="px-8 py-4 h-full overflow-y-auto">
-            Page content
+                <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
+
+                    Page content
+
+                </div>
+            </main>
         </div>
-    </>
-    );
+    </>);
 }

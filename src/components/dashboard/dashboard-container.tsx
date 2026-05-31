@@ -7,7 +7,7 @@ import RecentActivityTile from "./recent-activity-tile";
 
 export default function DashboardContainer({ inventory }: { inventory: FilamentWithHistory[] }) {
 
-    return (<div className="grid grid-cols-4 gap-6 pt-2">
+    return (<div className="grid grid-cols-4 gap-6">
         <div className="col-span-4">
             <QueryTiles inventory={inventory} />
         </div>

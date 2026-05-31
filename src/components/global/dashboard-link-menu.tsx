@@ -28,7 +28,7 @@ export default function DashboardLinkMenu() {
                     <span className="hidden group-hover:block">
                         <ChevronRightIcon />
                     </span>
-                </Link>
+                </Link>;
             })
         }
     </>;

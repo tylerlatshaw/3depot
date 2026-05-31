@@ -213,9 +213,6 @@ export async function POST(request: Request) {
         if (isNew) {
             action = "created";
             changes.push("Filament created");
-        } else if (removeSwatchImage) {
-            action = "removed";
-            changes.push("Swatch image removed");
         } else if (
             existingData?.remaining_weight !== remainingWeight
         ) {
@@ -237,7 +234,7 @@ export async function POST(request: Request) {
                 existingData?.swatch_image_url !== swatchImageUrl ||
                 existingData?.notes !== filament.notes;
 
-            if (infoFieldsChanged || swatchImage) {
+            if (infoFieldsChanged || swatchImage || removeSwatchImage) {
                 action = "change info";
                 changes.push("Filament info changed");
             }

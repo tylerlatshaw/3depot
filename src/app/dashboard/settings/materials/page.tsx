@@ -1,4 +1,5 @@
 import PageHeader from "@/components/global/page-header";
+import { SetPageTitle } from "@/components/global/set-page-title";
 import SettingsLinkMenu from "@/components/settings/dashboard-link-menu";
 import MaterialEditTable from "@/components/settings/material-table";
 import { cookies } from "next/headers";
@@ -11,29 +12,19 @@ export default async function SettingsPage() {
         return <div>Not authorized</div>;
     }
 
-    return (<div className="flex h-screen overflow-hidden">
-        <div className="flex flex-col w-64 h-full bg-menu border-r border-accent">
+    return (<>
+        <SettingsLinkMenu />
 
-            <div className="h-[86px] p-4 border-b-2 border-accent flex flex-col gap-1">
-                <h1 className="text-2xl font-bold">Settings</h1>
-                <span className="text-xs font-light uppercase">Select a category</span>
-            </div>
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">
+            <PageHeader />
 
-            {/* Links */}
-            <div className="grow p-4">
-                <div className="flex flex-col gap-2 w-full">
-                    <SettingsLinkMenu />
-                </div>
-            </div>
-        </div>
+            <SetPageTitle title="Edit Materials" />
 
-        <div className="flex-1 flex flex-col overflow-hidden">
-            <PageHeader pageName="Edit Materials" />
+            <main className="min-h-0 flex-1 overflow-auto px-8 py-6">
 
-            <div className="px-8 py-4 h-full overflow-y-auto">
                 <MaterialEditTable />
-            </div>
+
+            </main>
         </div>
-    </div>
-    );
+    </>);
 }

@@ -28,7 +28,6 @@ export const FILAMENT_STATUS_ORDER: FilamentStatus[] = [
 export type ScanActions =
     | "created"
     | "log weight"
-    | "change status"
     | "change info"
     | "removed";
 

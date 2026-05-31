@@ -2,8 +2,6 @@
 
 import { FilamentWithHistory } from "@/lib/types";
 import { ArrowRightIcon, ClockIcon } from "lucide-react";
-import { Progress } from "../ui/progress";
-import { Chip } from "../ui/chip";
 import { Button } from "../ui/button";
 import Link from "next/link";
 import { flattenFilamentHistory } from "@/utilities/filament-functions";
@@ -93,7 +91,7 @@ export default function RecentActivityTile({
 
                         return <div className="flex flex-row gap-3 items-center justify-center w-full p-2 pb-3" key={x.historyId}>
 
-                            <div className={`h-14 w-14 rounded-full`} style={{ backgroundColor: x.filament.colorCode }}></div>
+                            <div className={"h-14 w-14 rounded-full"} style={{ backgroundColor: x.filament.colorCode }}></div>
 
                             <div className="flex flex-col grow">
 
@@ -116,7 +114,7 @@ export default function RecentActivityTile({
                                 </span>
                             </div>
 
-                        </div>
+                        </div>;
                     })
                 }
             </div>

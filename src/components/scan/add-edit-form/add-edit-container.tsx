@@ -13,6 +13,7 @@ import Loading from "@/components/ui/loading";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { SetPageTitle } from "@/components/global/set-page-title";
 
 type Props = {
     newFilamentId?: string;
@@ -80,14 +81,6 @@ export default function AddEditContainer({
         if (!editedData.colorCode?.trim()) {
             showToast({
                 message: "Hex color is required",
-                variant: "danger",
-            });
-            return;
-        }
-
-        if (!editedData.datePurchased) {
-            showToast({
-                message: "Purchase date is required",
                 variant: "danger",
             });
             return;
@@ -175,7 +168,9 @@ export default function AddEditContainer({
         );
     }
 
-    return (
+    return (<>
+        <SetPageTitle title={newFilamentId ? "Add New Filament" : selectedFilament?.brand + " " + selectedFilament?.color} />
+
         <div className="flex h-full w-full flex-col gap-16 py-4">
             <div className="flex w-full flex-row gap-16">
 
@@ -258,5 +253,5 @@ export default function AddEditContainer({
                 </div>
             </div>
         </div>
-    );
+    </>);
 }

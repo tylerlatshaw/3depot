@@ -24,7 +24,7 @@ export default function FilamentProgressCard({
 
     return <div className="flex flex-row gap-3 items-center justify-center w-full p-2">
 
-        <div className={`h-14 w-14 aspect-square rounded-full`} style={{ backgroundColor: inventory.colorCode }}></div>
+        <div className={"h-14 w-14 aspect-square rounded-full"} style={{ backgroundColor: inventory.colorCode }}></div>
 
         <div className="flex flex-col gap-2 w-full">
             {/* Stats Row */}
@@ -45,9 +45,9 @@ export default function FilamentProgressCard({
                     className="h-2 rounded-full bg-accent"
                     indicatorClassName={statusColorMap[statusColor!]}
                 />
-                <span className={cn("text-sm font-semibold", ("text-" + statusColor))}>{inventory.percentRemaining}%</span>
+                <span className={cn("text-sm font-semibold", ("text-" + statusColor))}>{inventory.percentRemaining.toFixed(0)}%</span>
             </div>
         </div>
 
-    </div>
+    </div>;
 }

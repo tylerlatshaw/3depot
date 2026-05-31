@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
-export default function LogoutPage() {
+export default function SignOutPage() {
     const router = useRouter();
 
     useEffect(() => {
@@ -22,7 +22,7 @@ export default function LogoutPage() {
                 console.error("Logout error:", err);
             } finally {
                 // 3. Redirect
-                router.replace("/login");
+                router.replace("/sign-in");
             }
         }
 

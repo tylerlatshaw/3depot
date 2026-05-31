@@ -2,9 +2,12 @@
 import { cookies } from "next/headers";
 import { DarkModeToggle } from "@/components/global/dark-mode-toggle";
 import Link from "next/link";
-import { redirect, RedirectType } from 'next/navigation';
+import { redirect, RedirectType } from "next/navigation";
 import DashboardLinkMenu from "@/components/global/dashboard-link-menu";
 import { adminAuth } from "@/lib/firebase-admin";
+import { Rotate3DIcon } from "lucide-react";
+import { SignOutButton } from "@/components/global/sign-out-button";
+import { PageHeaderProvider } from "@/contexts/page-header-context";
 
 export default async function DashboardLayout({
     children,
@@ -15,7 +18,7 @@ export default async function DashboardLayout({
     const session = cookieStore.get("session")?.value;
 
     if (!session) {
-        redirect('/login', RedirectType.replace);
+        redirect("/login", RedirectType.replace);
     }
 
     try {
@@ -33,11 +36,11 @@ export default async function DashboardLayout({
                     <div className="h-[86px] p-4 border-b-2 border-accent">
                         <Link
                             href={"/dashboard"}
-                            className="group flex items-center justify-center gap-2"
+                            className="group flex items-center justify-center gap-3"
                         >
                             <div className="bg-primary aspect-square rounded-lg p-2">
-                                <span className="text-3xl logo text-white">
-                                    3D
+                                <span className="text-white">
+                                    <Rotate3DIcon className="size-8" />
                                 </span>
                             </div>
                             <div className="flex flex-col gap-1">
@@ -59,14 +62,19 @@ export default async function DashboardLayout({
                     </div>
 
                     {/* Footer */}
-                    <div className="p-4">
+                    <div className="flex flex-row items-center justify-between p-4">
+                        <SignOutButton />
                         <DarkModeToggle />
                     </div>
                 </div>
 
                 {/* Main Content */}
                 <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                    {children}
+                    <PageHeaderProvider>
+                        <div className="flex h-screen overflow-hidden">
+                            {children}
+                        </div>
+                    </PageHeaderProvider>
                 </div>
             </div>
 
