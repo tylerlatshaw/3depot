@@ -16,14 +16,14 @@ export default function SettingsLinkMenu() {
                 <span className="text-xs font-light uppercase">Select a Category</span>
             </div>
 
-            <div className="grow p-4">
+            <div className="flex flex-col grow p-4 gap-2">
                 {
                     settingsLinks.map((link) => {
                         const Icon = link.icon ?? LinkIcon;
                         return <Link
                             href={link.href}
                             key={link.name}
-                            className={`group flex flex-row gap-2 p-3 rounded-md hover:bg-primary hover:text-foreground w-full ${path === link.href ? "bg-primary/40" : ""}`}
+                            className={`group flex flex-row gap-2 p-3 rounded-md hover:bg-primary hover:text-background dark:hover:text-foreground w-full ${path === link.href ? "bg-primary/40" : ""}`}
                         >
                             <Icon />
                             <span className="grow font-semibold">

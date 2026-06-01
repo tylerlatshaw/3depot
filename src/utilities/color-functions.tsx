@@ -32,7 +32,7 @@ export function getStatusChipColor(status: FilamentStatus): ChipVariantProps["va
 };
 
 export function getStatusTextColor(percentRemaining: Filament["percentRemaining"]) {
-    if (percentRemaining >= 50) return "foreground";
+    if (percentRemaining >= 40) return "foreground";
     if (percentRemaining >= 20) return "warning";
     if (percentRemaining >= 0) return "danger";
     return "foreground";

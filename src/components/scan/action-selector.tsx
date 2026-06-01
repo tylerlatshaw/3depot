@@ -106,7 +106,7 @@ export default function ActionSelector({
                     {/* No Action Selected */}
                     {
                         !selectedAction && <>
-                            <div className="w-2xl bg-card rounded-lg p-6 border-t-8"
+                            <div className="w-2xl bg-card shadow-md rounded-lg p-6 border-t-8"
                                 style={{ "borderColor": selectedFilament.colorCode }}
                             >
                                 <FilamentProgressCard inventory={selectedFilament} />

@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SetPageTitle } from "@/components/global/set-page-title";
+import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 type Props = {
     newFilamentId?: string;
@@ -38,6 +39,8 @@ export default function AddEditContainer({
 
         brands,
         materials,
+        existingTags,
+
         loading,
         error,
     } = useFilamentForm({
@@ -125,7 +128,7 @@ export default function AddEditContainer({
                 formData.append("swatchImage", swatchImage);
             }
 
-            const response = await fetch("/api/upsert-filament", {
+            const response = await authenticatedFetch("/api/upsert-filament", {
                 method: "POST",
                 body: formData,
             });
@@ -171,7 +174,7 @@ export default function AddEditContainer({
     return (<>
         <SetPageTitle title={newFilamentId ? "Add New Filament" : selectedFilament?.brand + " " + selectedFilament?.color} />
 
-        <div className="flex h-full w-full flex-col gap-16 py-4">
+        <div className="flex h-full w-full flex-col gap-16 pt-0 pb-4">
             <div className="flex w-full flex-row gap-16">
 
                 <div className="flex flex-col gap-14">
@@ -180,6 +183,7 @@ export default function AddEditContainer({
                         updateField={updateField}
                         brands={brands}
                         materials={materials}
+                        existingTags={existingTags}
                     />
 
                     <div className="flex w-full flex-row items-center justify-between">
@@ -210,7 +214,7 @@ export default function AddEditContainer({
                         updateField={updateField}
                     />
 
-                    <div className="flex flex-col gap-4 rounded-xl bg-card p-6">
+                    <div className="flex flex-col gap-4 rounded-xl bg-card shadow-md p-6">
                         <Field className="flex flex-row items-center gap-4">
                             <FieldLabel className="font-semibold uppercase">
                                 Swatch Printed:

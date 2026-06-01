@@ -155,7 +155,7 @@ export default function InventoryContainer({
 
                 <span className="text-accent">|</span>
 
-                <span className="text-sm font-light">
+                <span className="text-sm text-muted-foreground">
                     <span className="inline-block w-6 text-right tabular-nums">
                         {filteredInventory.length}
                     </span>

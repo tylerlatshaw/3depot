@@ -3,7 +3,7 @@
 import { Filament, FilamentWithHistory } from "@/lib/types";
 import { Progress } from "../ui/progress";
 import { Chip } from "../ui/chip";
-import { getStatusChipColor } from "@/utilities/color-functions";
+import { getStatusChipColor, getStatusTextColor } from "@/utilities/color-functions";
 import { cn } from "@/lib/utils";
 
 export default function FilamentProgressCard({
@@ -12,15 +12,20 @@ export default function FilamentProgressCard({
     inventory: FilamentWithHistory | Filament;
 }) {
 
-    const statusColorMap = {
-        default: "bg-foreground",
-        success: "bg-success",
-        warning: "bg-warning",
-        danger: "bg-danger",
-        info: "bg-info"
+    const statusTextColorMap = {
+        foreground: "text-success",
+        warning: "text-warning",
+        danger: "text-danger",
     } as const;
 
-    const statusColor = getStatusChipColor(inventory.status);
+    const statusBgColorMap = {
+        foreground: "bg-success",
+        warning: "bg-warning",
+        danger: "bg-danger",
+    } as const;
+
+    const chipVariantColor = getStatusChipColor(inventory.status);
+    const statusTextColor = getStatusTextColor(inventory.percentRemaining);
 
     return <div className="flex flex-row gap-3 items-center justify-center w-full p-2">
 
@@ -35,7 +40,7 @@ export default function FilamentProgressCard({
                     <span>{inventory.id}</span>
                 </span>
 
-                <Chip variant={statusColor}>{inventory.remainingWeight} g left</Chip>
+                <Chip variant={chipVariantColor}>{inventory.remainingWeight} g left</Chip>
             </div>
 
             {/* Progress Bar */}
@@ -43,9 +48,9 @@ export default function FilamentProgressCard({
                 <Progress
                     value={inventory.percentRemaining}
                     className="h-2 rounded-full bg-accent"
-                    indicatorClassName={statusColorMap[statusColor!]}
+                    indicatorClassName={statusBgColorMap[statusTextColor!]}
                 />
-                <span className={cn("text-sm font-semibold", ("text-" + statusColor))}>{inventory.percentRemaining.toFixed(0)}%</span>
+                <span className={cn("text-sm font-semibold", (statusTextColorMap[statusTextColor]))}>{inventory.percentRemaining.toFixed(0)}%</span>
             </div>
         </div>
 

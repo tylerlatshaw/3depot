@@ -1,7 +1,19 @@
 import { firestore } from "firebase-admin";
-import { NextResponse } from "next/server";
+import { protectRoute } from "@/lib/auth/protect-route";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+
+    if (!(await protectRoute(request))) {
+        return NextResponse.json(
+            {
+                success: false,
+                error: "Unauthorized",
+            },
+            { status: 401 }
+        );
+    }
+
     try {
         const brand = await request.json();
 
@@ -42,7 +54,7 @@ export async function POST(request: Request) {
                 date_created: wasInserted
                     ? now
                     : existingDoc.data()
-                          ?.date_created ?? now,
+                        ?.date_created ?? now,
 
                 date_modified: now,
             },

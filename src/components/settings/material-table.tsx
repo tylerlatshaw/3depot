@@ -34,6 +34,7 @@ import {
 } from "../ui/table";
 import Loading from "../ui/loading";
 import NoData from "../global/no-data";
+import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 const NEW_MATERIAL_UUID = "__new_material__";
 
@@ -51,7 +52,7 @@ export default function MaterialEditTable() {
                 setLoading(true);
                 setError("");
 
-                const response = await fetch("/api/get-materials", {
+                const response = await authenticatedFetch("/api/get-materials", {
                     cache: "no-store",
                 });
 
@@ -111,7 +112,7 @@ export default function MaterialEditTable() {
         try {
             const isNewMaterial = editingUuid === NEW_MATERIAL_UUID;
 
-            const response = await fetch("/api/upsert-material", {
+            const response = await authenticatedFetch("/api/upsert-material", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -155,12 +156,9 @@ export default function MaterialEditTable() {
 
     async function handleDelete(material: Materials) {
         try {
-            const response = await fetch(
-                `/api/delete-material?uuid=${material.uuid}`,
-                {
-                    method: "DELETE",
-                }
-            );
+            const response = await authenticatedFetch(`/api/delete-material?uuid=${material.uuid}`, {
+                method: "DELETE",
+            });
 
             const result = await response.json();
 

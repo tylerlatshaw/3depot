@@ -5,23 +5,25 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #ffffff;
-  --foreground: #17191c;
-  --accent: #2f3033;
+  --background: #F6F7F8;
+  --foreground: #1c1e22;
+  --muted-foreground: #676f7e;
+  --accent: #dddfe1;
   --card: #ffffff;
   --disabled: #f3f4f6;
   --primary: #275ed9;
   --secondary: #7183a9;
-  --menu: #b0b0b0;
-  --success: #40a633;
-  --warning: #de9c2d;
-  --danger: #ba2525;
-  --info: #275ed9;
+  --menu: #F9F9FA;
+  --success: #00c950;
+  --warning: #ef8206;
+  --danger: #ec1e1e;
+  --info: #2b7fff;
 }
 
 .dark {
   --background: #17191c;
   --foreground: #ffffff;
+  --muted-foreground: #b7b7b7;
   --accent: #3c3e42;
   --card: #202327;
   --disabled: #3b3d41;
@@ -37,6 +39,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-card: var(--card);
   --color-disabled: var(--disabled);
@@ -56,7 +59,6 @@
 
 .sign-in-button {
   font-family: var(--font-roboto), sans-serif;
-  background-color: #F2F2F2;
   border: 0;
   color: #1F1F1F;
   font-size: 14px;

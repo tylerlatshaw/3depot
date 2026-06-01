@@ -1,4 +1,4 @@
-import { getFilamentWithHistory } from "@/lib/data/get-filament-with-history";
+import { getTags } from "@/lib/data/get-tags";
 import { protectRoute } from "@/lib/auth/protect-route";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -15,19 +15,19 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const filament = await getFilamentWithHistory();
+        const tags = await getTags();
 
         return NextResponse.json({
             success: true,
-            data: filament,
+            data: tags,
         });
     } catch (error) {
-        console.error("Error fetching filament with history:", error);
+        console.error("Error fetching tag data:", error);
 
         return NextResponse.json(
             {
                 success: false,
-                error: "Failed to fetch filament with history",
+                error: "Failed to fetch tag data",
             },
             {
                 status: 500,

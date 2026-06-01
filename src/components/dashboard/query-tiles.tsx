@@ -26,7 +26,7 @@ function Tile({
     iconColor,
 }: TileProps) {
     return (
-        <div className="flex flex-col gap-4 rounded-xl bg-card p-6">
+        <div className="flex flex-col gap-4 rounded-xl bg-card p-6 shadow-md">
             <div className="flex flex-row items-center justify-between">
 
                 <Icon className={`h-8 w-8 text-${iconColor}`} />
@@ -71,7 +71,9 @@ export default function QueryTiles({
         ...new Set(
             flattenedHistory
                 .filter(
-                    x => new Date(x.dateCreated) > last30Days
+                    x =>
+                        new Date(x.dateCreated) > last30Days &&
+                        x.action === "log weight"
                 )
                 .map(
                     x => x.filamentId
@@ -87,7 +89,8 @@ export default function QueryTiles({
                     inventory.filter(
                         x =>
                             x.status === "in stock" ||
-                            x.status === "low stock"
+                            x.status === "low stock" ||
+                            x.status === "empty"
                     ).length
                 }
                 subtitle="In stock or low stock"
@@ -99,10 +102,12 @@ export default function QueryTiles({
                 title="Low Stock"
                 value={
                     inventory.filter(
-                        x => x.status === "low stock"
+                        x =>
+                            x.status === "low stock" ||
+                            x.status === "empty"
                     ).length
                 }
-                subtitle="Remaining weight below 20%"
+                subtitle="Remaining weight below 40%"
                 icon={TrendingDownIcon}
                 iconColor="danger"
             />

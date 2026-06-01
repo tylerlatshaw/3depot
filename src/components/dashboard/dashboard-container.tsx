@@ -12,11 +12,11 @@ export default function DashboardContainer({ inventory }: { inventory: FilamentW
             <QueryTiles inventory={inventory} />
         </div>
 
-        <div className="col-span-2 flex flex-col gap-4 rounded-xl bg-card p-6 min-h-112">
+        <div className="col-span-2 flex flex-col gap-4 rounded-xl bg-card p-6 min-h-112 shadow-md">
             <LowStockTile inventory={inventory} />
         </div>
 
-        <div className="col-span-2 flex flex-col gap-4 rounded-xl bg-card p-6 min-h-112">
+        <div className="col-span-2 flex flex-col gap-4 rounded-xl bg-card p-6 min-h-112 shadow-md">
             <RecentActivityTile inventory={inventory} />
         </div>
     </div>);
