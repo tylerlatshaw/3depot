@@ -123,7 +123,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
                             >
                                 <ToggleGroupItem
                                     value="camera"
-                                    className="rounded-lg py-6"
+                                    className="rounded-none rounded-l-lg py-6"
                                 >
                                     <div className="flex flex-row items-center justify-center gap-3 px-3 py-4 text-xl">
                                         <ScanLineIcon size={16} />
@@ -133,7 +133,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
 
                                 <ToggleGroupItem
                                     value="manual"
-                                    className="rounded-lg py-6"
+                                    className="rounded-none rounded-r-lg py-6"
                                 >
                                     <div className="flex flex-row items-center justify-center gap-3 px-3 py-4 text-xl">
                                         <KeyboardIcon size={16} />

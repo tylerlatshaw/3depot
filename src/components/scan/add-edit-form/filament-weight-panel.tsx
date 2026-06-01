@@ -17,7 +17,7 @@ export default function FilamentWeightPanel({
     updateField,
 }: Props) {
     return (
-        <div className="flex flex-col gap-6 rounded-xl bg-card p-6">
+        <div className="flex flex-col gap-6 rounded-xl bg-card shadow-md p-6">
             <Field className="flex flex-col gap-2">
                 <FieldLabel className="font-semibold uppercase" htmlFor="startingWeight">
                     Starting Weight:

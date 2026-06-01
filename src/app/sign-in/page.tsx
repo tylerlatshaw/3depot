@@ -101,7 +101,7 @@ export default function SignInPage() {
                     <button
                         onClick={handleGoogleLogin}
                         disabled={loading}
-                        className="sign-in-button flex flex-row gap-[10px] items-center justify-center px-[12px] py-[10px] rounded-full cursor-pointer"
+                        className="sign-in-button bg-[#F2F2F2] dark:bg-[#F2F2F2] flex flex-row gap-[10px] items-center justify-center px-[12px] py-[10px] rounded-full cursor-pointer"
                     >
                         <svg className="size-[20px]" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -118,12 +118,12 @@ export default function SignInPage() {
                         <span className="text-danger">{error}</span>
                     ) : null}
 
-                    <span className="text-xs font-light uppercase text-foreground/60">
-                        By signing in, you agree to the <Link href={"/privacy-policy"} className="underline hover:text-foreground/80">Privacy Policy</Link>.
+                    <span className="text-xs font-light uppercase text-muted-foreground">
+                        By signing in, you agree to the <Link href={"/privacy-policy"} className="underline hover:text-foreground">Privacy Policy</Link>.
                     </span>
                 </div>
 
-                <span className="text-xs font-light uppercase text-foreground/60">3Depot Filament Management</span>
+                <span className="text-xs font-light uppercase text-muted-foreground">3Depot Filament Management</span>
             </div>
 
         </main>

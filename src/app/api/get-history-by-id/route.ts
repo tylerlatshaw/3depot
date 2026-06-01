@@ -1,8 +1,20 @@
 import { firestore } from "firebase-admin";
-import { NextResponse } from "next/server";
 import { FilamentHistoryItem } from "@/lib/types";
+import { protectRoute } from "@/lib/auth/protect-route";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
+
+    if (!(await protectRoute(request))) {
+        return NextResponse.json(
+            {
+                success: false,
+                error: "Unauthorized",
+            },
+            { status: 401 }
+        );
+    }
+
     try {
         const { searchParams } = new URL(request.url);
         const id = searchParams.get("id");

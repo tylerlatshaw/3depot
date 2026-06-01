@@ -1,6 +1,6 @@
 import PageHeader from "@/components/global/page-header";
 import { SetPageTitle } from "@/components/global/set-page-title";
-import SettingsLinkMenu from "@/components/settings/dashboard-link-menu";
+import SettingsLinkMenu from "@/components/settings/settings-link-menu";
 import MaterialEditTable from "@/components/settings/material-table";
 import { cookies } from "next/headers";
 

@@ -1,20 +1,26 @@
+import { protectRoute } from "@/lib/auth/protect-route";
 import { firestore } from "firebase-admin";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function DELETE(request: Request) {
-    try {
-        const { searchParams } = new URL(
-            request.url
+export async function DELETE(request: NextRequest) {
+    if (!(await protectRoute(request))) {
+        return NextResponse.json(
+            {
+                success: false,
+                error: "Unauthorized",
+            },
+            { status: 401 }
         );
+    }
 
-        const uuid =
-            searchParams.get("uuid");
+    try {
+        const { uuid } = await request.json();
 
         if (!uuid) {
             return NextResponse.json(
                 {
                     success: false,
-                    error: "UUID required",
+                    error: "Brand UUID required",
                 },
                 { status: 400 }
             );
@@ -29,7 +35,7 @@ export async function DELETE(request: Request) {
             success: true,
         });
     } catch (error) {
-        console.error(error);
+        console.error("Error deleting brand:", error);
 
         return NextResponse.json(
             {

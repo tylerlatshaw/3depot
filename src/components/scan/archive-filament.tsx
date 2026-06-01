@@ -1,5 +1,3 @@
-// components/scan/archive-filament.tsx
-
 "use client";
 
 import { EntryModeOptions, Filament } from "@/lib/types";
@@ -14,6 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/components/ui/toast";
 import FilamentProgressCard from "../dashboard/filament-progress-card";
+import { auth } from "@/lib/firebase";
+import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 type Props = {
     selectedFilament: Filament;
@@ -30,7 +30,7 @@ export default function ArchiveFilament({
         try {
             setLoading(true);
 
-            const response = await fetch("/api/delete-filament", {
+            const response = await authenticatedFetch("/api/delete-filament", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export default function ArchiveFilament({
     return (
         <div className="flex w-4xl flex-col items-center justify-center gap-8">
             <div
-                className="w-2xl rounded-lg border-t-8 bg-card p-6"
+                className="w-2xl rounded-lg border-t-8 bg-card shadow-md p-6"
                 style={{
                     borderColor: selectedFilament.colorCode,
                 }}

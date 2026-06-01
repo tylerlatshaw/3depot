@@ -1,7 +1,7 @@
 import PageHeader from "@/components/global/page-header";
 import { SetPageTitle } from "@/components/global/set-page-title";
 import BrandEditTable from "@/components/settings/brand-table";
-import SettingsLinkMenu from "@/components/settings/dashboard-link-menu";
+import SettingsLinkMenu from "@/components/settings/settings-link-menu";
 import { cookies } from "next/headers";
 
 export default async function SettingsPage() {

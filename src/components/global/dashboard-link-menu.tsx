@@ -19,7 +19,7 @@ export default function DashboardLinkMenu() {
                 return <Link
                     href={link.href}
                     key={link.name}
-                    className={`group flex flex-row gap-2 p-3 rounded-md hover:bg-primary hover:text-foreground w-full ${isActive ? "bg-primary/40" : ""}`}
+                    className={`group flex flex-row gap-2 p-3 rounded-md hover:bg-primary hover:text-background dark:hover:text-foreground w-full ${isActive ? "bg-primary/40" : ""}`}
                 >
                     <Icon />
                     <span className="grow font-semibold">

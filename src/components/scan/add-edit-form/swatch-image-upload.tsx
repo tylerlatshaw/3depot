@@ -104,7 +104,7 @@ export default function SwatchImageUpload({
                         </Button>
                     </>
                 ) : (
-                    <div className="flex flex-col items-center justify-center gap-4 text-foreground/50">
+                    <div className="flex flex-col items-center justify-center gap-4 text-muted-foreground">
                         <UploadIcon className="size-8" />
 
                         <div className="flex flex-col gap-1">

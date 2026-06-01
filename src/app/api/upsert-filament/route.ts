@@ -1,4 +1,5 @@
-import { NextResponse } from "next/server";
+import { protectRoute } from "@/lib/auth/protect-route";
+import { NextRequest, NextResponse } from "next/server";
 import {
     FieldValue,
     type DocumentData,
@@ -48,7 +49,18 @@ async function deleteSubcollection({
     );
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+
+    if (!(await protectRoute(request))) {
+        return NextResponse.json(
+            {
+                success: false,
+                error: "Unauthorized",
+            },
+            { status: 401 }
+        );
+    }
+
     try {
         const formData = await request.formData();
 
@@ -165,7 +177,7 @@ export async function POST(request: Request) {
             brand: filament.brand ?? "",
             color: filament.color ?? "",
             color_code: filament.colorCode ?? "",
-            tags: filament.tags ?? [],
+            tags: Array.isArray(filament.tags) ? filament.tags : [],
             material: filament.material ?? "",
 
             status: filament.status ?? "in stock",

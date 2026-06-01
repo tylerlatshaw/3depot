@@ -1,5 +1,6 @@
 import { firestore } from "firebase-admin";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { protectRoute } from "@/lib/auth/protect-route";
 
 function getFilamentStatus(percentRemaining: number) {
     if (percentRemaining >= 40) return "in stock";
@@ -7,7 +8,18 @@ function getFilamentStatus(percentRemaining: number) {
     return "empty";
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
+
+    if (!(await protectRoute(request))) {
+        return NextResponse.json(
+            {
+                success: false,
+                error: "Unauthorized",
+            },
+            { status: 401 }
+        );
+    }
+    
     try {
         const { filamentId, updatedWeight, notes } = await request.json();
 

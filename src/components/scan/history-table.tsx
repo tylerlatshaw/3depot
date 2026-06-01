@@ -13,6 +13,7 @@ import {
 import dayjs from "dayjs";
 import { Button } from "../ui/button";
 import { Undo2Icon } from "lucide-react";
+import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 type Props = {
     selectedFilament: Filament;
@@ -56,12 +57,9 @@ export default function HistoryTable({
                 setLoading(true);
                 setError("");
 
-                const response = await fetch(
-                    `/api/get-history-by-id?id=${selectedFilament.id}`,
-                    {
-                        cache: "no-store",
-                    }
-                );
+                const response = await authenticatedFetch(`/api/get-history-by-id?id=${selectedFilament.id}`, {
+                    cache: "no-store",
+                });
 
                 const result = await response.json();
 

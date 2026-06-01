@@ -71,7 +71,7 @@ export default async function DashboardLayout({
                 {/* Main Content */}
                 <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
                     <PageHeaderProvider>
-                        <div className="flex h-screen overflow-hidden">
+                        <div className="flex h-screen overflow-hidden bg-background">
                             {children}
                         </div>
                     </PageHeaderProvider>

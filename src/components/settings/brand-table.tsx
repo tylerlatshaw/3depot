@@ -35,6 +35,8 @@ import {
 import { Colorful } from "@uiw/react-color";
 import Loading from "../ui/loading";
 import NoData from "../global/no-data";
+import { auth } from "@/lib/firebase";
+import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 const NEW_BRAND_UUID = "__new_brand__";
 
@@ -52,8 +54,8 @@ export default function BrandEditTable() {
                 setLoading(true);
                 setError("");
 
-                const response = await fetch("/api/get-brands", {
-                    cache: "no-store",
+                const response = await authenticatedFetch("/api/get-brands", {
+                    cache: "no-store"
                 });
 
                 const result = await response.json();
@@ -112,7 +114,7 @@ export default function BrandEditTable() {
         try {
             const isNewBrand = editingUuid === NEW_BRAND_UUID;
 
-            const response = await fetch("/api/upsert-brand", {
+            const response = await authenticatedFetch("/api/upsert-brand", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -164,12 +166,15 @@ export default function BrandEditTable() {
 
     async function handleDelete(brand: Brands) {
         try {
-            const response = await fetch(
-                `/api/delete-brand?uuid=${brand.uuid}`,
-                {
-                    method: "DELETE",
-                }
-            );
+            const response = await authenticatedFetch("/api/delete-brand", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    uuid: brand.uuid,
+                }),
+            });
 
             const result = await response.json();
 

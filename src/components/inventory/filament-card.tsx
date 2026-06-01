@@ -47,7 +47,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
             <DialogTrigger asChild>
 
                 {/* Filament Card */}
-                <div className="group hover:ring hover:ring-primary flex flex-col gap-2 bg-card rounded-xl px-4 py-4 pb-8 cursor-pointer">
+                <div className="group hover:ring hover:ring-primary flex flex-col gap-2 bg-card rounded-xl px-4 py-4 pb-8 cursor-pointer shadow-md">
 
                     {/* Color Info Row */}
                     <div className="flex flex-row items-center gap-2 w-full">
