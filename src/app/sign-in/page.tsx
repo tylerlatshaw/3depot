@@ -10,7 +10,7 @@ export default function SignInPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    async function handleGoogleLogin() {
+    async function handleGoogleSignin() {
         setLoading(true);
         setError("");
 
@@ -20,7 +20,7 @@ export default function SignInPage() {
             const result = await signInWithPopup(auth, provider);
             const idToken = await result.user.getIdToken();
 
-            const response = await fetch("/api/auth/login", {
+            const response = await fetch("/api/auth/sign-in", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export default function SignInPage() {
 
             window.location.href = "/dashboard";
         } catch (err: unknown) {
-            console.error("Google login error:", err);
+            console.error("Google sign-in error:", err);
 
             const firebaseError = err as { code?: string; message?: string };
 
@@ -48,7 +48,7 @@ export default function SignInPage() {
                     break;
 
                 case "auth/popup-closed-by-user":
-                    setError("Sign-in popup was closed before completing login.");
+                    setError("Sign-in popup was closed before completing sign-in.");
                     break;
 
                 case "auth/popup-blocked":
@@ -99,7 +99,7 @@ export default function SignInPage() {
                     </div>
 
                     <button
-                        onClick={handleGoogleLogin}
+                        onClick={handleGoogleSignin}
                         disabled={loading}
                         className="sign-in-button bg-[#F2F2F2] dark:bg-[#F2F2F2] flex flex-row gap-[10px] items-center justify-center px-[12px] py-[10px] rounded-full cursor-pointer"
                     >

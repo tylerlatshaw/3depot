@@ -9,24 +9,24 @@ export default function SignOutPage() {
     const router = useRouter();
 
     useEffect(() => {
-        async function logout() {
+        async function signOutUser() {
             try {
                 // 1. Sign out from Firebase (client)
                 await signOut(auth);
 
                 // 2. Clear session cookie (server)
-                await fetch("/api/auth/logout", {
+                await fetch("/api/auth/sign-out", {
                     method: "POST",
                 });
             } catch (err) {
-                console.error("Logout error:", err);
+                console.error("Sign-out error:", err);
             } finally {
                 // 3. Redirect
                 router.replace("/sign-in");
             }
         }
 
-        logout();
+        signOutUser();
     }, [router]);
 
     return (

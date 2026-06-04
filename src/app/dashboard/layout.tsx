@@ -20,7 +20,7 @@ export default async function DashboardLayout({
     const session = cookieStore.get("session")?.value;
 
     if (!session) {
-        redirect("/login", RedirectType.replace);
+        redirect("/sign-in", RedirectType.replace);
     }
 
     try {
