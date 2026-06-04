@@ -1,18 +1,22 @@
 import PageHeader from "@/components/global/page-header";
 import { SetPageTitle } from "@/components/global/set-page-title";
-import AllHistoryTable from "@/components/recent-activity/all-history-table";
-import { getFilamentWithHistory } from "@/lib/data/get-filament-with-history";
+import ActivityData from "@/components/recent-activity/activity-data";
+import Loading from "@/components/ui/loading";
+import { Metadata } from "next";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 
-export default async function AnalyticsPage() {
+export const metadata: Metadata = {
+    title: "Recent Activity",
+};
+
+export default async function RecentActivityPage() {
     const cookieStore = await cookies();
     const session = cookieStore.get("session")?.value;
 
     if (!session) {
         return <div>Not authorized</div>;
     }
-
-    const inventory = await getFilamentWithHistory();
 
     return (<>
         <div className="flex min-w-0 flex-1 flex-col">
@@ -22,7 +26,9 @@ export default async function AnalyticsPage() {
 
                 <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
 
-                    <AllHistoryTable inventory={inventory} />
+                    <Suspense fallback={<Loading />}>
+                        <ActivityData />
+                    </Suspense>
 
                 </div>
             </main>

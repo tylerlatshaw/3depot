@@ -8,6 +8,8 @@ import { adminAuth } from "@/lib/firebase-admin";
 import { Rotate3DIcon } from "lucide-react";
 import { SignOutButton } from "@/components/global/sign-out-button";
 import { PageHeaderProvider } from "@/contexts/page-header-context";
+import { Suspense } from "react";
+import Loading from "@/components/ui/loading";
 
 export default async function DashboardLayout({
     children,
@@ -72,7 +74,9 @@ export default async function DashboardLayout({
                 <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
                     <PageHeaderProvider>
                         <div className="flex h-screen overflow-hidden bg-background">
-                            {children}
+                            <Suspense fallback={<Loading />}>
+                                {children}
+                            </Suspense>
                         </div>
                     </PageHeaderProvider>
                 </div>

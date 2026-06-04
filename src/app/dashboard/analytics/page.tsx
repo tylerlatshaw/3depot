@@ -1,6 +1,11 @@
 import PageHeader from "@/components/global/page-header";
 import { SetPageTitle } from "@/components/global/set-page-title";
+import { Metadata } from "next";
 import { cookies } from "next/headers";
+
+export const metadata: Metadata = {
+    title: "Analytics",
+};
 
 export default async function AnalyticsPage() {
     const cookieStore = await cookies();

@@ -2,6 +2,7 @@ import { Barlow, Public_Sans, Roboto } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/global/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { Metadata } from "next";
 
 const barlow = Barlow({
   subsets: ["latin"],
@@ -20,6 +21,13 @@ const roboto = Roboto({
   weight: ["300", "400", "500", "600", "700"],
   variable: "--font-roboto"
 });
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | 3Depot",
+    default: "3Depot | 3D Printer Filament Management"
+  },
+};
 
 export default function RootLayout({
   children,

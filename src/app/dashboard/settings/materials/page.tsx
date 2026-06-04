@@ -3,6 +3,11 @@ import { SetPageTitle } from "@/components/global/set-page-title";
 import SettingsLinkMenu from "@/components/settings/settings-link-menu";
 import MaterialEditTable from "@/components/settings/material-table";
 import { cookies } from "next/headers";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Edit Materials",
+};
 
 export default async function SettingsPage() {
     const cookieStore = await cookies();

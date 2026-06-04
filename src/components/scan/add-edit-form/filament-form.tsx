@@ -152,10 +152,10 @@ export default function FilamentForm({
                         updateField("colorCode", color.hex)
                     }
                     disableAlpha
-                    className="pt-1"
+                    className="pt-0.5"
                 />
 
-                <div className="flex flex-col gap-2 grow">
+                <div className="flex flex-col gap-4 grow">
                     <Field className="flex flex-col gap-2">
                         <FieldLabel className="font-semibold uppercase" htmlFor="hex">
                             Hex Color:
@@ -172,6 +172,7 @@ export default function FilamentForm({
                             }
                             placeholder="#275ED9"
                             className="w-48 px-4 py-6 text-base font-bold uppercase tracking-widest"
+                            autoComplete="one-time-code"
                         />
                     </Field>
 
@@ -189,6 +190,7 @@ export default function FilamentForm({
                             }
                             placeholder="Matte Blue"
                             className="w-48 px-4 py-6 text-base font-bold tracking-widest"
+                            autoComplete="one-time-code"
                         />
                     </Field>
                 </div>
@@ -278,8 +280,8 @@ export default function FilamentForm({
                                                 >
                                                     <CheckIcon
                                                         className={`mr-2 h-4 w-4 ${selected
-                                                                ? "opacity-100"
-                                                                : "opacity-0"
+                                                            ? "opacity-100"
+                                                            : "opacity-0"
                                                             }`}
                                                     />
                                                     {tag}
