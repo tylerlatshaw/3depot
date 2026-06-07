@@ -24,12 +24,10 @@ export default async function RecentActivityPage() {
             <main className="min-h-0 flex-1 overflow-auto">
                 <SetPageTitle title="Recent Activity" />
 
-                <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
-
+                <div className="min-h-0 flex-1 overflow-y-auto px-4 md:px-8 py-4 md:py-6">
                     <Suspense fallback={<Loading />}>
                         <ActivityData />
                     </Suspense>
-
                 </div>
             </main>
         </div>

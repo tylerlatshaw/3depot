@@ -1,7 +1,7 @@
 "use client";
 
 import { Field } from "../ui/field";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import {
     KeyboardIcon,
@@ -26,6 +26,7 @@ import AddEditContainer from "./add-edit-form/add-edit-container";
 import HistoryTable from "./history-table";
 import ArchiveFilament from "./archive-filament";
 import { SetPageTitle } from "../global/set-page-title";
+import { useIsMobileOrTablet } from "@/utilities/device-functions";
 
 type Props = {
     inventory: Filament[];
@@ -43,6 +44,8 @@ export default function ScanEntryContainer({ inventory }: Props) {
 
     const idParam = params.get("id");
     const actionParam = params.get("action");
+
+    const isMobileOrTablet = useIsMobileOrTablet();
 
     const initialAction: FormActions | null =
         actionParam && validActions.includes(actionParam as FormActions)
@@ -62,7 +65,15 @@ export default function ScanEntryContainer({ inventory }: Props) {
             : "entry";
 
     const [entryFormat, setEntryFormat] =
-        useState<EntryFormatOptions>("manual");
+        useState<EntryFormatOptions>(() => {
+            if (typeof window === "undefined") {
+                return "manual";
+            }
+
+            return window.matchMedia("(max-width: 1024px)").matches
+                ? "camera"
+                : "manual";
+        });
 
     const [entryMode, setEntryMode] =
         useState<EntryModeOptions>(initialEntryMode);
@@ -106,7 +117,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
                 className="flex flex-col items-center w-full h-full"
             >
                 {entryMode === "entry" && (
-                    <div className="flex flex-col items-center justify-center w-full h-full gap-12">
+                    <div className="flex flex-col items-center justify-start md:justify-center w-full h-full gap-12">
                         <SetPageTitle title="Scan" />
 
                         <Field>

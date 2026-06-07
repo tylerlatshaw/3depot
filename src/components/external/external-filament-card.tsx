@@ -70,12 +70,12 @@ export default function ExternalFilamentCard({ filament }: { filament: Filament 
 
                         </div>
 
-                                <Chip
-                                    variant={chipVariantColor}
-                                    className="shrink-0 text-nowrap"
-                                >
-                                    {status}
-                                </Chip>
+                        <Chip
+                            variant={chipVariantColor}
+                            className="shrink-0 text-nowrap"
+                        >
+                            {status}
+                        </Chip>
                     </div>
 
                     {/* Stats Row */}

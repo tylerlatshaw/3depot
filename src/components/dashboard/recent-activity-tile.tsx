@@ -89,32 +89,85 @@ export default function RecentActivityTile({
 
                         const actionInfo = actionMap[x.action];
 
-                        return <div className="flex flex-row gap-3 items-center justify-center w-full p-2 pb-3" key={x.historyId}>
+                        return <>
+                            {/* Desktop Layout */}
+                            <div
+                                className="hidden md:flex md:flex-nowrap items-center gap-3 w-full p-2 pb-3"
+                                key={x.historyId}
+                            >
+                                <div
+                                    className="h-14 w-14 shrink-0 rounded-full"
+                                    style={{
+                                        backgroundColor: x.filament.colorCode,
+                                    }}
+                                />
 
-                            <div className={"h-14 w-14 rounded-full"} style={{ backgroundColor: x.filament.colorCode }}></div>
+                                <div className="flex grow flex-col items-start justify-center gap-0 min-w-0">
+                                    <div className="w-full text-lg font-light">
+                                        <span className="font-bold">
+                                            {x.filament.brand} {x.filament.color}
+                                        </span>
+                                    </div>
 
-                            <div className="flex flex-col grow">
-
-                                <div className="flex flex-row items-center gap-4 w-full text-lg font-light">
-                                    <span className="font-bold">{x.filament.brand + " " + x.filament.color}</span>
+                                    <div className="text-base font-light">
+                                        <span>{x.filament.id}</span>
+                                    </div>
                                 </div>
 
-                                <div className="text-base font-light">
-                                    <span>{x.filament.id}</span>
+                                <div className="basis-auto flex flex-col text-right justify-start">
+                                    <span
+                                        className={`font-bold ${actionInfo.textColor}`}
+                                    >
+                                        {actionInfo.display}
+                                    </span>
+
+                                    <span className="font-light">
+                                        {getRelativeTime(x.dateCreated)}
+                                    </span>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col text-right">
-                                <span className={`font-bold ${actionInfo.textColor}`}>
-                                    {actionInfo.display}
-                                </span>
+                            {/* Mobile Layout */}
+                            <div
+                                className="flex md:hidden flex-wrap items-center gap-3 w-full p-2 pb-3"
+                                key={x.historyId}
+                            >
+                                <div
+                                    className="h-14 w-14 shrink-0 rounded-full"
+                                    style={{
+                                        backgroundColor: x.filament.colorCode,
+                                    }}
+                                />
 
-                                <span className="font-light">
-                                    {getRelativeTime(x.dateCreated)}
-                                </span>
+                                <div className="flex grow flex-col items-start justify-center gap-0 min-w-0">
+                                    <div className="flex flex-row items-center w-full text-lg gap-2">
+                                        <span className="font-bold">
+                                            {x.filament.brand} {x.filament.color}
+                                        </span>
+
+                                        <span>•</span>
+
+                                        <div className="text-base font-light">
+                                            <span>{x.filament.id}</span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-row items-center w-full text-base gap-2">
+                                        <span
+                                            className={`font-bold ${actionInfo.textColor}`}
+                                        >
+                                            {actionInfo.display}
+                                        </span>
+
+                                        <span>•</span>
+
+                                        <div className="font-light">
+                                            {getRelativeTime(x.dateCreated)}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
-                        </div>;
+                        </>;
                     })
                 }
             </div>

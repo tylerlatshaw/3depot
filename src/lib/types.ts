@@ -2,6 +2,7 @@ import { type LucideProps } from "lucide-react";
 
 export type Links = {
     name: string;
+    shortName: string;
     href: string;
     icon?: React.FC<LucideProps>;
 };

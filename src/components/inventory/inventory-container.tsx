@@ -165,7 +165,7 @@ export default function InventoryContainer({
 
             <hr className="border border-accent" />
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {filteredInventory.map((filament) => (
                     <FilamentCard
                         key={filament.id}

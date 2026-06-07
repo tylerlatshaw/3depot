@@ -82,7 +82,7 @@ export default function QueryTiles({
     ];
 
     return (
-        <div className="grid grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
             <Tile
                 title="Total Spools"
                 value={
@@ -107,7 +107,7 @@ export default function QueryTiles({
                             x.status === "empty"
                     ).length
                 }
-                subtitle="Remaining weight below 40%"
+                subtitle="Weight below 40%"
                 icon={TrendingDownIcon}
                 iconColor="danger"
             />

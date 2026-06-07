@@ -31,16 +31,28 @@ export default function FilamentProgressCard({
 
         <div className={"h-14 w-14 aspect-square rounded-full"} style={{ backgroundColor: inventory.colorCode }}></div>
 
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col gap-2 w-full min-w-0">
+
             {/* Stats Row */}
-            <div className="flex flex-row items-center gap-4 w-full text-lg font-light">
-                <span className="flex gap-2 grow">
-                    <span className="font-bold">{inventory.brand + " " + inventory.color}</span>
-                    <span>•</span>
-                    <span>{inventory.id}</span>
+            <div className="flex min-w-0 w-full flex-row items-center gap-4 text-lg font-light">
+                <span className="flex min-w-0 flex-1 flex-col gap-0 overflow-hidden md:flex-row md:items-center md:justify-start md:gap-2">
+                    <span className="block min-w-0 flex-1 md:flex-none truncate font-bold">
+                        {inventory.brand} {inventory.color}
+                    </span>
+
+                    <span className="hidden shrink-0 md:inline">•</span>
+
+                    <span className="shrink-0">
+                        {inventory.id}
+                    </span>
                 </span>
 
-                <Chip variant={chipVariantColor}>{inventory.remainingWeight} g left</Chip>
+                <Chip
+                    className="shrink-0 whitespace-nowrap"
+                    variant={chipVariantColor}
+                >
+                    {inventory.remainingWeight} g left
+                </Chip>
             </div>
 
             {/* Progress Bar */}

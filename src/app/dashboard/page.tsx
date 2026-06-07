@@ -20,7 +20,7 @@ export default async function DashboardPage() {
             <main className="min-h-0 flex-1 overflow-auto">
                 <SetPageTitle title="Dashboard" />
 
-                <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
+                <div className="min-h-0 flex-1 overflow-y-auto px-4 md:px-8 py-4 md:py-6">
                     <Suspense fallback={<DashboardLoading />}>
                         <DashboardData />
                     </Suspense>

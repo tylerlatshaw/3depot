@@ -21,7 +21,7 @@ export default async function AnalyticsPage() {
             <main className="min-h-0 flex-1 overflow-auto">
                 <SetPageTitle title="Analytics" />
 
-                <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
+                <div className="min-h-0 flex-1 overflow-y-auto px-4 md:px-8 py-4 md:py-6">
 
                     Page content
 
