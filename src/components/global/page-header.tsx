@@ -10,13 +10,13 @@ export default function PageHeader() {
   const { title } = usePageHeader();
 
   return (
-    <div className="sticky top-0 flex flex-row items-center h-[86px] px-8 py-4 border-b-2 border-accent bg-background z-10">
+    <div className="md:sticky top-0 flex flex-row items-center md:h-[86px] px-4 md:px-8 py-4 border-b-2 border-accent bg-background z-10">
       <div className="flex flex-col gap-1 grow">
         <h1 className="text-2xl font-bold">
           {title}
         </h1>
 
-        <span className="text-xs font-light uppercase">
+        <span className="hidden md:block text-xs font-light uppercase">
           {dayjs().format("dddd, MMMM D")}
         </span>
       </div>

@@ -12,7 +12,7 @@ export function middleware(req: NextRequest) {
     );
 
     if (isProtected && !session) {
-        return NextResponse.redirect(new URL("/login", req.url));
+        return NextResponse.redirect(new URL("/sign-in", req.url));
     }
 
     return NextResponse.next();

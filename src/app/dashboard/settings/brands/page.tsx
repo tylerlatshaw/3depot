@@ -2,7 +2,12 @@ import PageHeader from "@/components/global/page-header";
 import { SetPageTitle } from "@/components/global/set-page-title";
 import BrandEditTable from "@/components/settings/brand-table";
 import SettingsLinkMenu from "@/components/settings/settings-link-menu";
+import { Metadata } from "next";
 import { cookies } from "next/headers";
+
+export const metadata: Metadata = {
+    title: "Edit Brands",
+};
 
 export default async function SettingsPage() {
     const cookieStore = await cookies();

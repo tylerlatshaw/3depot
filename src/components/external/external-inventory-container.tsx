@@ -8,7 +8,6 @@ import {
     InputGroupAddon,
     InputGroupInput,
 } from "../ui/input-group";
-import FilamentCard from "./filament-card";
 import {
     Filament,
     FILAMENT_STATUS,
@@ -17,8 +16,10 @@ import {
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import ExternalFilamentCard from "./external-filament-card";
+import QueryTiles from "./external-query-tiles";
 
-export default function InventoryContainer({
+export default function ExternalInventoryContainer({
     inventory,
 }: {
     inventory: Filament[];
@@ -165,9 +166,9 @@ export default function InventoryContainer({
 
             <hr className="border border-accent" />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-4 gap-6">
                 {filteredInventory.map((filament) => (
-                    <FilamentCard
+                    <ExternalFilamentCard
                         key={filament.id}
                         filament={filament}
                     />

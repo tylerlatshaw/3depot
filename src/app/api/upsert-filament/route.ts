@@ -151,8 +151,17 @@ export async function POST(request: NextRequest) {
             swatchImageUrl = "";
         }
 
-        const startingWeight = Number(
+        const totalWeight = Number(
             filament.startingWeight ?? 0
+        );
+
+        const spoolWeight = Number(
+            filament.spoolWeight ?? 0
+        );
+
+        const startingWeight = Math.max(
+            totalWeight - spoolWeight,
+            0
         );
 
         const remainingWeight = Number(
@@ -171,6 +180,18 @@ export async function POST(request: NextRequest) {
 
         const now = FieldValue.serverTimestamp();
 
+        const existingTags = Array.isArray(existingData?.tags)
+            ? existingData.tags
+            : [];
+
+        const incomingTags = Array.isArray(filament.tags)
+            ? filament.tags
+            : [];
+
+        const tagsChanged =
+            existingTags.length !== incomingTags.length ||
+            existingTags.some((tag: string) => !incomingTags.includes(tag));
+
         const newData: DocumentData = {
             id: newDocId,
 
@@ -184,7 +205,7 @@ export async function POST(request: NextRequest) {
             percent_remaining: percentRemaining,
             remaining_weight: remainingWeight,
             starting_weight: startingWeight,
-            spool_weight: Number(filament.spoolWeight ?? 0),
+            spool_weight: spoolWeight,
 
             last_scanned:
                 existingData?.last_scanned ?? now,
@@ -238,6 +259,7 @@ export async function POST(request: NextRequest) {
                 existingData?.brand !== filament.brand ||
                 existingData?.color !== filament.color ||
                 existingData?.color_code !== filament.colorCode ||
+                tagsChanged ||
                 existingData?.material !== filament.material ||
                 existingData?.status !== filament.status ||
                 existingData?.starting_weight !== startingWeight ||

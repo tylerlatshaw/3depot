@@ -16,21 +16,39 @@ export default function FilamentWeightPanel({
     editedData,
     updateField,
 }: Props) {
+    const startingWeight = Number(editedData.startingWeight ?? 0);
+    const spoolWeight = Number(editedData.spoolWeight ?? 0);
+    const remainingWeight = Math.max(startingWeight - spoolWeight, 0);
+
+    function updateStartingWeight(value: number) {
+        updateField("startingWeight", value);
+        updateField("remainingWeight", Math.max(value - spoolWeight, 0));
+    }
+
+    function updateSpoolWeight(value: number) {
+        updateField("spoolWeight", value);
+        updateField("remainingWeight", Math.max(startingWeight - value, 0));
+    }
+
     return (
-        <div className="flex flex-col gap-6 rounded-xl bg-card shadow-md p-6">
+        <div className="flex flex-col gap-6 rounded-xl bg-card p-6 shadow-md">
             <Field className="flex flex-col gap-2">
-                <FieldLabel className="font-semibold uppercase" htmlFor="startingWeight">
+                <FieldLabel
+                    className="font-semibold uppercase"
+                    htmlFor="startingWeight"
+                >
                     Starting Weight:
                 </FieldLabel>
 
                 <Input
                     id="startingWeight"
                     type="number"
-                    value={editedData.startingWeight ?? 0}
+                    value={editedData.startingWeight ?? ""}
                     onChange={(event) =>
-                        updateField("startingWeight", Number(event.target.value))
+                        updateStartingWeight(Number(event.target.value))
                     }
                     placeholder="1300"
+                    autoComplete="off"
                     className="px-4 py-6 text-base font-bold tracking-widest"
                 />
 
@@ -40,18 +58,22 @@ export default function FilamentWeightPanel({
             </Field>
 
             <Field className="flex flex-col gap-2">
-                <FieldLabel className="font-semibold uppercase" htmlFor="spoolWeight">
+                <FieldLabel
+                    className="font-semibold uppercase"
+                    htmlFor="spoolWeight"
+                >
                     Spool Weight:
                 </FieldLabel>
 
                 <Input
                     id="spoolWeight"
                     type="number"
-                    value={editedData.spoolWeight ?? 0}
+                    value={editedData.spoolWeight ?? ""}
                     onChange={(event) =>
-                        updateField("spoolWeight", Number(event.target.value))
+                        updateSpoolWeight(Number(event.target.value))
                     }
                     placeholder="300"
+                    autoComplete="off"
                     className="px-4 py-6 text-base font-bold tracking-widest"
                 />
 
@@ -61,16 +83,19 @@ export default function FilamentWeightPanel({
             </Field>
 
             <Field className="flex flex-col gap-2">
-                <FieldLabel className="font-semibold uppercase" htmlFor="remainingWeight">
+                <FieldLabel
+                    className="font-semibold uppercase"
+                    htmlFor="remainingWeight"
+                >
                     Remaining Filament:
                 </FieldLabel>
 
                 <Input
                     id="remainingWeight"
                     type="number"
-                    value={editedData.remainingWeight ?? 0}
+                    value={remainingWeight}
                     disabled
-                    placeholder="300"
+                    placeholder="1000"
                     className="px-4 py-6 text-base font-bold tracking-widest"
                 />
 

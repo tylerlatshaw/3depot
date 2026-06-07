@@ -1,8 +1,9 @@
-import DashboardContainer from "@/components/dashboard/dashboard-container";
+import DashboardData from "@/components/dashboard/dashboard-data";
+import DashboardLoading from "@/components/dashboard/dashboard-loading";
 import PageHeader from "@/components/global/page-header";
 import { SetPageTitle } from "@/components/global/set-page-title";
-import { getFilamentWithHistory } from "@/lib/data/get-filament-with-history";
 import { cookies } from "next/headers";
+import { Suspense } from "react";
 
 export default async function DashboardPage() {
     const cookieStore = await cookies();
@@ -12,20 +13,19 @@ export default async function DashboardPage() {
         return <div>Not authorized</div>;
     }
 
-    const inventory = await getFilamentWithHistory();
-
-    return (<>
+    return (
         <div className="flex min-w-0 flex-1 flex-col">
             <PageHeader />
+
             <main className="min-h-0 flex-1 overflow-auto">
                 <SetPageTitle title="Dashboard" />
 
-                <div className="min-h-0 flex-1 overflow-y-auto px-8 py-6">
-
-                    <DashboardContainer inventory={inventory} />
-
+                <div className="min-h-0 flex-1 overflow-y-auto px-4 md:px-8 py-4 md:py-6">
+                    <Suspense fallback={<DashboardLoading />}>
+                        <DashboardData />
+                    </Suspense>
                 </div>
             </main>
         </div>
-    </>);
+    );
 }

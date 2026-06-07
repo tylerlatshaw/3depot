@@ -14,6 +14,7 @@ import { showToast } from "@/components/ui/toast";
 import FilamentProgressCard from "../dashboard/filament-progress-card";
 import { auth } from "@/lib/firebase";
 import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
+import { useRouter } from "next/navigation";
 
 type Props = {
     selectedFilament: Filament;
@@ -24,6 +25,9 @@ export default function ArchiveFilament({
     selectedFilament,
     setEntryMode,
 }: Props) {
+
+    const router = useRouter();
+
     const [loading, setLoading] = useState(false);
 
     async function handleArchive() {
@@ -46,6 +50,8 @@ export default function ArchiveFilament({
             if (!result.success) {
                 throw new Error(result.error);
             }
+
+            router.refresh();
 
             showToast({
                 message: `${selectedFilament.id} archived`,

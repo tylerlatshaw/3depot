@@ -15,6 +15,7 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SetPageTitle } from "@/components/global/set-page-title";
 import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
+import { useRouter } from "next/navigation";
 
 type Props = {
     newFilamentId?: string;
@@ -27,6 +28,9 @@ export default function AddEditContainer({
     selectedFilament,
     setEntryMode,
 }: Props) {
+
+    const router = useRouter();
+
     const {
         editedData,
         updateField,
@@ -139,6 +143,8 @@ export default function AddEditContainer({
                 throw new Error(result.error);
             }
 
+            router.refresh();
+
             showToast({
                 message: "Filament saved successfully",
                 variant: "success",
@@ -234,14 +240,14 @@ export default function AddEditContainer({
                             >
                                 <ToggleGroupItem
                                     value="yes"
-                                    className="px-8"
+                                    className="px-8 rounded-none rounded-l-lg"
                                 >
                                     Yes
                                 </ToggleGroupItem>
 
                                 <ToggleGroupItem
                                     value="no"
-                                    className="px-8"
+                                    className="px-8 rounded-none rounded-r-lg"
                                 >
                                     No
                                 </ToggleGroupItem>
