@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/__/:path*",
+        destination: "https://tylerlatshaw-3depot-dev.firebaseapp.com://*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
