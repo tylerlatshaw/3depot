@@ -1,6 +1,6 @@
 import { Brands, Filament, Materials } from "@/lib/types";
 import { useEffect, useState } from "react";
-import buildInitialFilament from "../utilities/build-initial-filament";
+import buildInitialFilament from "../components/scan/add-edit-form/utilities/build-initial-filament";
 import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 type Props = {

@@ -7,7 +7,7 @@ import { ArrowRightIcon, Undo2Icon } from "lucide-react";
 import FilamentForm from "./filament-form";
 import FilamentWeightPanel from "./filament-weight-panel";
 import SwatchImageUpload from "./swatch-image-upload";
-import { useFilamentForm } from "./hooks/use-filament-form";
+import { useFilamentForm } from "../../../hooks/use-filament-form";
 import { showToast } from "@/components/ui/toast";
 import Loading from "@/components/ui/loading";
 import { Button } from "@/components/ui/button";

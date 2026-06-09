@@ -5,6 +5,7 @@ import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Rotate3DIcon } from "lucide-react";
 import Link from "next/link";
+import Navbar from "@/components/homepage/navbar";
 
 export default function SignInPage() {
     const [loading, setLoading] = useState(false);
@@ -74,9 +75,10 @@ export default function SignInPage() {
         }
     }
 
-    return (
-        <main className="grid h-screen place-items-center">
+    return (<>
+        <Navbar />
 
+        <main className="grid h-[calc(100vh-86px)] place-items-center">
             <div className="flex flex-col items-center justify-center gap-8">
                 <div className="flex flex-col items-center justify-center gap-8 bg-card rounded-xl p-8">
                     <div className="flex flex-col items-center justify-center gap-2">
@@ -125,7 +127,6 @@ export default function SignInPage() {
 
                 <span className="text-xs font-light uppercase text-muted-foreground">3Depot Filament Management</span>
             </div>
-
         </main>
-    );
+    </>);
 }
