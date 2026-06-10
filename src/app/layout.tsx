@@ -40,7 +40,7 @@ export default function RootLayout({
       className={`${barlow.variable} ${publicSans.variable} ${roboto.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background">
+      <body className="min-h-full flex flex-col bg-background w-full">
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
