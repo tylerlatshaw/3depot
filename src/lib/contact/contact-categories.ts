@@ -1,0 +1,1 @@
+export const contactCategories = ["General Question", "Report a Bug", "Feature Request", "Account Question", "Privacy Inquiry"];

@@ -5,7 +5,7 @@ import PolicyCTA from "@/components/policies/policy-cta";
 import { Chip } from "@/components/ui/chip";
 import { TermsOfUsePolicyText } from "@/lib/legal/terms-of-use";
 
-export default function Home() {
+export default function TermsOfUse() {
     return (<div className="w-full flex flex-col items-center justify-start">
         <Navbar />
 

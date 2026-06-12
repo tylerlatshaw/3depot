@@ -5,7 +5,7 @@ import { Chip } from "@/components/ui/chip";
 import PolicyContainer from "@/components/policies/policy-container";
 import { PrivacyPolicyText } from "@/lib/legal/privacy-policy";
 
-export default function Home() {
+export default function PrivacyPolicy() {
     return (<div className="w-full flex flex-col items-center justify-start">
         <Navbar />
 
