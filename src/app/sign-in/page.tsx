@@ -5,7 +5,8 @@ import { GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Rotate3DIcon } from "lucide-react";
 import Link from "next/link";
-import Navbar from "@/components/homepage/navbar";
+import Navbar from "@/components/global/navbar";
+import Footer from "@/components/global/footer";
 
 export default function SignInPage() {
     const [loading, setLoading] = useState(false);
@@ -128,5 +129,7 @@ export default function SignInPage() {
                 <span className="text-xs font-light uppercase text-muted-foreground">3Depot Filament Management</span>
             </div>
         </main>
+
+        <Footer />
     </>);
 }

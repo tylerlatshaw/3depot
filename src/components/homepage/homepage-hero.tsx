@@ -16,7 +16,7 @@ export default function HomepageHero() {
                 <Chip variant="info" className="uppercase"> Filament Stock Management </Chip>
 
                 <h1 className="flex flex-col gap-4 text-6xl font-bold tracking-wide text-center">
-                    <span>Manage Your Filament. </span>
+                    <span>Manage Your Filament</span>
                     <span className="text-primary">Smarter.</span>
                 </h1>
 

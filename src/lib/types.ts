@@ -125,3 +125,11 @@ export type Materials = {
     dateModified: string;
     name: string;
 }
+
+export type PolicySection = {
+    title: string;
+    details: {
+        header?: string;
+        text: string;
+    }[];
+}
