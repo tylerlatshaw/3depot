@@ -5,19 +5,19 @@ import Link from "next/link";
 export default function Footer() {
     return (
         <footer className="w-full bg-menu border-t border-accent/50">
-            <div className="flex flex-row items-center justify-between max-w-7xl mx-auto py-8">
-                <div className="flex flex-col gap-2">
+            <div className="flex flex-col md:flex-row items-center justify-center md:justify-between md:max-w-7xl px-4 md:px-0 mx-auto py-8 gap-8 md:gap-0">
+                <div className="flex flex-col items-center md:items-start gap-2">
                     <Link href="/" className="group flex items-center gap-3">
                         <div className="aspect-square rounded-lg bg-primary p-1.5">
-                            <Rotate3DIcon className="size-5 text-white" />
+                            <Rotate3DIcon className="size-7 md:size-5 text-white" />
                         </div>
 
-                        <span className="logo text-lg transition-colors group-hover:text-primary">
+                        <span className="logo text-2xl md:text-lg transition-colors group-hover:text-primary">
                             3Depot
                         </span>
                     </Link>
 
-                    <span className="text-xs text-muted-foreground">
+                    <span className="hidden md:inline text-xs text-muted-foreground">
                         &copy; {dayjs().year()} 3Depot Filament Inventory Management. All rights reserved.
                     </span>
                 </div>
@@ -27,6 +27,10 @@ export default function Footer() {
                     <Link href={"/terms-of-use"} className="text-muted-foreground font-semibold hover:text-foreground hover:underline">Terms of Use</Link>
                     <Link href={"/contact"} className="text-muted-foreground font-semibold hover:text-foreground hover:underline">Contact</Link>
                 </div>
+
+                <span className="inline md:hidden text-xs text-muted-foreground">
+                    &copy; {dayjs().year()} 3Depot Filament Inventory Management. All rights reserved.
+                </span>
             </div>
         </footer>
     );

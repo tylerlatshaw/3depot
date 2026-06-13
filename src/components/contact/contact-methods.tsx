@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function ContactMethods() {
 
-    return (<div className="flex flex-col items-start w-fit gap-2">
+    return (<div className="flex flex-col items-start w-full md:w-fit gap-2">
         <span className="text-muted-foreground">Other Ways to Reach Us</span>
 
         <div className="flex flex-col items-start justify-center w-full bg-card px-6 py-4 rounded-xl">

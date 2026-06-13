@@ -11,7 +11,7 @@ export default function InstallCTA() {
         return null;
     }
 
-    return (<div className="flex flex-col items-center justify-center gap-16 w-full">
+    return (<div className="hidden md:flex flex-col items-center justify-center gap-24 w-full">
         <hr className="border border-accent/50 w-full" />
 
         <div className="flex flex-row items-center justify-between bg-info/10 border border-info rounded-xl w-full px-16 py-12">
