@@ -143,7 +143,7 @@ export default function ContactForm() {
                             type="text"
                             autoComplete="name"
                             required
-                            placeholder="Dean Winchester"
+                            placeholder="Enter Your Name"
                             className="w-full border-0 px-4 py-6 text-base font-semibold"
                         />
                     </div>
@@ -167,7 +167,7 @@ export default function ContactForm() {
                             inputMode="email"
                             autoComplete="email"
                             required
-                            placeholder="you@example.com"
+                            placeholder="Enter Your Email"
                             className="w-full border-0 px-4 py-6 text-base font-semibold"
                         />
                     </div>

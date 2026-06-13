@@ -7,7 +7,7 @@ import InstallAppButton from "@/components/global/install-button";
 export default function Navbar() {
     return (
         <nav className="w-full bg-menu border-b border-accent/50">
-            <div className="flex flex-row items-center justify-between max-w-7xl mx-auto py-4">
+            <div className="flex flex-row items-center justify-between md:max-w-7xl mx-auto px-4 md:px-0 py-4">
                 <Link href="/" className="group flex items-center gap-3">
                     <div className="aspect-square rounded-lg bg-primary p-2">
                         <Rotate3DIcon className="size-7 text-white" />
@@ -19,7 +19,9 @@ export default function Navbar() {
                 </Link>
 
                 <div className="flex flex-row items-center gap-6">
-                    <InstallAppButton />
+                    <div className="hidden md:flex">
+                        <InstallAppButton />
+                    </div>
 
                     <Button
                         variant="default"
@@ -33,7 +35,9 @@ export default function Navbar() {
                         </Link>
                     </Button>
 
-                    <DarkModeToggle />
+                    <div className="hidden md:flex">
+                        <DarkModeToggle />
+                    </div>
                 </div>
             </div>
         </nav>

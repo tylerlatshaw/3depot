@@ -53,7 +53,7 @@ export default function PolicyContainer({ policy }: { policy: PolicySection[] })
         <div className="flex flex-col items-start gap-8">
 
             {/* Contents */}
-            <div className="flex flex-col items-start gap-2 w-full rounded-lg bg-accent/20 border border-accent p-8">
+            <div className="flex flex-col items-start gap-2 w-full rounded-lg bg-accent/20 border border-accent p-6 md:p-8">
                 <span className="font-bold">Contents</span>
 
                 <ol className="list-inside list-decimal text-muted-foreground">

@@ -9,7 +9,7 @@ export default function Home() {
   return (<div className="w-full flex flex-col items-center justify-start">
     <Navbar />
 
-    <main className="flex flex-col flex-1 items-center my-30 w-full max-w-7xl gap-24">
+    <main className="flex flex-col flex-1 items-center my-16 md:my-30 w-full md:max-w-7xl px-4 md:px-0 gap-24">
       <HomepageHero />
 
       <BrowserImage />

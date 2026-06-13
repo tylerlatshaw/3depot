@@ -18,7 +18,7 @@ function Tile({
     iconBackground
 }: TileProps) {
     return (
-        <div className="flex flex-col gap-4 rounded-xl bg-card p-6 w-full border border-accent hover:border-primary shadow-lg">
+        <div className="flex flex-col gap-4 rounded-xl bg-card p-4 md:p-6 w-full border border-accent hover:border-primary shadow-lg">
             <div className="flex flex-col items-start justify-center gap-3">
                 <div className={`flex items-center justify-center rounded-lg p-2 ${iconBackground}`}>
                     <Icon className={`h-8 w-8 ${iconColor}`} />
@@ -37,9 +37,9 @@ export default function SellingFeatures() {
     return (
         <div className="flex flex-col items-center justify-center gap-8 w-full">
 
-            <h2 className="text-3xl font-bold">Everything you need for filament inventory management</h2>
+            <h2 className="text-3xl font-bold text-center">Everything you need for filament inventory management</h2>
 
-            <div className="grid grid-cols-4 gap-8 w-full">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 w-full">
                 <Tile
                     title={"Log Weight"}
                     description={"Estimate and track remaining filament inventory by scanning and logging spool weights."}

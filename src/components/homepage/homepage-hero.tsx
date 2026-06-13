@@ -15,16 +15,16 @@ export default function HomepageHero() {
             <div className="flex flex-col items-center gap-8 z-10">
                 <Chip variant="info" className="uppercase"> Filament Inventory Management </Chip>
 
-                <h1 className="flex flex-col gap-4 text-6xl font-bold tracking-wide text-center">
+                <h1 className="inline md:flex md:flex-col md:gap-4 text-4xl md:text-6xl font-bold tracking-wide text-center">
                     <span>Manage Your Filament</span>
-                    <span className="text-primary">Smarter.</span>
+                    <span className="text-primary ml-2 md:ml-0">Smarter.</span>
                 </h1>
 
                 <p className="text-xl text-center max-w-2xl text-muted-foreground">
                     Track every spool, scan QR codes, get low-stock alerts, and share your inventory - all from one clean dashboard built by makers for makers.
                 </p>
 
-                <div className="flex flex-col items-center gap-4">
+                <div className="flex flex-col items-center gap-8">
                     <Button
                         variant="default"
                         size="lg"
@@ -37,7 +37,7 @@ export default function HomepageHero() {
                         </Link>
                     </Button>
 
-                    <div className="flex flex-row items-center gap-8 text-sm text-muted-foreground">
+                    <div className="flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-8 text-sm text-muted-foreground">
                         <span className="flex flex-row items-center gap-2">
                             <CircleCheckBigIcon className="text-success" size={16} />
                             No more spreadsheets
