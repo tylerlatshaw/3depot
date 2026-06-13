@@ -96,6 +96,24 @@ export async function POST(request: NextRequest) {
         const oldDocId = filament.uuid || filament.id;
         const newDocId = filament.id;
 
+        const duplicateDoc = await adminDb
+            .collection("filament")
+            .doc(newDocId)
+            .get();
+
+        if (
+            duplicateDoc.exists &&
+            duplicateDoc.id !== oldDocId
+        ) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "A filament with that ID already exists.",
+                },
+                { status: 409 }
+            );
+        }
+
         const oldDocRef = adminDb
             .collection("filament")
             .doc(oldDocId);

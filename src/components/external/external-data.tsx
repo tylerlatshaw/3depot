@@ -25,7 +25,7 @@ export default async function ExternalData() {
                     </span>
 
                     <span className="text-xs font-light uppercase transition-colors group-hover:text-primary">
-                        Filament Management
+                        Filament Inventory Management
                     </span>
                 </div>
             </Link>

@@ -126,7 +126,7 @@ export default function SignInPage() {
                     </span>
                 </div>
 
-                <span className="text-xs font-light uppercase text-muted-foreground">3Depot Filament Management</span>
+                <span className="text-xs font-light uppercase text-muted-foreground">3Depot Filament Inventory Management</span>
             </div>
         </main>
 

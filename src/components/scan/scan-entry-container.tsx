@@ -222,6 +222,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
                                     <AddEditContainer
                                         selectedFilament={selectedFilament}
                                         setEntryMode={setEntryMode}
+                                        inventory={inventory}
                                     />
                                 )}
 
@@ -240,8 +241,10 @@ export default function ScanEntryContainer({ inventory }: Props) {
 
                 {entryMode === "unmatched" && (
                     <div className="flex flex-col items-center justify-center w-full h-full">
-                        <AddEditContainer newFilamentId={newFilamentId}
+                        <AddEditContainer
+                            newFilamentId={newFilamentId}
                             setEntryMode={setEntryMode}
+                            inventory={inventory}
                         />
                     </div>
                 )}

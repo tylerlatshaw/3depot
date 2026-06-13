@@ -48,7 +48,7 @@ export default function BrowserImage() {
                 </div>
             </div>
 
-            <div className="min-h-96 grid grid-cols-6">
+            <div className="min-h-120 grid grid-cols-6">
 
                 {/* Sidebar */}
                 <div className="border-r border-accent bg-menu p-4 flex flex-col gap-6">

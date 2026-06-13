@@ -13,7 +13,7 @@ export default function HomepageHero() {
 
             {/* Content */}
             <div className="flex flex-col items-center gap-8 z-10">
-                <Chip variant="info" className="uppercase"> Filament Stock Management </Chip>
+                <Chip variant="info" className="uppercase"> Filament Inventory Management </Chip>
 
                 <h1 className="flex flex-col gap-4 text-6xl font-bold tracking-wide text-center">
                     <span>Manage Your Filament</span>

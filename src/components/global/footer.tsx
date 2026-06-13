@@ -18,7 +18,7 @@ export default function Footer() {
                     </Link>
 
                     <span className="text-xs text-muted-foreground">
-                        &copy; {dayjs().year()} 3Depot Filament Management. All rights reserved.
+                        &copy; {dayjs().year()} 3Depot Filament Inventory Management. All rights reserved.
                     </span>
                 </div>
 

@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: "3Depot Filament Management",
+        name: "3Depot Filament Inventory Management",
         short_name: "3Depot",
         description: "A web application for managing 3D printing filament inventory and usage.",
         start_url: "/dashboard",
