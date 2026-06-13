@@ -1,8 +1,8 @@
 "use client";
 
 import { EntryModeOptions, Filament } from "@/lib/types";
-import { Dispatch, SetStateAction } from "react";
-import { ArrowRightIcon, Undo2Icon } from "lucide-react";
+import { Dispatch, SetStateAction, useRef } from "react";
+import { ArrowRightIcon, DownloadIcon, QrCodeIcon, Undo2Icon, XIcon } from "lucide-react";
 
 import FilamentForm from "./filament-form";
 import FilamentWeightPanel from "./filament-weight-panel";
@@ -16,19 +16,25 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SetPageTitle } from "@/components/global/set-page-title";
 import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 import { useRouter } from "next/navigation";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import QRCode from "react-qr-code";
+import { toPng } from "html-to-image";
 
 type Props = {
     newFilamentId?: string;
     selectedFilament?: Filament;
+    inventory: Filament[];
     setEntryMode: Dispatch<SetStateAction<EntryModeOptions>>;
 };
 
 export default function AddEditContainer({
     newFilamentId,
     selectedFilament,
+    inventory,
     setEntryMode,
 }: Props) {
 
+    const labelRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
     const {
@@ -56,6 +62,27 @@ export default function AddEditContainer({
         if (!editedData.id?.trim()) {
             showToast({
                 message: "Spool ID is required",
+                variant: "danger",
+            });
+            return;
+        }
+
+        const submittedId = editedData.id.trim();
+
+        const duplicate = inventory.find((filament) => {
+            const sameId =
+                filament.id.toLowerCase() === submittedId.toLowerCase();
+
+            const sameOriginalFilament =
+                selectedFilament &&
+                filament.uuid === selectedFilament.uuid;
+
+            return sameId && !sameOriginalFilament;
+        });
+
+        if (duplicate) {
+            showToast({
+                message: `Spool ID ${submittedId} already exists`,
                 variant: "danger",
             });
             return;
@@ -161,6 +188,20 @@ export default function AddEditContainer({
         }
     }
 
+    async function downloadLabel() {
+        if (!labelRef.current) return;
+
+        const dataUrl = await toPng(labelRef.current, {
+            pixelRatio: 4,
+            backgroundColor: "#ffffff",
+        });
+
+        const link = document.createElement("a");
+        link.download = `${editedData.id}.png`;
+        link.href = dataUrl;
+        link.click();
+    }
+
     if (loading) {
         return (
             <div className="flex h-full w-full flex-col items-center justify-center">
@@ -202,15 +243,78 @@ export default function AddEditContainer({
                             <span>Reset</span>
                         </Button>
 
-                        <Button
-                            onClick={handleSubmit}
-                            className="w-fit bg-success"
-                            variant="default"
-                            size="lg"
-                        >
-                            <span>Submit</span>
-                            <ArrowRightIcon />
-                        </Button>
+                        <div className="flex flex-row gap-4 items-center justify-center">
+
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        size="lg"
+                                        variant="default"
+                                    >
+                                        <span>Generate Label</span>
+                                        <QrCodeIcon />
+                                    </Button>
+                                </DialogTrigger>
+
+                                {/* Label Modal */}
+                                <DialogContent className="w-full lg:w-1/2 text-base" showCloseButton={false}>
+                                    <DialogHeader className="w-full p-8">
+                                        <DialogDescription className="grid grid-cols-1 w-full">
+
+                                            <DialogTitle className="text-xl font-bold">Generated Label</DialogTitle>
+
+                                            <div className="flex flex-col items-center justify-center w-full gap-8 mt-8">
+
+                                                <div
+                                                    ref={labelRef}
+                                                    className="flex items-center justify-between gap-4 px-3 py-2 w-80 h-24 rounded-xl bg-white text-black overflow-hidden"
+                                                >
+                                                    <div className="flex items">
+                                                        <QRCode
+                                                            size={76}
+                                                            value={editedData.id ?? ""}
+                                                        />
+                                                    </div>
+                                                    <div className="grow text-base leading-tight text-nowrap text-ellipsis overflow-hidden">
+                                                        <div><strong>ID:</strong> {editedData.id ?? ""}</div>
+                                                        <div><strong>Brand:</strong> {editedData.brand ?? ""}</div>
+                                                        <div><strong>Color:</strong> {editedData.color ?? ""}</div>
+                                                        <div><strong>Tags:</strong> {editedData.tags?.join(", ") ?? ""}</div>
+                                                    </div>
+                                                </div>
+
+                                                <Button
+                                                    onClick={downloadLabel}
+                                                    variant="default"
+                                                    size="lg"
+                                                    className="flex items-center justify-center gap-2"
+                                                >
+                                                    <span>Download Label</span>
+                                                    <DownloadIcon />
+                                                </Button>
+                                            </div>
+
+                                            <DialogClose asChild>
+                                                <div className="absolute top-4 right-4 rounded-full focus:outline-none p-0 cursor-pointer">
+                                                    <XIcon className="size-6" />
+                                                </div>
+                                            </DialogClose>
+
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                </DialogContent>
+                            </Dialog>
+
+                            <Button
+                                onClick={handleSubmit}
+                                className="w-fit bg-success"
+                                variant="default"
+                                size="lg"
+                            >
+                                <span>Submit</span>
+                                <ArrowRightIcon />
+                            </Button>
+                        </div>
                     </div>
                 </div>
 

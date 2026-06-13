@@ -37,7 +37,7 @@ export default function SellingFeatures() {
     return (
         <div className="flex flex-col items-center justify-center gap-8 w-full">
 
-            <h2 className="text-3xl font-bold">Everything you need for filament management</h2>
+            <h2 className="text-3xl font-bold">Everything you need for filament inventory management</h2>
 
             <div className="grid grid-cols-4 gap-8 w-full">
                 <Tile
