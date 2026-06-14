@@ -15,12 +15,15 @@ export async function DELETE(request: NextRequest) {
     }
 
     try {
-        const { searchParams } = new URL(
-            request.url
-        );
+        const body = await request.json();
+        const uuid = body.uuid;
 
-        const uuid =
-            searchParams.get("uuid");
+        if (!uuid) {
+            return NextResponse.json(
+                { success: false, error: "UUID required" },
+                { status: 400 }
+            );
+        }
 
         if (!uuid) {
             return NextResponse.json(

@@ -15,7 +15,7 @@ export default async function InventoryLoading() {
 
             <hr className="border border-accent" />
 
-            <div className="grid grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {
                     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(i => {
                         return <div key={i} className="w-full h-48 animate-pulse rounded-md bg-card shadow-md"></div>;

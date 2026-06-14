@@ -74,9 +74,12 @@ export default function InventoryContainer({
 
     return (
         <div className="flex flex-col gap-6 pt-2">
-            <div className="flex flex-row items-center gap-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-4">
+
                 <div className="flex min-w-0 grow flex-row items-center gap-2">
-                    <FilterIcon />
+                    <div className="hidden md:flex">
+                        <FilterIcon />
+                    </div>
 
                     <div className="no-scrollbar overflow-x-auto whitespace-nowrap">
                         <ToggleGroup
@@ -104,7 +107,7 @@ export default function InventoryContainer({
                     </div>
                 </div>
 
-                <Field className="group w-64">
+                <Field className="hidden md:flex group w-64">
                     <InputGroup className="border border-accent bg-card">
                         <InputGroupInput
                             id="input-search-box"
@@ -123,44 +126,46 @@ export default function InventoryContainer({
                     </InputGroup>
                 </Field>
 
-                <span className="text-accent">|</span>
+                <span className="text-accent hidden md:flex">|</span>
 
-                <div className="flex items-center gap-2 whitespace-nowrap">
-                    <Checkbox
-                        id="show-archived"
-                        checked={showArchived}
-                        onCheckedChange={(checked) => {
-                            const nextValue =
-                                checked === true;
+                <div className="flex flex-row items-center justify-between md:justify-center w-full md:w-fit px-1 md:px-0 gap-0 md:gap-2">
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                        <Checkbox
+                            id="show-archived"
+                            checked={showArchived}
+                            onCheckedChange={(checked) => {
+                                const nextValue =
+                                    checked === true;
 
-                            setShowArchived(nextValue);
+                                setShowArchived(nextValue);
 
-                            if (
-                                !nextValue &&
-                                selectedStatus ===
-                                FILAMENT_STATUS.ARCHIVED
-                            ) {
-                                setSelectedStatus("all");
-                            }
-                        }}
-                    />
+                                if (
+                                    !nextValue &&
+                                    selectedStatus ===
+                                    FILAMENT_STATUS.ARCHIVED
+                                ) {
+                                    setSelectedStatus("all");
+                                }
+                            }}
+                        />
 
-                    <Label
-                        htmlFor="show-archived"
-                        className="text-sm font-light"
-                    >
-                        Show Archived
-                    </Label>
-                </div>
+                        <Label
+                            htmlFor="show-archived"
+                            className="text-sm font-light"
+                        >
+                            Show Archived
+                        </Label>
+                    </div>
 
-                <span className="text-accent">|</span>
+                    <span className="text-accent hidden md:block">|</span>
 
-                <span className="text-sm text-muted-foreground">
-                    <span className="inline-block w-6 text-right tabular-nums">
-                        {filteredInventory.length}
+                    <span className="text-sm text-muted-foreground">
+                        <span className="inline-block w-6 text-right tabular-nums">
+                            {filteredInventory.length}
+                        </span>
+                        &nbsp;Spools
                     </span>
-                    &nbsp;Spools
-                </span>
+                </div>
             </div>
 
             <hr className="border border-accent" />

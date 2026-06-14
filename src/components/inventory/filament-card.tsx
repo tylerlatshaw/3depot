@@ -102,26 +102,26 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
             </DialogTrigger>
 
             {/* Expanded Info Modal */}
-            <DialogContent className="w-full lg:w-1/2 text-base" showCloseButton={false}>
+            <DialogContent className="w-[95%] lg:w-1/2 text-base" showCloseButton={false}>
                 <DialogHeader className="w-full">
-                    <DialogDescription className={swatchImageUrl ? "grid grid-cols-5 w-full" : "grid grid-cols-1 w-full"}>
+                    <DialogDescription className={swatchImageUrl ? "grid grid-cols-1 md:grid-cols-5 w-full" : "grid grid-cols-1 w-full"}>
 
                         <DialogTitle className="sr-only">{brand + " " + color}</DialogTitle>
 
                         {
                             swatchImageUrl && <>
-                                <div className="flex w-full justify-center col-span-2">
+                                <div className="relative flex w-full justify-center md:col-span-2">
                                     <Image
                                         src={swatchImageUrl}
                                         alt={`${brand} ${color} swatch`}
-                                        className="rounded-l-lg object-cover"
+                                        className="rounded-t-lg md:rounded-t-none md:rounded-l-lg object-cover"
                                         width={1024}
                                         height={1024}
                                     />
 
-                                    <div className="rounded-l-lg absolute inset-x-0 bottom-0 h-2/5 w-2/5 bg-gradient-to-t from-black/80 to-transparent" />
+                                    <div className="rounded-t-lg md:rounded-t-none md:rounded-l-lg absolute inset-x-0 bottom-0 h-2/5 w-full bg-gradient-to-t from-black/80 to-transparent" />
 
-                                    <div className="absolute flex items-end inset-x-0 bottom-0 h-1/3 w-2/5">
+                                    <div className="absolute flex items-end inset-x-0 bottom-0 h-1/3 w-full">
                                         <div
                                             className="relative flex flex-row items-center justify-between m-3 mb-4 rounded-lg p-3 w-full"
                                             style={{ backgroundColor: hexToRgba(colorCode, 0.5), border: `2px solid ${getContrastingColor(colorCode)}` }}
@@ -138,8 +138,8 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                             </>
                         }
 
-                        <div className={swatchImageUrl ? "col-span-3" : "col-span-1"}>
-                            <div className="flex flex-col w-full gap-6 items-center p-8 pb-4">
+                        <div className={swatchImageUrl ? "col-span-1 md:col-span-3" : "col-span-1"}>
+                            <div className="flex flex-col w-full gap-4 md:gap-6 items-center p-8 pb-6 md:pb-4">
 
                                 <div className="flex flex-col gap-1 w-full">
                                     <div className="flex flex-row w-full items-start justify-center">
@@ -148,9 +148,9 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-row w-full items-start">
+                                    <div className="flex flex-row w-full items-center md:items-start">
                                         <div className="grow">
-                                            <span className="text-2xl font-bold leading-none">{brand + " " + color}</span>
+                                            <span className="text-lg md:text-2xl font-bold leading-none">{brand + " " + color}</span>
                                         </div>
 
                                         <Chip variant={chipVariantColor}>{status}</Chip>
@@ -225,14 +225,14 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
 
                                 <div className="flex flex-row gap-4 w-full items-start justify-between">
                                     <Button variant={"default"} size={"lg"} asChild>
-                                        <Link href={`/dashboard/scan?id=${id}&action=logWeight`} className="flex flex-row items-center gap-2">
+                                        <Link href={`/dashboard/scan?id=${id}&action=logweight`} className="flex flex-row items-center gap-2">
                                             <ScanLineIcon />
                                             <span>Log Weight</span>
                                         </Link>
                                     </Button>
 
                                     <Button variant={"outline"} size={"lg"} asChild>
-                                        <Link href={`/dashboard/scan?id=${id}&action=changeInfo`} className="flex flex-row items-center gap-2">
+                                        <Link href={`/dashboard/scan?id=${id}&action=changeinfo`} className="flex flex-row items-center gap-2">
                                             <SlidersHorizontalIcon />
                                             <span>Edit Filament</span>
                                         </Link>

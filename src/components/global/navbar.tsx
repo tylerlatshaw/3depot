@@ -18,7 +18,7 @@ export default function Navbar() {
                     </span>
                 </Link>
 
-                <div className="flex flex-row items-center gap-6">
+                <div className="flex flex-row items-center gap-4 md:gap-6">
                     <div className="hidden md:flex">
                         <InstallAppButton />
                     </div>
@@ -35,9 +35,7 @@ export default function Navbar() {
                         </Link>
                     </Button>
 
-                    <div className="hidden md:flex">
-                        <DarkModeToggle />
-                    </div>
+                    <DarkModeToggle />
                 </div>
             </div>
         </nav>

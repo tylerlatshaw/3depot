@@ -37,14 +37,14 @@ export default function ActionSelector({
             subtitle: "Update current spool weight",
             icon: ScaleIcon,
             iconColor: "info",
-            action: "logWeight"
+            action: "logweight"
         },
         {
             title: "Change Info",
             subtitle: "Edit info related to a filament",
             icon: SettingsIcon,
             iconColor: "success",
-            action: "changeInfo"
+            action: "changeinfo"
         },
         {
             title: "View History",
@@ -101,12 +101,12 @@ export default function ActionSelector({
                 transition={{ duration: 0.2, ease: "easeOut" }}
                 className="flex flex-col items-center w-full"
             >
-                <div className="flex flex-col items-center justify-center gap-4 w-4xl">
+                <div className="flex flex-col items-center justify-center gap-2 md:gap-4 w-full md:w-4xl">
 
                     {/* No Action Selected */}
                     {
                         !selectedAction && <>
-                            <div className="w-2xl bg-card shadow-md rounded-lg p-6 border-t-8"
+                            <div className="w-full md:w-2xl bg-card shadow-md rounded-lg p-4 md:p-6 border-t-8"
                                 style={{ "borderColor": selectedFilament.colorCode }}
                             >
                                 <FilamentProgressCard inventory={selectedFilament} />
@@ -116,7 +116,7 @@ export default function ActionSelector({
                                 <span className="text-base font-light uppercase">Select an action</span>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                                 {
                                     actionOptions.map(action => {
                                         return <ActionTile

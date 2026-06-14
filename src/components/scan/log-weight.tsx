@@ -92,15 +92,15 @@ export default function LogWeight({
     }
 
     return (
-        <div className="flex w-4xl flex-col items-center gap-8">
+        <div className="flex w-full md:w-4xl flex-col items-center gap-8">
             <div
-                className="w-2xl rounded-lg border-t-8 bg-card p-6 shadow-md"
+                className="w-full md:w-2xl rounded-lg border-t-8 bg-card p-6 shadow-md"
                 style={{ borderColor: selectedFilament.colorCode }}
             >
                 <FilamentProgressCard inventory={selectedFilament} />
             </div>
 
-            <div className="flex w-lg flex-col gap-6">
+            <div className="flex w-full md:w-lg flex-col gap-6">
                 <span className="text-base font-light uppercase">
                     Current Scale Weight (g)
                 </span>
