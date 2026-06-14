@@ -1,7 +1,7 @@
 "use client";
 
 import { Field } from "../ui/field";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import {
     KeyboardIcon,
@@ -26,15 +26,14 @@ import AddEditContainer from "./add-edit-form/add-edit-container";
 import HistoryTable from "./history-table";
 import ArchiveFilament from "./archive-filament";
 import { SetPageTitle } from "../global/set-page-title";
-import { useIsMobileOrTablet } from "@/utilities/device-functions";
 
 type Props = {
     inventory: Filament[];
 };
 
 const validActions: FormActions[] = [
-    "logWeight",
-    "changeInfo",
+    "logweight",
+    "changeinfo",
     "history",
     "archive",
 ];
@@ -44,8 +43,6 @@ export default function ScanEntryContainer({ inventory }: Props) {
 
     const idParam = params.get("id");
     const actionParam = params.get("action");
-
-    const isMobileOrTablet = useIsMobileOrTablet();
 
     const initialAction: FormActions | null =
         actionParam && validActions.includes(actionParam as FormActions)
@@ -114,7 +111,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: -12, scale: 0.98 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="flex flex-col items-center w-full h-full"
+                className="flex flex-col items-center w-full h-full py-8 md:py-0"
             >
                 {entryMode === "entry" && (
                     <div className="flex flex-col items-center justify-start md:justify-center w-full h-full gap-12">
@@ -179,7 +176,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
                 )}
 
                 {entryMode === "matched" && selectedFilament && (
-                    <div className="flex h-full w-full flex-col gap-8">
+                    <div className="flex flex-col h-full w-full gap-4 md:gap-8">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={selectedAction ?? "actionSelector"}
@@ -190,7 +187,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
                                 className="flex h-full w-full"
                             >
                                 {!selectedAction && (
-                                    <div className="flex h-full w-full flex-col items-center justify-center">
+                                    <div className="flex flex-col items-center justify-start md:justify-center w-full h-full">
                                         <ActionSelector
                                             selectedFilament={selectedFilament}
                                             setEntryMode={setEntryMode}
@@ -200,8 +197,8 @@ export default function ScanEntryContainer({ inventory }: Props) {
                                     </div>
                                 )}
 
-                                {selectedAction === "logWeight" && (
-                                    <div className="flex flex-1 items-center justify-center">
+                                {selectedAction?.toLowerCase() === "logweight" && (
+                                    <div className="flex flex-col items-center justify-start md:justify-center w-full h-full">
                                         <LogWeight
                                             selectedFilament={selectedFilament}
                                             setEntryMode={setEntryMode}
@@ -209,8 +206,8 @@ export default function ScanEntryContainer({ inventory }: Props) {
                                     </div>
                                 )}
 
-                                {selectedAction === "history" && (
-                                    <div className="flex flex-1 items-center justify-center">
+                                {selectedAction?.toLowerCase() === "history" && (
+                                    <div className="flex flex-col items-center justify-start w-full h-full">
                                         <HistoryTable
                                             selectedFilament={selectedFilament}
                                             setEntryMode={setEntryMode}
@@ -218,7 +215,7 @@ export default function ScanEntryContainer({ inventory }: Props) {
                                     </div>
                                 )}
 
-                                {selectedAction === "changeInfo" && (
+                                {selectedAction?.toLowerCase() === "changeinfo" && (
                                     <AddEditContainer
                                         selectedFilament={selectedFilament}
                                         setEntryMode={setEntryMode}
@@ -226,8 +223,8 @@ export default function ScanEntryContainer({ inventory }: Props) {
                                     />
                                 )}
 
-                                {selectedAction === "archive" && (
-                                    <div className="flex flex-1 items-center justify-center">
+                                {selectedAction?.toLowerCase() === "archive" && (
+                                    <div className="flex flex-col items-center justify-start md:justify-center w-full h-full">
                                         <ArchiveFilament
                                             selectedFilament={selectedFilament}
                                             setEntryMode={setEntryMode}

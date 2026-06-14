@@ -5,7 +5,7 @@ import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
 const chipVariants = cva(
-  "px-2 py-1 rounded-2xl text-xs font-medium uppercase tracking-wider",
+  "px-2 py-1 rounded-2xl text-xs font-medium uppercase tracking-wider text-nowrap",
   {
     variants: {
       variant: {

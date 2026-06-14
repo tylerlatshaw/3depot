@@ -106,7 +106,7 @@ export type EntryModeOptions =
     | "unmatched";
 
 
-export type FormActions = "logWeight" | "changeInfo" | "history" | "archive";
+export type FormActions = "logweight" | "changeinfo" | "history" | "archive";
 
 export type Brands = {
     uuid: string;

@@ -10,7 +10,7 @@ export default async function ExternalData() {
 
     return <>
         {/* Header */}
-        <div className="flex h-[86px] shrink-0 items-center justify-between border-b-2 border-accent bg-menu px-24">
+        <div className="flex h-[86px] shrink-0 items-center justify-between border-b-2 border-accent bg-menu px-4 md:px-24">
             <Link
                 href="/"
                 className="group flex items-center gap-3"
@@ -30,14 +30,16 @@ export default async function ExternalData() {
                 </div>
             </Link>
 
-            <QueryTiles inventory={inventory} />
+            <div className="hidden md:flex">
+                <QueryTiles inventory={inventory} />
+            </div>
 
             <DarkModeToggle />
         </div>
 
         {/* Content */}
         <main className="min-h-0 flex-1 overflow-hidden">
-            <div className="h-full overflow-y-auto px-24 py-4">
+            <div className="h-full overflow-y-auto px-4 md:px-24 py-4">
                 <ExternalInventoryContainer inventory={inventory} />
             </div>
         </main>

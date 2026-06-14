@@ -1,7 +1,6 @@
-import { Materials } from "@/lib/types";
-import { firestore } from "firebase-admin";
 import { protectRoute } from "@/lib/auth/protect-route";
 import { NextRequest, NextResponse } from "next/server";
+import { getMaterials } from "@/lib/data/get-materials";
 
 export async function GET(request: NextRequest) {
 
@@ -16,32 +15,13 @@ export async function GET(request: NextRequest) {
     }
 
     try {
-        const snapshot = await firestore()
-            .collection("materials")
-            .orderBy("name", "asc")
-            .get();
-
-        const brands: Materials[] = snapshot.docs.map((doc) => {
-
-            const data = doc.data();
-
-            return {
-                uuid: doc.id,
-                id: data.id,
-                dateCreated: data.date_created.toDate().toISOString(),
-                dateModified: data.date_modified.toDate().toISOString(),
-                name: data.name,
-            };
-        });
+        const materials = await getMaterials();
 
         return NextResponse.json({
             success: true,
-            data: brands,
+            data: materials,
         });
-
-
     } catch (error) {
-
         console.error("Error fetching material data:", error);
 
         return NextResponse.json(

@@ -37,6 +37,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "../ui/select";
+import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 type Props = {
     inventory: FilamentWithHistory[];
@@ -248,7 +249,7 @@ export default function AllHistoryTable({ inventory }: Props) {
                                 .getColumn("filamentId")
                                 ?.setFilterValue(event.target.value)
                         }
-                        className="px-2 py-3 text-base font-base w-48 !h-[36px]"
+                        className="px-2 py-3 text-base font-base w-48 !h-[36px] hidden md:flex"
                     />
 
                     <Select
@@ -346,7 +347,7 @@ export default function AllHistoryTable({ inventory }: Props) {
             </Table>
 
             <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 hidden md:flex">
                     <Select
                         value={String(
                             table.getState().pagination.pageSize
@@ -381,7 +382,7 @@ export default function AllHistoryTable({ inventory }: Props) {
                         disabled={!table.getCanPreviousPage()}
                         className="!h-[36px] hover:bg-foreground/20"
                     >
-                        Previous
+                        <ArrowLeftIcon />
                     </Button>
 
                     {paginationItems.map((item, index) =>
@@ -417,7 +418,7 @@ export default function AllHistoryTable({ inventory }: Props) {
                         disabled={!table.getCanNextPage()}
                         className="!h-[36px] hover:bg-foreground/20"
                     >
-                        Next
+                        <ArrowRightIcon />
                     </Button>
                 </div>
             </div>

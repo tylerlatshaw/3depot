@@ -25,7 +25,7 @@ export default async function ScanPage() {
             <main className="min-h-0 flex-1 overflow-auto">
                 <SetPageTitle title="Scan" />
 
-                <div className="min-h-0 h-[100vh] md:h-[calc(100vh-86px)] flex-1 overflow-y-auto px-4 md:px-8 py-4 md:py-6">
+                <div className="min-h-0 md:h-[calc(100vh-86px)] flex-1 overflow-y-auto px-4 md:px-8 py-4 md:py-6">
                     <Suspense fallback={<ScanLoading />}>
                         <ScanData />
                     </Suspense>

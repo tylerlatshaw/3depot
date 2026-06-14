@@ -1,7 +1,8 @@
 "use client";
 
 import { Brands } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     CheckIcon,
     PencilIcon,
@@ -9,6 +10,7 @@ import {
     Trash2Icon,
     XIcon,
 } from "lucide-react";
+import { Colorful } from "@uiw/react-color";
 
 import {
     AlertDialog,
@@ -22,6 +24,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import {
@@ -32,49 +35,26 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
-import { Colorful } from "@uiw/react-color";
-import Loading from "../ui/loading";
 import NoData from "../global/no-data";
-import { auth } from "@/lib/firebase";
-import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 const NEW_BRAND_UUID = "__new_brand__";
 
-export default function BrandEditTable() {
-    const [brands, setBrands] = useState<Brands[]>([]);
-    const [loading, setLoading] = useState(true);
+export default function BrandEditTable({
+    initialData = [],
+}: {
+    initialData?: Brands[];
+}) {
+    const router = useRouter();
+
+    const [brands, setBrands] = useState<Brands[]>(initialData ?? []);
     const [error, setError] = useState("");
 
     const [editingUuid, setEditingUuid] = useState<string | null>(null);
     const [editedBrand, setEditedBrand] = useState<Partial<Brands>>({});
 
-    useEffect(() => {
-        async function getBrands() {
-            try {
-                setLoading(true);
-                setError("");
-
-                const response = await authenticatedFetch("/api/get-brands", {
-                    cache: "no-store"
-                });
-
-                const result = await response.json();
-
-                if (!result.success) {
-                    throw new Error(result.error);
-                }
-
-                setBrands(result.data);
-            } catch (error) {
-                console.error(error);
-                setError("Failed to load brands.");
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        getBrands();
-    }, []);
+    const [actionLoading, setActionLoading] = useState<
+        "save" | "delete" | null
+    >(null);
 
     function handleAddBrand() {
         if (editingUuid) return;
@@ -112,6 +92,9 @@ export default function BrandEditTable() {
 
     async function handleSave() {
         try {
+            setError("");
+            setActionLoading("save");
+
             const isNewBrand = editingUuid === NEW_BRAND_UUID;
 
             const response = await authenticatedFetch("/api/upsert-brand", {
@@ -158,14 +141,21 @@ export default function BrandEditTable() {
 
             setEditingUuid(null);
             setEditedBrand({});
+
+            router.refresh();
         } catch (error) {
             console.error(error);
             setError("Failed to save brand.");
+        } finally {
+            setActionLoading(null);
         }
     }
 
     async function handleDelete(brand: Brands) {
         try {
+            setError("");
+            setActionLoading("delete");
+
             const response = await authenticatedFetch("/api/delete-brand", {
                 method: "DELETE",
                 headers: {
@@ -185,18 +175,22 @@ export default function BrandEditTable() {
             setBrands((current) =>
                 current.filter((item) => item.uuid !== brand.uuid)
             );
+
+            router.refresh();
         } catch (error) {
             console.error(error);
             setError("Failed to delete brand.");
+        } finally {
+            setActionLoading(null);
         }
     }
 
-    if (loading) {
-        return <div className="text-xl font-bold h-full"><Loading /></div>;
-    }
-
     if (error) {
-        return <div className="text-xl font-bold text-danger">{error}</div>;
+        return (
+            <div className="text-xl font-bold text-danger">
+                {error}
+            </div>
+        );
     }
 
     return (
@@ -212,190 +206,219 @@ export default function BrandEditTable() {
                 </TableHeader>
 
                 <TableBody>
-                    {
-                        brands.length === 0
-                            ? <TableRow>
-                                <TableCell colSpan={4} className="py-16">
-                                    <NoData />
-                                </TableCell>
-                            </TableRow>
-                            : brands.map((brand) => {
-                                const isEditing = editingUuid === brand.uuid;
+                    {brands.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={4} className="py-16">
+                                <NoData />
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        brands.map((brand) => {
+                            const isEditing = editingUuid === brand.uuid;
 
-                                return (
-                                    <TableRow key={brand.uuid}>
-                                        <TableCell className="align-middle">
-                                            <div className="flex items-center gap-3">
-                                                {isEditing && (
-                                                    <Colorful
-                                                        color={editedBrand.brandColor ?? "#00ddff"}
-                                                        onChange={(color) =>
-                                                            setEditedBrand((prev) => ({
-                                                                ...prev,
-                                                                brandColor: color.hex,
-                                                            }))
-                                                        }
-                                                    />
-                                                )}
-
-                                                <div
-                                                    className="h-3 w-3 rounded-full"
-                                                    style={{
-                                                        backgroundColor:
-                                                            isEditing
-                                                                ? editedBrand.brandColor
-                                                                : brand.brandColor,
-                                                    }}
-                                                />
-
-                                                {isEditing ? (
-                                                    <Input
-                                                        value={editedBrand.name ?? ""}
-                                                        placeholder="Brand name"
-                                                        onChange={(event) =>
-                                                            setEditedBrand((prev) => ({
-                                                                ...prev,
-                                                                name: event.target.value,
-                                                            }))
-                                                        }
-                                                        className="w-56"
-                                                    />
-                                                ) : (
-                                                    <span className="text-lg font-semibold">
-                                                        {brand.name}
-                                                    </span>
-                                                )}
-                                            </div>
-                                        </TableCell>
-
-                                        <TableCell className="align-middle">
-                                            {isEditing ? (
-                                                <Input
-                                                    value={editedBrand.id ?? ""}
-                                                    placeholder="BA"
-                                                    onChange={(event) =>
+                            return (
+                                <TableRow key={brand.uuid}>
+                                    <TableCell className="align-middle">
+                                        <div className="flex items-center gap-3">
+                                            {isEditing && (
+                                                <Colorful
+                                                    color={
+                                                        editedBrand.brandColor ??
+                                                        "#00ddff"
+                                                    }
+                                                    onChange={(color) =>
                                                         setEditedBrand((prev) => ({
                                                             ...prev,
-                                                            id: event.target.value.toUpperCase(),
+                                                            brandColor:
+                                                                color.hex,
                                                         }))
                                                     }
-                                                    className="w-24 uppercase"
                                                 />
-                                            ) : (
-                                                brand.id
                                             )}
-                                        </TableCell>
 
-                                        <TableCell className="align-middle">
+                                            <div
+                                                className="h-3 w-3 rounded-full"
+                                                style={{
+                                                    backgroundColor: isEditing
+                                                        ? editedBrand.brandColor
+                                                        : brand.brandColor,
+                                                }}
+                                            />
+
                                             {isEditing ? (
                                                 <Input
-                                                    type="number"
-                                                    value={editedBrand.spoolWeight ?? 0}
-                                                    onChange={(event) =>
-                                                        setEditedBrand((prev) => ({
-                                                            ...prev,
-                                                            spoolWeight: Number(
-                                                                event.target.value
-                                                            ),
-                                                        }))
+                                                    value={
+                                                        editedBrand.name ?? ""
                                                     }
-                                                    className="w-28"
+                                                    placeholder="Brand name"
+                                                    onChange={(event) =>
+                                                        setEditedBrand(
+                                                            (prev) => ({
+                                                                ...prev,
+                                                                name: event
+                                                                    .target
+                                                                    .value,
+                                                            })
+                                                        )
+                                                    }
+                                                    className="w-56"
                                                 />
                                             ) : (
-                                                `${brand.spoolWeight.toFixed(1)} g`
+                                                <span className="text-lg font-semibold">
+                                                    {brand.name}
+                                                </span>
                                             )}
-                                        </TableCell>
+                                        </div>
+                                    </TableCell>
 
-                                        <TableCell className="align-middle">
-                                            <div className="flex items-center gap-4">
-                                                {isEditing ? (
-                                                    <>
-                                                        <Button
-                                                            variant="default"
-                                                            className="gap-2"
-                                                            onClick={handleSave}
+                                    <TableCell className="align-middle">
+                                        {isEditing ? (
+                                            <Input
+                                                value={editedBrand.id ?? ""}
+                                                placeholder="BA"
+                                                onChange={(event) =>
+                                                    setEditedBrand((prev) => ({
+                                                        ...prev,
+                                                        id: event.target.value.toUpperCase(),
+                                                    }))
+                                                }
+                                                className="w-24 uppercase"
+                                            />
+                                        ) : (
+                                            brand.id
+                                        )}
+                                    </TableCell>
+
+                                    <TableCell className="align-middle">
+                                        {isEditing ? (
+                                            <Input
+                                                type="number"
+                                                value={
+                                                    editedBrand.spoolWeight ??
+                                                    0
+                                                }
+                                                onChange={(event) =>
+                                                    setEditedBrand((prev) => ({
+                                                        ...prev,
+                                                        spoolWeight: Number(
+                                                            event.target.value
+                                                        ),
+                                                    }))
+                                                }
+                                                className="w-28"
+                                            />
+                                        ) : (
+                                            `${brand.spoolWeight.toFixed(1)} g`
+                                        )}
+                                    </TableCell>
+
+                                    <TableCell className="align-middle">
+                                        <div className="flex items-center gap-4">
+                                            {isEditing ? (
+                                                <>
+                                                    <Button
+                                                        variant="default"
+                                                        className="gap-2"
+                                                        onClick={handleSave}
+                                                        disabled={actionLoading !== null}
+                                                    >
+                                                        {actionLoading === "save" ? (
+                                                            <span>Saving...</span>
+                                                        ) : (
+                                                            <>
+                                                                <CheckIcon />
+                                                                <span>Save</span>
+                                                            </>
+                                                        )}
+                                                    </Button>
+
+                                                    <Button
+                                                        variant="outline"
+                                                        className="gap-2"
+                                                        onClick={handleCancel}
+                                                    >
+                                                        <XIcon />
+                                                        <span>Cancel</span>
+                                                    </Button>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Button
+                                                        variant="outline"
+                                                        className="gap-2"
+                                                        onClick={() =>
+                                                            handleEdit(brand)
+                                                        }
+                                                    >
+                                                        <PencilIcon />
+                                                        <span>Edit</span>
+                                                    </Button>
+
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger
+                                                            asChild
                                                         >
-                                                            <CheckIcon />
-                                                            <span>Save</span>
-                                                        </Button>
+                                                            <Button
+                                                                variant="danger"
+                                                                className="gap-2"
+                                                                disabled={actionLoading !== null}
+                                                            >
+                                                                <Trash2Icon />
+                                                                <span>
+                                                                    {actionLoading === "delete" ? "Deleting..." : "Delete"}
+                                                                </span>
+                                                            </Button>
+                                                        </AlertDialogTrigger>
 
-                                                        <Button
-                                                            variant="outline"
-                                                            className="gap-2"
-                                                            onClick={handleCancel}
-                                                        >
-                                                            <XIcon />
-                                                            <span>Cancel</span>
-                                                        </Button>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Button
-                                                            variant="outline"
-                                                            className="gap-2"
-                                                            onClick={() =>
-                                                                handleEdit(brand)
-                                                            }
-                                                        >
-                                                            <PencilIcon />
-                                                            <span>Edit</span>
-                                                        </Button>
+                                                        <AlertDialogContent className="w-96 p-4">
+                                                            <AlertDialogHeader className="flex flex-col gap-1 p-2 pb-4 text-base font-base">
+                                                                <AlertDialogTitle className="text-lg font-bold">
+                                                                    Delete{" "}
+                                                                    {brand.name}
+                                                                </AlertDialogTitle>
 
-                                                        <AlertDialog>
-                                                            <AlertDialogTrigger asChild>
-                                                                <Button
-                                                                    variant="danger"
-                                                                    className="gap-2"
-                                                                >
-                                                                    <Trash2Icon />
-                                                                    <span>Delete</span>
-                                                                </Button>
-                                                            </AlertDialogTrigger>
-
-                                                            <AlertDialogContent className="w-96 p-4">
-                                                                <AlertDialogHeader className="flex flex-col gap-1 p-2 pb-4 text-base font-base">
-                                                                    <AlertDialogTitle className="text-lg font-bold">
-                                                                        Delete{" "}
-                                                                        {brand.name}
-                                                                    </AlertDialogTitle>
-
-                                                                    <AlertDialogDescription>
-                                                                        Are you sure you
-                                                                        want to delete{" "}
-                                                                        <span className="font-semibold">
-                                                                            {brand.name}
-                                                                        </span>
-                                                                        ? This cannot be
-                                                                        undone.
-                                                                    </AlertDialogDescription>
-                                                                </AlertDialogHeader>
-
-                                                                <AlertDialogFooter className="flex flex-row gap-4">
-                                                                    <AlertDialogCancel>
-                                                                        Cancel
-                                                                    </AlertDialogCancel>
-
-                                                                    <AlertDialogAction
-                                                                        variant="danger"
-                                                                        className="text-base"
-                                                                        onClick={() =>
-                                                                            handleDelete(
-                                                                                brand
-                                                                            )
+                                                                <AlertDialogDescription>
+                                                                    Are you sure
+                                                                    you want to
+                                                                    delete{" "}
+                                                                    <span className="font-semibold">
+                                                                        {
+                                                                            brand.name
                                                                         }
-                                                                    >
-                                                                        Delete
-                                                                    </AlertDialogAction>
-                                                                </AlertDialogFooter>
-                                                            </AlertDialogContent>
-                                                        </AlertDialog>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
+                                                                    </span>
+                                                                    ? This
+                                                                    cannot be
+                                                                    undone.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+
+                                                            <AlertDialogFooter className="flex flex-row gap-4">
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+
+                                                                <AlertDialogAction
+                                                                    variant="danger"
+                                                                    className="text-base"
+                                                                    onClick={() =>
+                                                                        handleDelete(
+                                                                            brand
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })
+                    )}
                 </TableBody>
             </Table>
 
@@ -405,7 +428,7 @@ export default function BrandEditTable() {
                     size="lg"
                     className="bg-success hover:bg-success/80"
                     onClick={handleAddBrand}
-                    disabled={!!editingUuid}
+                    disabled={!!editingUuid || actionLoading !== null}
                 >
                     <div className="flex flex-row items-center justify-center gap-2">
                         <PlusIcon />

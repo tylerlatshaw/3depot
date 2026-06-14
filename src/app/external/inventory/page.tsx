@@ -1,6 +1,6 @@
 import ExternalData from "@/components/external/external-data";
+import Loading from "@/components/ui/loading";
 import { Metadata } from "next";
-import { cookies } from "next/headers";
 import { Suspense } from "react";
 
 export const metadata: Metadata = {
@@ -10,7 +10,9 @@ export const metadata: Metadata = {
 export default async function InventoryPage() {
     return (<>
         <div className="flex h-screen flex-col overflow-hidden">
-            <ExternalData />
+            <Suspense fallback={<Loading />}>
+                <ExternalData />
+            </Suspense>
         </div>
     </>);
 }

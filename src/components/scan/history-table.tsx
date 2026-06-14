@@ -88,7 +88,7 @@ export default function HistoryTable({
     }
 
     return (
-        <div className="flex w-2xl flex-col items-center justify-center gap-8 text-base font-base">
+        <div className="flex w-full md:w-2xl flex-col items-center justify-center gap-8 text-base font-base pb-8">
             <Table>
                 <TableHeader>
                     <TableRow>

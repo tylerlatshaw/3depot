@@ -14,7 +14,15 @@ export async function DELETE(request: NextRequest) {
     }
 
     try {
-        const { uuid } = await request.json();
+        const body = await request.json();
+        const uuid = body.uuid;
+
+        if (!uuid) {
+            return NextResponse.json(
+                { success: false, error: "UUID required" },
+                { status: 400 }
+            );
+        }
 
         if (!uuid) {
             return NextResponse.json(

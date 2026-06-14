@@ -12,7 +12,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { showToast } from "@/components/ui/toast";
 import FilamentProgressCard from "../dashboard/filament-progress-card";
-import { auth } from "@/lib/firebase";
 import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 import { useRouter } from "next/navigation";
 
@@ -72,9 +71,9 @@ export default function ArchiveFilament({
     }
 
     return (
-        <div className="flex w-4xl flex-col items-center justify-center gap-8">
+        <div className="flex w-full md:w-4xl flex-col items-center justify-center gap-8">
             <div
-                className="w-2xl rounded-lg border-t-8 bg-card shadow-md p-6"
+                className="w-full md:w-2xl rounded-lg border-t-8 bg-card shadow-md p-6"
                 style={{
                     borderColor: selectedFilament.colorCode,
                 }}
@@ -82,7 +81,7 @@ export default function ArchiveFilament({
                 <FilamentProgressCard inventory={selectedFilament} />
             </div>
 
-            <div className="flex w-lg flex-col gap-6 rounded-xl border border-danger bg-danger/10 p-6">
+            <div className="flex w-full md:w-lg flex-col gap-6 rounded-xl border border-danger bg-danger/10 p-6">
                 <div className="flex flex-row items-center gap-4 text-danger">
                     <TriangleAlertIcon className="size-16" />
 

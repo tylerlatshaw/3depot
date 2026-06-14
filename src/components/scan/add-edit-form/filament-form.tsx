@@ -35,7 +35,7 @@ export default function FilamentForm({
     return (
         <div className="flex grow flex-col gap-8">
             <div className="flex flex-col gap-1">
-                <div className="flex flex-row gap-16">
+                <div className="flex flex-col md:flex-row gap-4 md:gap-16">
                     <Field className="flex flex-col gap-2">
                         <FieldLabel className="font-semibold uppercase" htmlFor="id">
                             Spool ID:
@@ -106,7 +106,7 @@ export default function FilamentForm({
                 </div>
             </div>
 
-            <Field className="flex flex-col gap-2">
+            <Field className="flex flex-col gap-2 w-full">
                 <FieldLabel className="font-semibold uppercase" htmlFor="brand">
                     Brand:
                 </FieldLabel>
@@ -118,7 +118,7 @@ export default function FilamentForm({
                     onValueChange={(value) => {
                         if (value) updateField("brand", value);
                     }}
-                    className="grid grid-cols-5 gap-4"
+                    className="grid grid-cols-2 md:grid-cols-5 gap-4 w-full"
                     variant="outline"
                     spacing={1}
                 >
@@ -145,17 +145,17 @@ export default function FilamentForm({
                 </ToggleGroup>
             </Field>
 
-            <div className="flex flex-row justify-between gap-8 pt-2">
+            <div className="flex flex-col md:flex-row justify-between gap-4 md:gap-8 pt-2">
                 <Colorful
                     color={editedData.colorCode ?? "#00DDFF"}
                     onChange={(color) =>
                         updateField("colorCode", color.hex)
                     }
                     disableAlpha
-                    className="pt-0.5"
+                    className="md:pt-0.5"
                 />
 
-                <div className="flex flex-col gap-4 grow">
+                <div className="flex flex-row md:flex-col gap-4 grow">
                     <Field className="flex flex-col gap-2">
                         <FieldLabel className="font-semibold uppercase" htmlFor="hex">
                             Hex Color:
@@ -195,7 +195,7 @@ export default function FilamentForm({
                     </Field>
                 </div>
 
-                <Field className="flex w-72 flex-1 flex-col gap-2">
+                <Field className="flex w-full md:w-72 flex-1 flex-col gap-2">
                     <FieldLabel className="font-semibold uppercase">
                         Tags:
                     </FieldLabel>
@@ -206,14 +206,14 @@ export default function FilamentForm({
                                 type="button"
                                 variant="outline"
                                 role="combobox"
-                                className="w-72 justify-between px-4 py-6 text-base"
+                                className="w-full md:w-72 justify-between px-4 py-6 text-base"
                             >
                                 Add tag
                                 <ChevronsUpDownIcon className="h-4 w-4 opacity-50" />
                             </Button>
                         </PopoverTrigger>
 
-                        <PopoverContent className="w-72 p-0 bg-background border border-accent">
+                        <PopoverContent className="w-[var(--radix-popover-trigger-width)] p-0 bg-background border border-accent">
                             <Command>
                                 <CommandInput
                                     placeholder="Search or create tag..."

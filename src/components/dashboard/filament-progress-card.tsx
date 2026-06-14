@@ -27,7 +27,7 @@ export default function FilamentProgressCard({
     const chipVariantColor = getStatusChipColor(inventory.status);
     const statusTextColor = getStatusTextColor(inventory.percentRemaining);
 
-    return <div className="flex flex-row gap-3 items-center justify-center w-full p-2">
+    return <div className="flex flex-row gap-3 items-center justify-center w-full md:p-2">
 
         <div className={"h-14 w-14 aspect-square rounded-full"} style={{ backgroundColor: inventory.colorCode }}></div>
 
@@ -48,10 +48,11 @@ export default function FilamentProgressCard({
                 </span>
 
                 <Chip
-                    className="shrink-0 whitespace-nowrap"
+                    className="flex gap-1 shrink-0 whitespace-nowrap"
                     variant={chipVariantColor}
                 >
-                    {inventory.remainingWeight} g left
+                    <span>{inventory.remainingWeight} g</span>
+                    <span className="hidden md:inline">left</span>
                 </Chip>
             </div>
 

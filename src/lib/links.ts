@@ -2,12 +2,10 @@ import { Links } from "./types";
 import {
     BarChart4Icon,
     ClockFadingIcon,
-    LayersIcon,
     LayoutDashboard,
     PackageIcon,
     ScanLineIcon,
     SettingsIcon,
-    TagIcon,
 } from "lucide-react";
 
 export const dashboardLinks: Links[] = [
@@ -43,23 +41,8 @@ export const dashboardLinks: Links[] = [
     },
     {
         name: "Settings",
-        href: "/dashboard/settings/brands",
+        href: "/dashboard/settings",
         icon: SettingsIcon,
         shortName: "Settings",
-    },
-];
-
-export const settingsLinks: Links[] = [
-    {
-        name: "Brands",
-        shortName: "Brands",
-        href: "/dashboard/settings/brands",
-        icon: TagIcon,
-    },
-    {
-        name: "Materials",
-        shortName: "Materials",
-        href: "/dashboard/settings/materials",
-        icon: LayersIcon,
     },
 ];

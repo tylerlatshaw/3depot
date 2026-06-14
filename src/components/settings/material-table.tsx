@@ -1,7 +1,8 @@
 "use client";
 
 import { Materials } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     CheckIcon,
     PencilIcon,
@@ -22,6 +23,7 @@ import {
     AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import {
@@ -32,47 +34,26 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
-import Loading from "../ui/loading";
 import NoData from "../global/no-data";
-import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 
 const NEW_MATERIAL_UUID = "__new_material__";
 
-export default function MaterialEditTable() {
-    const [materials, setMaterials] = useState<Materials[]>([]);
-    const [loading, setLoading] = useState(true);
+export default function MaterialEditTable({
+    initialData = [],
+}: {
+    initialData?: Materials[];
+}) {
+    const router = useRouter();
+
+    const [materials, setMaterials] = useState<Materials[]>(initialData);
     const [error, setError] = useState("");
 
     const [editingUuid, setEditingUuid] = useState<string | null>(null);
     const [editedMaterial, setEditedMaterial] = useState<Partial<Materials>>({});
 
-    useEffect(() => {
-        async function getMaterials() {
-            try {
-                setLoading(true);
-                setError("");
-
-                const response = await authenticatedFetch("/api/get-materials", {
-                    cache: "no-store",
-                });
-
-                const result = await response.json();
-
-                if (!result.success) {
-                    throw new Error(result.error);
-                }
-
-                setMaterials(result.data);
-            } catch (error) {
-                console.error(error);
-                setError("Failed to load materials.");
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        getMaterials();
-    }, []);
+    const [actionLoading, setActionLoading] = useState<
+        "save" | "delete" | null
+    >(null);
 
     function handleAddMaterial() {
         if (editingUuid) return;
@@ -110,6 +91,9 @@ export default function MaterialEditTable() {
 
     async function handleSave() {
         try {
+            setError("");
+            setActionLoading("save");
+
             const isNewMaterial = editingUuid === NEW_MATERIAL_UUID;
 
             const response = await authenticatedFetch("/api/upsert-material", {
@@ -138,7 +122,8 @@ export default function MaterialEditTable() {
                                 ...material,
                                 uuid: result.uuid ?? material.uuid,
                                 id: editedMaterial.id ?? material.id,
-                                name: editedMaterial.name ?? material.name,
+                                name:
+                                    editedMaterial.name ?? material.name,
                                 dateModified: new Date().toISOString(),
                             }
                             : material
@@ -148,16 +133,29 @@ export default function MaterialEditTable() {
 
             setEditingUuid(null);
             setEditedMaterial({});
+
+            router.refresh();
         } catch (error) {
             console.error(error);
             setError("Failed to save material.");
+        } finally {
+            setActionLoading(null);
         }
     }
 
     async function handleDelete(material: Materials) {
         try {
-            const response = await authenticatedFetch(`/api/delete-material?uuid=${material.uuid}`, {
+            setError("");
+            setActionLoading("delete");
+
+            const response = await authenticatedFetch("/api/delete-material", {
                 method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    uuid: material.uuid,
+                }),
             });
 
             const result = await response.json();
@@ -169,18 +167,22 @@ export default function MaterialEditTable() {
             setMaterials((current) =>
                 current.filter((item) => item.uuid !== material.uuid)
             );
+
+            router.refresh();
         } catch (error) {
             console.error(error);
             setError("Failed to delete material.");
+        } finally {
+            setActionLoading(null);
         }
     }
 
-    if (loading) {
-        return <div className="text-xl font-bold h-full"><Loading /></div>;
-    }
-
     if (error) {
-        return <div className="text-xl font-bold text-danger">{error}</div>;
+        return (
+            <div className="text-xl font-bold text-danger">
+                {error}
+            </div>
+        );
     }
 
     return (
@@ -195,149 +197,181 @@ export default function MaterialEditTable() {
                 </TableHeader>
 
                 <TableBody>
-                    {
-                        materials.length === 0
-                            ? <TableRow>
-                                <TableCell colSpan={4} className="py-16">
-                                    <NoData />
-                                </TableCell>
-                            </TableRow>
-                            : materials.map((material) => {
-                                const isEditing = editingUuid === material.uuid;
+                    {materials.length === 0 ? (
+                        <TableRow>
+                            <TableCell colSpan={3} className="py-16">
+                                <NoData />
+                            </TableCell>
+                        </TableRow>
+                    ) : (
+                        materials.map((material) => {
+                            const isEditing =
+                                editingUuid === material.uuid;
 
-                                return (
-                                    <TableRow key={material.uuid}>
-                                        <TableCell className="align-middle">
-                                            {isEditing ? (
-                                                <Input
-                                                    value={editedMaterial.name ?? ""}
-                                                    placeholder="Material name"
-                                                    onChange={(event) =>
-                                                        setEditedMaterial((prev) => ({
+                            return (
+                                <TableRow key={material.uuid}>
+                                    <TableCell className="align-middle">
+                                        {isEditing ? (
+                                            <Input
+                                                value={
+                                                    editedMaterial.name ?? ""
+                                                }
+                                                placeholder="Material name"
+                                                onChange={(event) =>
+                                                    setEditedMaterial(
+                                                        (prev) => ({
                                                             ...prev,
-                                                            name: event.target.value,
-                                                        }))
-                                                    }
-                                                    className="w-56"
-                                                />
-                                            ) : (
-                                                <span className="text-lg font-semibold">
-                                                    {material.name}
-                                                </span>
-                                            )}
-                                        </TableCell>
+                                                            name: event
+                                                                .target
+                                                                .value,
+                                                        })
+                                                    )
+                                                }
+                                                className="w-56"
+                                            />
+                                        ) : (
+                                            <span className="text-lg font-semibold">
+                                                {material.name}
+                                            </span>
+                                        )}
+                                    </TableCell>
 
-                                        <TableCell className="align-middle">
-                                            {isEditing ? (
-                                                <Input
-                                                    value={editedMaterial.id ?? ""}
-                                                    placeholder="PLA"
-                                                    onChange={(event) =>
-                                                        setEditedMaterial((prev) => ({
+                                    <TableCell className="align-middle">
+                                        {isEditing ? (
+                                            <Input
+                                                value={
+                                                    editedMaterial.id ?? ""
+                                                }
+                                                placeholder="PLA"
+                                                onChange={(event) =>
+                                                    setEditedMaterial(
+                                                        (prev) => ({
                                                             ...prev,
                                                             id: event.target.value.toUpperCase(),
-                                                        }))
-                                                    }
-                                                    className="w-24 uppercase"
-                                                />
+                                                        })
+                                                    )
+                                                }
+                                                className="w-24 uppercase"
+                                            />
+                                        ) : (
+                                            material.id
+                                        )}
+                                    </TableCell>
+
+                                    <TableCell className="align-middle">
+                                        <div className="flex items-center gap-4">
+                                            {isEditing ? (
+                                                <>
+                                                    <Button
+                                                        variant="default"
+                                                        className="gap-2"
+                                                        onClick={handleSave}
+                                                        disabled={actionLoading !== null}
+                                                    >
+                                                        {actionLoading === "save" ? (
+                                                            <span>Saving...</span>
+                                                        ) : (
+                                                            <>
+                                                                <CheckIcon />
+                                                                <span>Save</span>
+                                                            </>
+                                                        )}
+                                                    </Button>
+
+                                                    <Button
+                                                        variant="outline"
+                                                        className="gap-2"
+                                                        onClick={
+                                                            handleCancel
+                                                        }
+                                                    >
+                                                        <XIcon />
+                                                        <span>Cancel</span>
+                                                    </Button>
+                                                </>
                                             ) : (
-                                                material.id
-                                            )}
-                                        </TableCell>
+                                                <>
+                                                    <Button
+                                                        variant="outline"
+                                                        className="gap-2"
+                                                        onClick={() =>
+                                                            handleEdit(
+                                                                material
+                                                            )
+                                                        }
+                                                    >
+                                                        <PencilIcon />
+                                                        <span>Edit</span>
+                                                    </Button>
 
-                                        <TableCell className="align-middle">
-                                            <div className="flex items-center gap-4">
-                                                {isEditing ? (
-                                                    <>
-                                                        <Button
-                                                            variant="default"
-                                                            className="gap-2"
-                                                            onClick={handleSave}
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger
+                                                            asChild
                                                         >
-                                                            <CheckIcon />
-                                                            <span>Save</span>
-                                                        </Button>
+                                                            <Button
+                                                                variant="danger"
+                                                                className="gap-2"
+                                                                disabled={actionLoading !== null}
+                                                            >
+                                                                <Trash2Icon />
+                                                                <span>
+                                                                    {actionLoading === "delete" ? "Deleting..." : "Delete"}
+                                                                </span>
+                                                            </Button>
+                                                        </AlertDialogTrigger>
 
-                                                        <Button
-                                                            variant="outline"
-                                                            className="gap-2"
-                                                            onClick={handleCancel}
-                                                        >
-                                                            <XIcon />
-                                                            <span>Cancel</span>
-                                                        </Button>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Button
-                                                            variant="outline"
-                                                            className="gap-2"
-                                                            onClick={() =>
-                                                                handleEdit(material)
-                                                            }
-                                                        >
-                                                            <PencilIcon />
-                                                            <span>Edit</span>
-                                                        </Button>
+                                                        <AlertDialogContent className="w-96 p-4">
+                                                            <AlertDialogHeader className="flex flex-col gap-1 p-2 pb-4 text-base font-base">
+                                                                <AlertDialogTitle className="text-lg font-bold">
+                                                                    Delete{" "}
+                                                                    {
+                                                                        material.name
+                                                                    }
+                                                                </AlertDialogTitle>
 
-                                                        <AlertDialog>
-                                                            <AlertDialogTrigger asChild>
-                                                                <Button
-                                                                    variant="danger"
-                                                                    className="gap-2"
-                                                                >
-                                                                    <Trash2Icon />
-                                                                    <span>Delete</span>
-                                                                </Button>
-                                                            </AlertDialogTrigger>
-
-                                                            <AlertDialogContent className="w-96 p-4">
-                                                                <AlertDialogHeader className="flex flex-col gap-1 p-2 pb-4 text-base font-base">
-                                                                    <AlertDialogTitle className="text-lg font-bold">
-                                                                        Delete{" "}
-                                                                        {material.name}
-                                                                    </AlertDialogTitle>
-
-                                                                    <AlertDialogDescription>
-                                                                        Are you sure you
-                                                                        want to delete{" "}
-                                                                        <span className="font-semibold">
-                                                                            {
-                                                                                material.name
-                                                                            }
-                                                                        </span>
-                                                                        ? This cannot be
-                                                                        undone.
-                                                                    </AlertDialogDescription>
-                                                                </AlertDialogHeader>
-
-                                                                <AlertDialogFooter className="flex flex-row gap-4">
-                                                                    <AlertDialogCancel>
-                                                                        Cancel
-                                                                    </AlertDialogCancel>
-
-                                                                    <AlertDialogAction
-                                                                        variant="danger"
-                                                                        className="text-base"
-                                                                        onClick={() =>
-                                                                            handleDelete(
-                                                                                material
-                                                                            )
+                                                                <AlertDialogDescription>
+                                                                    Are you
+                                                                    sure you
+                                                                    want to
+                                                                    delete{" "}
+                                                                    <span className="font-semibold">
+                                                                        {
+                                                                            material.name
                                                                         }
-                                                                    >
-                                                                        Delete
-                                                                    </AlertDialogAction>
-                                                                </AlertDialogFooter>
-                                                            </AlertDialogContent>
-                                                        </AlertDialog>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })
-                    }
+                                                                    </span>
+                                                                    ? This
+                                                                    cannot be
+                                                                    undone.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+
+                                                            <AlertDialogFooter className="flex flex-row gap-4">
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+
+                                                                <AlertDialogAction
+                                                                    variant="danger"
+                                                                    className="text-base"
+                                                                    onClick={() =>
+                                                                        handleDelete(
+                                                                            material
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </>
+                                            )}
+                                        </div>
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })
+                    )}
                 </TableBody>
             </Table>
 
@@ -347,7 +381,7 @@ export default function MaterialEditTable() {
                     size="lg"
                     className="bg-success hover:bg-success/80"
                     onClick={handleAddMaterial}
-                    disabled={!!editingUuid}
+                    disabled={!!editingUuid || actionLoading !== null}
                 >
                     <div className="flex flex-row items-center justify-center gap-2">
                         <PlusIcon />

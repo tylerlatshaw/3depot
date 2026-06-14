@@ -28,7 +28,7 @@ export default function Footer() {
                     <Link href={"/contact"} className="text-muted-foreground font-semibold hover:text-foreground hover:underline">Contact</Link>
                 </div>
 
-                <span className="inline md:hidden text-xs text-muted-foreground">
+                <span className="inline md:hidden text-xs text-center text-muted-foreground">
                     &copy; {dayjs().year()} 3Depot Filament Inventory Management. All rights reserved.
                 </span>
             </div>
