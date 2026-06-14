@@ -73,15 +73,15 @@ export default function InventoryContainer({
     );
 
     return (
-        <div className="flex flex-col gap-6 pt-2">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-4">
+<div className="flex w-full flex-col gap-6 pt-2">
+    <div className="flex min-w-0 w-full flex-col gap-6 md:flex-row md:items-center md:gap-4">
+        <div className="flex min-w-0 w-full flex-row items-center gap-2">
+            <div className="hidden shrink-0 md:flex">
+                <FilterIcon />
+            </div>
 
-                <div className="flex min-w-0 grow flex-row items-center gap-2">
-                    <div className="hidden md:flex">
-                        <FilterIcon />
-                    </div>
-
-                    <div className="no-scrollbar overflow-x-auto whitespace-nowrap">
+            <div className="min-w-0 flex-1 overflow-hidden">
+                <div className="no-scrollbar max-w-full overflow-x-auto">
                         <ToggleGroup
                             type="single"
                             size="default"
@@ -91,7 +91,7 @@ export default function InventoryContainer({
                             }}
                             variant="default"
                             spacing={2}
-                            className="w-max cursor-pointer"
+                            className="inline-flex w-max shrink-0"
                         >
                             {statusArray.map((status) => (
                                 <ToggleGroupItem
@@ -105,6 +105,7 @@ export default function InventoryContainer({
                             ))}
                         </ToggleGroup>
                     </div>
+                </div>
                 </div>
 
                 <Field className="hidden md:flex group w-64">
@@ -159,7 +160,7 @@ export default function InventoryContainer({
 
                     <span className="text-accent hidden md:block">|</span>
 
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-muted-foreground text-nowrap">
                         <span className="inline-block w-6 text-right tabular-nums">
                             {filteredInventory.length}
                         </span>

@@ -6,7 +6,7 @@ import { Chip } from "@/components/ui/chip";
 import { TermsOfUsePolicyText } from "@/lib/legal/terms-of-use";
 
 export default function TermsOfUse() {
-    return (<div className="w-full flex flex-col items-center justify-start">
+    return (<div className="w-full flex flex-col items-center justify-start min-h-screen">
         <Navbar />
 
         <main className="flex flex-col flex-1 items-start my-8 md:my-16 w-full md:max-w-4xl px-4 md:px-0 gap-8 md:gap-12">
