@@ -1,6 +1,7 @@
-import { firestore } from "firebase-admin";
 import { protectRoute } from "@/lib/auth/protect-route";
 import { NextRequest, NextResponse } from "next/server";
+import { adminDb } from "@/lib/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 export async function POST(request: NextRequest) {
 
@@ -27,7 +28,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const collection = firestore().collection("brands");
+        const collection = adminDb.collection("brands");
 
         // Existing row edit = use existing UUID
         // New row insert = generate UUID
@@ -39,7 +40,7 @@ export async function POST(request: NextRequest) {
 
         const wasInserted = !existingDoc.exists;
 
-        const now = firestore.FieldValue.serverTimestamp();
+        const now = FieldValue.serverTimestamp();
 
         await docRef.set(
             {

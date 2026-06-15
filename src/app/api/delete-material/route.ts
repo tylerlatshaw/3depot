@@ -1,4 +1,4 @@
-import { firestore } from "firebase-admin";
+import { adminDb } from "@/lib/firebase-admin";
 import { protectRoute } from "@/lib/auth/protect-route";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -20,13 +20,6 @@ export async function DELETE(request: NextRequest) {
 
         if (!uuid) {
             return NextResponse.json(
-                { success: false, error: "UUID required" },
-                { status: 400 }
-            );
-        }
-
-        if (!uuid) {
-            return NextResponse.json(
                 {
                     success: false,
                     error: "UUID required",
@@ -35,7 +28,7 @@ export async function DELETE(request: NextRequest) {
             );
         }
 
-        await firestore()
+        await adminDb
             .collection("materials")
             .doc(uuid)
             .delete();

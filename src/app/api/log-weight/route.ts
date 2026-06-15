@@ -1,6 +1,7 @@
-import { firestore } from "firebase-admin";
 import { NextRequest, NextResponse } from "next/server";
 import { protectRoute } from "@/lib/auth/protect-route";
+import { adminDb } from "@/lib/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 
 function getFilamentStatus(percentRemaining: number) {
     if (percentRemaining >= 40) return "in stock";
@@ -33,9 +34,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const db = firestore();
-
-        const filamentRef = db
+        const filamentRef = adminDb
             .collection("filament")
             .doc(filamentId);
 
@@ -75,7 +74,7 @@ export async function POST(request: NextRequest) {
 
         const status = getFilamentStatus(percentRemaining);
 
-        const now = firestore.FieldValue.serverTimestamp();
+        const now = FieldValue.serverTimestamp();
 
         const historyId = new Date().toISOString();
 
@@ -83,7 +82,7 @@ export async function POST(request: NextRequest) {
             .collection("scan_history")
             .doc(historyId);
 
-        const batch = db.batch();
+        const batch = adminDb.batch();
 
         batch.update(filamentRef, {
             remaining_weight: updatedWeight,
