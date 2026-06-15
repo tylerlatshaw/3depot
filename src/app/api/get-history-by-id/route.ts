@@ -1,7 +1,7 @@
-import { firestore } from "firebase-admin";
 import { FilamentHistoryItem } from "@/lib/types";
 import { protectRoute } from "@/lib/auth/protect-route";
 import { NextRequest, NextResponse } from "next/server";
+import { adminDb } from "@/lib/firebase-admin";
 
 export async function GET(request: NextRequest) {
 
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
             );
         }
 
-        const snapshot = await firestore()
+        const snapshot = await adminDb
             .collection("filament")
             .doc(id)
             .collection("scan_history")

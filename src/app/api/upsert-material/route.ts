@@ -1,9 +1,9 @@
-import { firestore } from "firebase-admin";
 import { protectRoute } from "@/lib/auth/protect-route";
+import { adminDb } from "@/lib/firebase-admin";
+import { FieldValue } from "firebase-admin/firestore";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
-
     if (!(await protectRoute(request))) {
         return NextResponse.json(
             {
@@ -27,28 +27,30 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const collection = firestore().collection("materials");
+        const collection = adminDb.collection("materials");
+
+        const isNew = !material.uuid;
 
         // Existing row edit = use existing UUID
         // New row insert = generate UUID
-        const docRef = material.uuid
-            ? collection.doc(material.uuid)
-            : collection.doc();
+        const docRef = isNew
+            ? collection.doc()
+            : collection.doc(material.uuid);
 
-        const existingDoc = await docRef.get();
+        const existingDoc = isNew
+            ? null
+            : await docRef.get();
 
-        const wasInserted = !existingDoc.exists;
-
-        const now = firestore.FieldValue.serverTimestamp();
+        const now = FieldValue.serverTimestamp();
 
         await docRef.set(
             {
                 id: material.id,
                 name: material.name ?? "",
-                date_created: wasInserted
+
+                date_created: isNew
                     ? now
-                    : existingDoc.data()
-                        ?.date_created ?? now,
+                    : existingDoc?.data()?.date_created ?? now,
 
                 date_modified: now,
             },
@@ -59,18 +61,12 @@ export async function POST(request: NextRequest) {
 
         return NextResponse.json({
             success: true,
-            operation: wasInserted
-                ? "inserted"
-                : "upserted",
-
+            operation: isNew ? "inserted" : "upserted",
             uuid: docRef.id,
             id: material.id,
         });
     } catch (error) {
-        console.error(
-            "Error upserting material:",
-            error
-        );
+        console.error("Error upserting material:", error);
 
         return NextResponse.json(
             {
