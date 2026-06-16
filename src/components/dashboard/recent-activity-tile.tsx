@@ -7,6 +7,7 @@ import Link from "next/link";
 import { flattenFilamentHistory } from "@/utilities/filament-functions";
 import { getRelativeTime } from "@/utilities/date-functions";
 import NoData from "../global/no-data";
+import { Fragment } from "react";
 
 export default function RecentActivityTile({
     inventory,
@@ -89,12 +90,10 @@ export default function RecentActivityTile({
 
                         const actionInfo = actionMap[x.action];
 
-                        return <>
+                        return <Fragment key={x.historyId}>
+
                             {/* Desktop Layout */}
-                            <div
-                                className="hidden md:flex md:flex-nowrap items-center gap-3 w-full p-2 pb-3"
-                                key={x.historyId}
-                            >
+                            <div className="hidden md:flex md:flex-nowrap items-center gap-3 w-full p-2 pb-3">
                                 <div
                                     className="h-14 w-14 shrink-0 rounded-full"
                                     style={{
@@ -128,10 +127,7 @@ export default function RecentActivityTile({
                             </div>
 
                             {/* Mobile Layout */}
-                            <div
-                                className="flex md:hidden flex-wrap items-center gap-3 w-full p-2 pb-3"
-                                key={x.historyId}
-                            >
+                            <div className="flex md:hidden flex-wrap items-center gap-3 w-full p-2 pb-3">
                                 <div
                                     className="h-14 w-14 shrink-0 rounded-full"
                                     style={{
@@ -167,7 +163,7 @@ export default function RecentActivityTile({
                                     </div>
                                 </div>
                             </div>
-                        </>;
+                        </Fragment>;
                     })
                 }
             </div>
