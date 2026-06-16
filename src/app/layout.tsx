@@ -23,10 +23,21 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.3depot.io"),
+  alternates: {
+    canonical: "/",
+  },
   title: {
     template: "%s | 3Depot",
     default: "3Depot | 3D Printer Filament Management"
   },
+  description: "Track, organize, and manage your 3D printing filament inventory with 3Depot. Monitor spool weights, view usage history, and keep your workshop organized.",
+  generator: "Next.js",
+  applicationName: "Next.js",
+  keywords: ["Next.js", "React", "JavaScript"],
+  authors: [{ name: "Tyler Latshaw", url: "https://tylerlatshaw.com/" }],
+  creator: "Tyler J. Latshaw",
+  publisher: "Tyler J. Latshaw",
 };
 
 export default function RootLayout({

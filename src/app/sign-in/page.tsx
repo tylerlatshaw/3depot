@@ -130,7 +130,7 @@ export default function SignInPage() {
                             <span className="text-danger">{error}</span>
                         ) : null}
 
-                        <span className="text-xs font-light uppercase text-muted-foreground text-center">
+                        <span className="text-xs font-light text-muted-foreground text-center">
                             By signing in, you agree to the <Link href={"/privacy-policy"} className="underline hover:text-foreground">Privacy Policy</Link>.
                         </span>
                     </div>
