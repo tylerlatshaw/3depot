@@ -1,4 +1,3 @@
-import { PrivacyPolicyText } from "@/lib/legal/privacy-policy";
 import { PolicySection } from "@/lib/types";
 import Link from "next/link";
 

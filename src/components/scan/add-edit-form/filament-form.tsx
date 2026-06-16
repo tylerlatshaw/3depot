@@ -118,7 +118,7 @@ export default function FilamentForm({
                     onValueChange={(value) => {
                         if (value) updateField("brand", value);
                     }}
-                    className="grid grid-cols-2 md:grid-cols-5 gap-4 w-full"
+                    className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full"
                     variant="outline"
                     spacing={1}
                 >

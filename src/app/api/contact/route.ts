@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
                 from:
                     process.env.CONTACT_FROM_EMAIL ??
                     "3Depot <noreply@example.com>",
-                to: process.env.CONTACT_TO_EMAIL ?? "",
+                to: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
                 replyTo: email,
                 subject: `3Depot Contact Form: ${reason}`,
                 html: `

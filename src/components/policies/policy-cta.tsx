@@ -11,7 +11,7 @@ export default function PolicyCTA() {
 
             <span className="text-muted-foreground">Feel free to <Link href={"/contact"} className="text-info font-semibold hover:underline">contact us</Link> or send us an email at the address listed below.</span>
 
-            <span className="text-info font-bold hover:underline"><Link href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}>{process.env.NEXT_PUBLIC_CONTACT_EMAIL}</Link></span>
+            <span className="text-info font-bold hover:underline"><Link href={`mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}`}>{process.env.NEXT_PUBLIC_LEGAL_EMAIL}</Link></span>
 
         </div>
     </div>);

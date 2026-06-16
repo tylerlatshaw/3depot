@@ -108,7 +108,7 @@ export default function InventoryContainer({
                 </div>
                 </div>
 
-                <Field className="hidden md:flex group w-64">
+                <Field className="hidden md:flex group w-64 lg:w-72 xl:w-96">
                     <InputGroup className="border border-accent bg-card">
                         <InputGroupInput
                             id="input-search-box"

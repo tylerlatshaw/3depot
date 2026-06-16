@@ -318,7 +318,7 @@ export default function AddEditContainer({
         <div className="flex h-full w-full flex-col gap-16 pt-0 pb-4">
             <div className="flex flex-col md:flex-row w-full gap-8 md:gap-16 pb-8 md:pb-0">
 
-                <div className="flex flex-col gap-14">
+                <div className="flex grow flex-col gap-14">
                     <FilamentForm
                         editedData={editedData}
                         updateField={updateField}
