@@ -2,7 +2,13 @@
 
 import { EntryModeOptions, Filament } from "@/lib/types";
 import { Dispatch, SetStateAction, useRef } from "react";
-import { ArrowRightIcon, DownloadIcon, QrCodeIcon, Undo2Icon, XIcon } from "lucide-react";
+import {
+    ArrowRightIcon,
+    DownloadIcon,
+    QrCodeIcon,
+    Undo2Icon,
+    XIcon,
+} from "lucide-react";
 
 import FilamentForm from "./filament-form";
 import FilamentWeightPanel from "./filament-weight-panel";
@@ -16,7 +22,15 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { SetPageTitle } from "@/components/global/set-page-title";
 import { authenticatedFetch } from "@/lib/auth/authenticated-fetch";
 import { useRouter } from "next/navigation";
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
 import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
 
@@ -33,24 +47,19 @@ export default function AddEditContainer({
     inventory,
     setEntryMode,
 }: Props) {
-
     const labelRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
 
     const {
         editedData,
         updateField,
-
         swatchImage,
         setSwatchImage,
-
         imageRemoved,
         setImageRemoved,
-
         brands,
         materials,
         existingTags,
-
         loading,
         error,
     } = useFilamentForm({
@@ -74,8 +83,7 @@ export default function AddEditContainer({
                 filament.id.toLowerCase() === submittedId.toLowerCase();
 
             const sameOriginalFilament =
-                selectedFilament &&
-                filament.uuid === selectedFilament.uuid;
+                selectedFilament && filament.uuid === selectedFilament.uuid;
 
             return sameId && !sameOriginalFilament;
         });
@@ -133,10 +141,46 @@ export default function AddEditContainer({
 
         if (
             editedData.spoolWeight == null ||
-            editedData.spoolWeight <= 0
+            editedData.spoolWeight < 0
         ) {
             showToast({
-                message: "Spool weight is required",
+                message: "Empty spool weight is required",
+                variant: "danger",
+            });
+            return;
+        }
+
+        if (
+            editedData.currentWeight == null ||
+            editedData.currentWeight <= 0
+        ) {
+            showToast({
+                message: "Current scale weight is required",
+                variant: "danger",
+            });
+            return;
+        }
+
+        if (editedData.spoolWeight > editedData.startingWeight) {
+            showToast({
+                message: "Empty spool weight cannot exceed starting weight",
+                variant: "danger",
+            });
+            return;
+        }
+
+        if (editedData.currentWeight > editedData.startingWeight) {
+            showToast({
+                message: "Current scale weight cannot exceed starting weight",
+                variant: "danger",
+            });
+            return;
+        }
+
+        if (editedData.currentWeight < editedData.spoolWeight) {
+            showToast({
+                message:
+                    "Current scale weight cannot be less than empty spool weight",
                 variant: "danger",
             });
             return;
@@ -145,15 +189,8 @@ export default function AddEditContainer({
         try {
             const formData = new FormData();
 
-            formData.append(
-                "filament",
-                JSON.stringify(editedData)
-            );
-
-            formData.append(
-                "removeSwatchImage",
-                String(imageRemoved)
-            );
+            formData.append("filament", JSON.stringify(editedData));
+            formData.append("removeSwatchImage", String(imageRemoved));
 
             if (swatchImage) {
                 formData.append("swatchImage", swatchImage);
@@ -202,99 +239,111 @@ export default function AddEditContainer({
         link.click();
     }
 
-    const buttonActions = <div className="flex w-full flex-row items-center justify-between">
-        <Button
-            size="lg"
-            onClick={() => setEntryMode("entry")}
-            variant="outline"
-            className="hidden md:flex"
-        >
-            <Undo2Icon />
-            <span>Reset</span>
-        </Button>
+    const buttonActions = (
+        <div className="flex w-full flex-row items-center justify-between pb-8">
+            <Button
+                size="lg"
+                onClick={() => setEntryMode("entry")}
+                variant="outline"
+                className="hidden md:flex"
+            >
+                <Undo2Icon />
+                <span>Reset</span>
+            </Button>
 
-        <div className="flex flex-row gap-4 items-center justify-between w-full md:w-fit md:justify-center">
-        <Button
-            size="lg"
-            onClick={() => setEntryMode("entry")}
-            variant="outline"
-            className="flex md:hidden"
-        >
-            <Undo2Icon />
-            <span>Reset</span>
-        </Button>
+            <div className="flex w-full flex-row items-center justify-between gap-4 md:w-fit md:justify-center">
+                <Button
+                    size="lg"
+                    onClick={() => setEntryMode("entry")}
+                    variant="outline"
+                    className="flex md:hidden"
+                >
+                    <Undo2Icon />
+                    <span>Reset</span>
+                </Button>
 
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button
-                        size="lg"
-                        variant="default"
+                <Dialog>
+                    <DialogTrigger asChild>
+                        <Button size="lg" variant="default">
+                            <span>Generate Label</span>
+                            <QrCodeIcon />
+                        </Button>
+                    </DialogTrigger>
+
+                    <DialogContent
+                        className="w-[95%] text-base lg:w-1/2"
+                        showCloseButton={false}
                     >
-                        <span>Generate Label</span>
-                        <QrCodeIcon />
-                    </Button>
-                </DialogTrigger>
+                        <DialogHeader className="w-full p-8">
+                            <DialogDescription className="grid w-full grid-cols-1">
+                                <DialogTitle className="text-xl font-bold">
+                                    Generated Label
+                                </DialogTitle>
 
-                {/* Label Modal */}
-                <DialogContent className="w-[95%] lg:w-1/2 text-base" showCloseButton={false}>
-                    <DialogHeader className="w-full p-8">
-                        <DialogDescription className="grid grid-cols-1 w-full">
-
-                            <DialogTitle className="text-xl font-bold">Generated Label</DialogTitle>
-
-                            <div className="flex flex-col items-center justify-center w-full gap-8 mt-8">
-
-                                <div
-                                    ref={labelRef}
-                                    className="flex items-center justify-between gap-4 px-3 py-2 w-80 h-24 rounded-xl bg-white text-black overflow-hidden"
-                                >
-                                    <div className="flex items">
+                                <div className="mt-8 flex w-full flex-col items-center justify-center gap-8">
+                                    <div
+                                        ref={labelRef}
+                                        className="flex h-24 w-80 items-center justify-between gap-4 overflow-hidden rounded-xl bg-white px-3 py-2 text-black"
+                                    >
                                         <QRCode
                                             size={76}
                                             value={editedData.id ?? ""}
                                         />
+
+                                        <div className="grow overflow-hidden text-ellipsis text-nowrap text-base leading-tight">
+                                            <div>
+                                                <strong>ID:</strong>{" "}
+                                                {editedData.id ?? ""}
+                                            </div>
+                                            <div>
+                                                <strong>Brand:</strong>{" "}
+                                                {editedData.brand ?? ""}
+                                            </div>
+                                            <div>
+                                                <strong>Color:</strong>{" "}
+                                                {editedData.color ?? ""}
+                                            </div>
+                                            <div>
+                                                <strong>Tags:</strong>{" "}
+                                                {editedData.tags?.join(", ") ??
+                                                    ""}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="grow text-base leading-tight text-nowrap text-ellipsis overflow-hidden">
-                                        <div><strong>ID:</strong> {editedData.id ?? ""}</div>
-                                        <div><strong>Brand:</strong> {editedData.brand ?? ""}</div>
-                                        <div><strong>Color:</strong> {editedData.color ?? ""}</div>
-                                        <div><strong>Tags:</strong> {editedData.tags?.join(", ") ?? ""}</div>
-                                    </div>
+
+                                    <Button
+                                        onClick={downloadLabel}
+                                        variant="default"
+                                        size="lg"
+                                        className="flex items-center justify-center gap-2"
+                                    >
+                                        <span>Download Label</span>
+                                        <DownloadIcon />
+                                    </Button>
                                 </div>
 
-                                <Button
-                                    onClick={downloadLabel}
-                                    variant="default"
-                                    size="lg"
-                                    className="flex items-center justify-center gap-2"
-                                >
-                                    <span>Download Label</span>
-                                    <DownloadIcon />
-                                </Button>
-                            </div>
+                                <DialogClose asChild>
+                                    <div className="absolute right-6 top-6 cursor-pointer rounded-full p-0 focus:outline-none">
+                                        <XIcon className="size-6" />
+                                    </div>
+                                </DialogClose>
+                            </DialogDescription>
+                        </DialogHeader>
+                    </DialogContent>
+                </Dialog>
 
-                            <DialogClose asChild>
-                                <div className="absolute top-6 right-6 rounded-full focus:outline-none p-0 cursor-pointer">
-                                    <XIcon className="size-6" />
-                                </div>
-                            </DialogClose>
-
-                        </DialogDescription>
-                    </DialogHeader>
-                </DialogContent>
-            </Dialog>
-
-            <Button
-                onClick={handleSubmit}
-                className="w-fit bg-success"
-                variant="default"
-                size="lg"
-            >
-                <span>Submit</span>
-                <ArrowRightIcon />
-            </Button>
+                <Button
+                    onClick={handleSubmit}
+                    className="w-fit bg-success"
+                    variant="default"
+                    size="lg"
+                >
+                    <span>Submit</span>
+                    <ArrowRightIcon />
+                </Button>
+            </div>
         </div>
-    </div>;
+    );
 
     if (loading) {
         return (
@@ -312,78 +361,84 @@ export default function AddEditContainer({
         );
     }
 
-    return (<>
-        <SetPageTitle title={newFilamentId ? "Add New Filament" : selectedFilament?.brand + " " + selectedFilament?.color} />
+    return (
+        <>
+            <SetPageTitle
+                title={
+                    newFilamentId
+                        ? "Add New Filament"
+                        : `${selectedFilament?.brand} ${selectedFilament?.color}`
+                }
+            />
 
-        <div className="flex h-full w-full flex-col gap-16 pt-0 pb-4">
-            <div className="flex flex-col md:flex-row w-full gap-8 md:gap-16 pb-8 md:pb-0">
-
-                <div className="flex grow flex-col gap-14">
-                    <FilamentForm
-                        editedData={editedData}
-                        updateField={updateField}
-                        brands={brands}
-                        materials={materials}
-                        existingTags={existingTags}
-                    />
-
-                    <div className="hidden md:flex">
-                        {buttonActions}
-                    </div>
-                </div>
-
-                <div className="flex min-w-96 flex-col gap-4 md:gap-8">
-                    <FilamentWeightPanel
-                        editedData={editedData}
-                        updateField={updateField}
-                    />
-
-                    <div className="flex flex-col gap-4 rounded-xl bg-card shadow-md p-6">
-                        <Field className="flex flex-row items-center md:items-center gap-4">
-                            <FieldLabel className="font-semibold uppercase">
-                                Swatch Printed:
-                            </FieldLabel>
-
-                            <ToggleGroup
-                                type="single"
-                                value={editedData.swatch ? "yes" : "no"}
-                                onValueChange={(value) => {
-                                    if (!value) return;
-
-                                    updateField("swatch", value === "yes");
-                                }}
-                                variant="outline"
-                                spacing={0}
-                                className="w-fit"
-                            >
-                                <ToggleGroupItem
-                                    value="yes"
-                                    className="px-8 rounded-none rounded-l-lg"
-                                >
-                                    Yes
-                                </ToggleGroupItem>
-
-                                <ToggleGroupItem
-                                    value="no"
-                                    className="px-8 rounded-none rounded-r-lg"
-                                >
-                                    No
-                                </ToggleGroupItem>
-                            </ToggleGroup>
-                        </Field>
-
-                        <SwatchImageUpload
-                            imageUrl={editedData.swatchImageUrl}
-                            onChange={setSwatchImage}
-                            onRemove={setImageRemoved}
+            <div className="flex h-full w-full flex-col gap-16 pt-0">
+                <div className="flex w-full flex-col gap-8 pb-8 md:flex-row md:gap-16 md:pb-0">
+                    <div className="flex grow flex-col gap-14">
+                        <FilamentForm
+                            editedData={editedData}
+                            updateField={updateField}
+                            brands={brands}
+                            materials={materials}
+                            existingTags={existingTags}
                         />
-                    </div>
-                </div>
 
-                <div className="flex md:hidden">
-                    {buttonActions}
+                        <div className="hidden md:flex">{buttonActions}</div>
+                    </div>
+
+                    <div className="flex min-w-96 flex-col gap-4 md:gap-8 pb-8">
+                        <FilamentWeightPanel
+                            editedData={editedData}
+                            updateField={updateField}
+                        />
+
+                        <div className="flex flex-col gap-4 rounded-xl bg-card p-6 shadow-md">
+                            <Field className="flex flex-row items-center gap-4 md:items-center">
+                                <FieldLabel className="font-semibold uppercase">
+                                    Swatch Printed:
+                                </FieldLabel>
+
+                                <ToggleGroup
+                                    type="single"
+                                    value={editedData.swatch ? "yes" : "no"}
+                                    onValueChange={(value) => {
+                                        if (!value) return;
+
+                                        updateField(
+                                            "swatch",
+                                            value === "yes"
+                                        );
+                                    }}
+                                    variant="outline"
+                                    spacing={0}
+                                    className="w-fit"
+                                >
+                                    <ToggleGroupItem
+                                        value="yes"
+                                        className="rounded-none rounded-l-lg px-8"
+                                    >
+                                        Yes
+                                    </ToggleGroupItem>
+
+                                    <ToggleGroupItem
+                                        value="no"
+                                        className="rounded-none rounded-r-lg px-8"
+                                    >
+                                        No
+                                    </ToggleGroupItem>
+                                </ToggleGroup>
+                            </Field>
+
+                            <SwatchImageUpload
+                                imageUrl={editedData.swatchImageUrl}
+                                onChange={setSwatchImage}
+                                onRemove={setImageRemoved}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="flex md:hidden">{buttonActions}</div>
                 </div>
             </div>
-        </div>
-    </>);
+        </>
+    );
 }

@@ -28,8 +28,16 @@ export default function LogWeight({
 }: Props) {
     const router = useRouter();
 
+    const originalFilamentWeight = Math.max(
+        selectedFilament.startingWeight - selectedFilament.spoolWeight,
+        0
+    );
+
+    const previousTotalWeight =
+        selectedFilament.remainingWeight + selectedFilament.spoolWeight;
+
     const [updatedWeight, setUpdatedWeight] = useState<number>(
-        selectedFilament.remainingWeight + selectedFilament.spoolWeight
+        selectedFilament.currentWeight ?? previousTotalWeight
     );
 
     const filamentWeight = Math.max(
@@ -38,15 +46,11 @@ export default function LogWeight({
     );
 
     const updatedPercent =
-        selectedFilament.startingWeight > 0
-            ? (filamentWeight / selectedFilament.startingWeight) * 100
+        originalFilamentWeight > 0
+            ? (filamentWeight / originalFilamentWeight) * 100
             : 0;
 
-    const changedAmount =
-        filamentWeight - selectedFilament.remainingWeight;
-
-    const previousTotalWeight =
-        selectedFilament.remainingWeight + selectedFilament.spoolWeight;
+    const changedAmount = updatedWeight - previousTotalWeight;
 
     const statusTextColor = getStatusTextColor(updatedPercent);
 
@@ -62,7 +66,25 @@ export default function LogWeight({
         danger: "bg-danger",
     } as const;
 
-    async function handleSubmit(updatedFilamentWeight: number) {
+    const isInvalid =
+        updatedWeight <= 0 ||
+        updatedWeight < selectedFilament.spoolWeight ||
+        updatedWeight > selectedFilament.startingWeight;
+
+    async function handleSubmit(updatedScaleWeight: number) {
+        if (isInvalid) {
+            showToast({
+                message: "Current scale weight is outside the valid range",
+                variant: "danger",
+            });
+            return;
+        }
+
+        const updatedFilamentWeight = Math.max(
+            updatedScaleWeight - selectedFilament.spoolWeight,
+            0
+        );
+
         const response = await authenticatedFetch("/api/log-weight", {
             method: "POST",
             headers: {
@@ -70,6 +92,7 @@ export default function LogWeight({
             },
             body: JSON.stringify({
                 filamentId: selectedFilament.id,
+                currentWeight: updatedScaleWeight,
                 updatedWeight: updatedFilamentWeight,
             }),
         });
@@ -78,6 +101,12 @@ export default function LogWeight({
 
         if (!result.success) {
             console.error(result.error);
+
+            showToast({
+                message: result.error ?? "Failed to update filament",
+                variant: "danger",
+            });
+
             return;
         }
 
@@ -92,15 +121,15 @@ export default function LogWeight({
     }
 
     return (
-        <div className="flex w-full md:w-4xl flex-col items-center gap-8">
+        <div className="flex w-full flex-col items-center gap-8 md:w-4xl">
             <div
-                className="w-full md:w-2xl rounded-lg border-t-8 bg-card p-6 shadow-md"
+                className="w-full rounded-lg border-t-8 bg-card p-6 shadow-md md:w-2xl"
                 style={{ borderColor: selectedFilament.colorCode }}
             >
                 <FilamentProgressCard inventory={selectedFilament} />
             </div>
 
-            <div className="flex w-full md:w-lg flex-col gap-6">
+            <div className="flex w-full flex-col gap-6 md:w-lg">
                 <span className="text-base font-light uppercase">
                     Current Scale Weight (g)
                 </span>
@@ -115,7 +144,23 @@ export default function LogWeight({
                     className="px-4 py-6 text-center text-xl font-bold uppercase tracking-widest"
                 />
 
+                {isInvalid && (
+                    <span className="text-center text-sm font-semibold text-danger">
+                        Current scale weight must be between spool weight and
+                        starting weight.
+                    </span>
+                )}
+
                 <div className="flex flex-col gap-1 rounded-lg bg-card p-4 text-sm">
+                    <div className="flex justify-between">
+                        <span className="font-light uppercase">
+                            Starting Weight:
+                        </span>
+                        <span className="font-bold tabular-nums">
+                            {selectedFilament.startingWeight} g
+                        </span>
+                    </div>
+
                     <div className="flex justify-between">
                         <span className="font-light uppercase">
                             Spool Weight:
@@ -127,7 +172,16 @@ export default function LogWeight({
 
                     <div className="flex justify-between">
                         <span className="font-light uppercase">
-                            Filament Weight:
+                            Original Filament:
+                        </span>
+                        <span className="font-bold tabular-nums">
+                            {originalFilamentWeight} g
+                        </span>
+                    </div>
+
+                    <div className="flex justify-between">
+                        <span className="font-light uppercase">
+                            Remaining Filament:
                         </span>
                         <span className="font-bold tabular-nums">
                             {filamentWeight} g
@@ -168,7 +222,7 @@ export default function LogWeight({
                         {changedAmount > 0 && (
                             <span className="flex flex-row gap-1 text-success">
                                 <span className="tabular-nums">
-                                    {changedAmount.toFixed(0)} g
+                                    +{changedAmount.toFixed(0)} g
                                 </span>
                                 <ArrowUpRightIcon />
                             </span>
@@ -190,8 +244,8 @@ export default function LogWeight({
                     </Button>
 
                     <Button
-                        disabled={changedAmount === 0}
-                        onClick={() => handleSubmit(filamentWeight)}
+                        disabled={changedAmount === 0 || isInvalid}
+                        onClick={() => handleSubmit(updatedWeight)}
                         className="w-fit bg-success"
                         variant="default"
                         size="lg"

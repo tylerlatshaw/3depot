@@ -12,25 +12,36 @@ export default function buildInitialFilament({
         return {
             ...selectedFilament,
             datePurchased: selectedFilament.datePurchased
-                ? dayjs(selectedFilament.datePurchased).format("YYYY-MM-DD")
+                ? dayjs(
+                    selectedFilament.datePurchased
+                ).format("YYYY-MM-DD")
                 : "",
         };
     }
-    
+
     return {
         id: newFilamentId ?? "",
+
         brand: "",
         color: "",
         colorCode: "#00DDFF",
         tags: [],
         material: "",
+
         status: "in stock",
+
         percentRemaining: 100,
-        remainingWeight: 1000,
+
         startingWeight: 1000,
         spoolWeight: 0,
+        currentWeight: 1000,
+        remainingWeight: 1000,
+
         swatch: false,
         notes: "",
-        datePurchased: dayjs().format("YYYY-MM-DD"),
+
+        datePurchased: dayjs().format(
+            "YYYY-MM-DD"
+        ),
     };
 }
