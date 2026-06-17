@@ -10,7 +10,6 @@ function getFilamentStatus(percentRemaining: number) {
 }
 
 export async function POST(request: NextRequest) {
-
     if (!(await protectRoute(request))) {
         return NextResponse.json(
             {
@@ -20,15 +19,19 @@ export async function POST(request: NextRequest) {
             { status: 401 }
         );
     }
-    
-    try {
-        const { filamentId, updatedWeight, notes } = await request.json();
 
-        if (!filamentId || typeof updatedWeight !== "number") {
+    try {
+        const {
+            filamentId,
+            currentWeight,
+            notes,
+        } = await request.json();
+
+        if (!filamentId || typeof currentWeight !== "number") {
             return NextResponse.json(
                 {
                     success: false,
-                    error: "filamentId and updatedWeight are required",
+                    error: "filamentId and currentWeight are required",
                 },
                 { status: 400 }
             );
@@ -53,6 +56,7 @@ export async function POST(request: NextRequest) {
         const data = filamentDoc.data();
 
         const startingWeight = data?.starting_weight ?? 0;
+        const spoolWeight = data?.spool_weight ?? 0;
 
         if (startingWeight <= 0) {
             return NextResponse.json(
@@ -64,8 +68,60 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        if (spoolWeight < 0) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Invalid spool weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        if (spoolWeight > startingWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Spool weight cannot exceed starting weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        if (currentWeight < spoolWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Current scale weight cannot be less than spool weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        if (currentWeight > startingWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Current scale weight cannot exceed starting weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        const originalFilamentWeight = Math.max(
+            startingWeight - spoolWeight,
+            0
+        );
+
+        const remainingWeight = Math.max(
+            currentWeight - spoolWeight,
+            0
+        );
+
         const rawPercent =
-            (updatedWeight / startingWeight) * 100;
+            originalFilamentWeight > 0
+                ? (remainingWeight / originalFilamentWeight) * 100
+                : 0;
 
         const percentRemaining = Math.min(
             100,
@@ -85,7 +141,8 @@ export async function POST(request: NextRequest) {
         const batch = adminDb.batch();
 
         batch.update(filamentRef, {
-            remaining_weight: updatedWeight,
+            current_weight: currentWeight,
+            remaining_weight: remainingWeight,
             percent_remaining: percentRemaining,
             status,
             last_scanned: now,
@@ -94,7 +151,9 @@ export async function POST(request: NextRequest) {
 
         batch.set(historyRef, {
             action: "log weight",
-            weight: updatedWeight,
+            current_weight: currentWeight,
+            remaining_weight: remainingWeight,
+            percent_remaining: percentRemaining,
             notes: notes ?? "",
             date_created: now,
             date_modified: now,
@@ -107,7 +166,8 @@ export async function POST(request: NextRequest) {
             data: {
                 filamentId,
                 historyId: historyRef.id,
-                remainingWeight: updatedWeight,
+                currentWeight,
+                remainingWeight,
                 percentRemaining,
                 status,
             },

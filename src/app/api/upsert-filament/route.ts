@@ -44,13 +44,16 @@ async function deleteSubcollection({
         .collection(subcollectionName)
         .get();
 
-    await Promise.all(
-        snapshot.docs.map((doc) => doc.ref.delete())
-    );
+    await Promise.all(snapshot.docs.map((doc) => doc.ref.delete()));
+}
+
+function getFilamentStatus(percentRemaining: number) {
+    if (percentRemaining >= 40) return "in stock";
+    if (percentRemaining >= 20) return "low stock";
+    return "empty";
 }
 
 export async function POST(request: NextRequest) {
-
     if (!(await protectRoute(request))) {
         return NextResponse.json(
             {
@@ -65,8 +68,7 @@ export async function POST(request: NextRequest) {
         const formData = await request.formData();
 
         const filamentRaw = formData.get("filament");
-        const swatchImage =
-            formData.get("swatchImage") as File | null;
+        const swatchImage = formData.get("swatchImage") as File | null;
 
         const removeSwatchImage =
             formData.get("removeSwatchImage") === "true";
@@ -101,10 +103,7 @@ export async function POST(request: NextRequest) {
             .doc(newDocId)
             .get();
 
-        if (
-            duplicateDoc.exists &&
-            duplicateDoc.id !== oldDocId
-        ) {
+        if (duplicateDoc.exists && duplicateDoc.id !== oldDocId) {
             return NextResponse.json(
                 {
                     success: false,
@@ -114,25 +113,14 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const oldDocRef = adminDb
-            .collection("filament")
-            .doc(oldDocId);
-
-        const newDocRef = adminDb
-            .collection("filament")
-            .doc(newDocId);
+        const oldDocRef = adminDb.collection("filament").doc(oldDocId);
+        const newDocRef = adminDb.collection("filament").doc(newDocId);
 
         const oldDocSnapshot = await oldDocRef.get();
-        const oldData = oldDocSnapshot.data();
+        const existingData = oldDocSnapshot.data();
 
         const isNew = !oldDocSnapshot.exists;
         const idChanged = oldDocId !== newDocId;
-
-        let existingData = oldData;
-
-        if (idChanged && oldDocSnapshot.exists) {
-            existingData = oldData;
-        }
 
         let swatchImageUrl =
             existingData?.swatch_image_url ??
@@ -142,15 +130,10 @@ export async function POST(request: NextRequest) {
         if (swatchImage && swatchImage.size > 0) {
             const bucket = adminStorage.bucket();
 
-            const extension =
-                swatchImage.type.split("/")[1] || "png";
-
+            const extension = swatchImage.type.split("/")[1] || "png";
             const filePath = `filament-swatches/${newDocId}.${extension}`;
 
-            const buffer = Buffer.from(
-                await swatchImage.arrayBuffer()
-            );
-
+            const buffer = Buffer.from(await swatchImage.arrayBuffer());
             const file = bucket.file(filePath);
 
             await file.save(buffer, {
@@ -161,40 +144,87 @@ export async function POST(request: NextRequest) {
 
             await file.makePublic();
 
-            swatchImageUrl =
-                `https://storage.googleapis.com/${bucket.name}/${filePath}`;
+            swatchImageUrl = `https://storage.googleapis.com/${bucket.name}/${filePath}`;
         }
 
         if (removeSwatchImage) {
             swatchImageUrl = "";
         }
 
-        const totalWeight = Number(
-            filament.startingWeight ?? 0
+        const startingWeight = Number(filament.startingWeight ?? 0);
+        const spoolWeight = Number(filament.spoolWeight ?? 0);
+        const currentWeight = Number(
+            filament.currentWeight ?? startingWeight
         );
 
-        const spoolWeight = Number(
-            filament.spoolWeight ?? 0
-        );
+        if (startingWeight <= 0) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Starting weight is required",
+                },
+                { status: 400 }
+            );
+        }
 
-        const startingWeight = Math.max(
-            totalWeight - spoolWeight,
+        if (spoolWeight < 0) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Invalid spool weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        if (spoolWeight > startingWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Spool weight cannot exceed starting weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        if (currentWeight < spoolWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Current scale weight cannot be less than spool weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        if (currentWeight > startingWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Current scale weight cannot exceed starting weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        const originalFilamentWeight = Math.max(
+            startingWeight - spoolWeight,
             0
         );
 
-        const remainingWeight = Number(
-            filament.remainingWeight ?? startingWeight
-        );
+        const remainingWeight = Math.max(currentWeight - spoolWeight, 0);
 
         const percentRemaining =
-            startingWeight > 0
+            originalFilamentWeight > 0
                 ? Number(
                     (
-                        (remainingWeight / startingWeight) *
+                        (remainingWeight / originalFilamentWeight) *
                         100
                     ).toFixed(1)
                 )
                 : 0;
+
+        const status = getFilamentStatus(percentRemaining);
 
         const now = FieldValue.serverTimestamp();
 
@@ -208,7 +238,9 @@ export async function POST(request: NextRequest) {
 
         const tagsChanged =
             existingTags.length !== incomingTags.length ||
-            existingTags.some((tag: string) => !incomingTags.includes(tag));
+            existingTags.some(
+                (tag: string) => !incomingTags.includes(tag)
+            );
 
         const newData: DocumentData = {
             id: newDocId,
@@ -216,31 +248,29 @@ export async function POST(request: NextRequest) {
             brand: filament.brand ?? "",
             color: filament.color ?? "",
             color_code: filament.colorCode ?? "",
-            tags: Array.isArray(filament.tags) ? filament.tags : [],
+            tags: incomingTags,
             material: filament.material ?? "",
 
-            status: filament.status ?? "in stock",
+            status,
             percent_remaining: percentRemaining,
             remaining_weight: remainingWeight,
+            current_weight: currentWeight,
             starting_weight: startingWeight,
             spool_weight: spoolWeight,
 
-            last_scanned:
-                existingData?.last_scanned ?? now,
+            last_scanned: existingData?.last_scanned ?? now,
 
-            date_purchased:
-                filament.datePurchased
-                    ? new Date(filament.datePurchased)
-                    : null,
+            date_purchased: filament.datePurchased
+                ? new Date(filament.datePurchased)
+                : null,
 
             swatch: Boolean(filament.swatch),
             swatch_image_url: swatchImageUrl,
             notes: filament.notes ?? "",
 
-            date_created:
-                isNew
-                    ? now
-                    : existingData?.date_created ?? now,
+            date_created: isNew
+                ? now
+                : existingData?.date_created ?? now,
 
             date_modified: now,
         };
@@ -264,12 +294,11 @@ export async function POST(request: NextRequest) {
         if (isNew) {
             action = "created";
             changes.push("Filament created");
-        } else if (
-            existingData?.remaining_weight !== remainingWeight
-        ) {
+        } else if (existingData?.current_weight !== currentWeight) {
             action = "log weight";
             changes.push(
-                `Weight changed from ${existingData?.remaining_weight ?? 0}g to ${remainingWeight}g`
+                `Current scale weight changed from ${existingData?.current_weight ?? 0
+                }g to ${currentWeight}g`
             );
         } else {
             const infoFieldsChanged =
@@ -279,9 +308,9 @@ export async function POST(request: NextRequest) {
                 existingData?.color_code !== filament.colorCode ||
                 tagsChanged ||
                 existingData?.material !== filament.material ||
-                existingData?.status !== filament.status ||
+                existingData?.status !== status ||
                 existingData?.starting_weight !== startingWeight ||
-                existingData?.spool_weight !== Number(filament.spoolWeight ?? 0) ||
+                existingData?.spool_weight !== spoolWeight ||
                 existingData?.swatch !== Boolean(filament.swatch) ||
                 existingData?.swatch_image_url !== swatchImageUrl ||
                 existingData?.notes !== filament.notes;
@@ -299,7 +328,9 @@ export async function POST(request: NextRequest) {
                 .set({
                     action,
                     notes: changes.join(" | "),
-                    weight: remainingWeight,
+                    current_weight: currentWeight,
+                    remaining_weight: remainingWeight,
+                    percent_remaining: percentRemaining,
                     date_created: now,
                     date_modified: now,
                 });

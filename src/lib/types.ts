@@ -67,10 +67,11 @@ export type Filament = {
     material: string;
 
     status: FilamentStatus;
-    percentRemaining: number;
-    remainingWeight: number;
-    startingWeight: number;
-    spoolWeight: number;
+    percentRemaining: number; // calculated percentage
+    remainingWeight: number; // calculated filament only
+    currentWeight: number; // current raw scale weight
+    startingWeight: number; // filament and spool weight starting e.g. 1000 + 200 for spool
+    spoolWeight: number; // empty spool only
     lastScanned: string;
     datePurchased?: string;
 

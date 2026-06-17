@@ -11,6 +11,12 @@ export async function getFilament(): Promise<Filament[]> {
     return snapshot.docs.map((doc) => {
         const data = doc.data();
 
+        const remainingWeight = data.remaining_weight ?? 0;
+        const spoolWeight = data.spool_weight ?? 0;
+
+        const currentWeight =
+            data.current_weight ?? remainingWeight + spoolWeight;
+
         return {
             uuid: doc.id,
             id: data.id,
@@ -23,9 +29,10 @@ export async function getFilament(): Promise<Filament[]> {
 
             status: data.status,
             percentRemaining: data.percent_remaining,
-            remainingWeight: data.remaining_weight,
+            remainingWeight,
+            currentWeight,
             startingWeight: data.starting_weight,
-            spoolWeight: data.spool_weight,
+            spoolWeight,
             lastScanned:
                 data.last_scanned?.toDate().toISOString() ?? "",
             datePurchased: data.date_purchased

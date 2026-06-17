@@ -25,6 +25,11 @@ export default function ExternalFilamentCard({ filament }: { filament: Filament 
         datePurchased
     } = filament;
 
+    const originalFilamentWeight = Math.max(
+        startingWeight - filament.spoolWeight,
+        0
+    );
+
     const chipVariantColor = getStatusChipColor(status);
     const statusTextColor = getStatusTextColor(percentRemaining);
 
@@ -86,7 +91,7 @@ export default function ExternalFilamentCard({ filament }: { filament: Filament 
                         <span className={`flex flex-row gap-2 font-semibold ${statusTextColorMap[statusTextColor]}`}>
                             <span>{remainingWeight} g</span>
                             <span>/</span>
-                            <span>{startingWeight} g</span>
+                            <span>{originalFilamentWeight} g</span>
                         </span>
                     </div>
 
@@ -169,7 +174,7 @@ export default function ExternalFilamentCard({ filament }: { filament: Filament 
                                         <span className={`flex flex-row gap-2 font-semibold ${statusTextColorMap[statusTextColor]}`}>
                                             <span>{remainingWeight} g</span>
                                             <span>/</span>
-                                            <span>{startingWeight} g</span>
+                                            <span>{originalFilamentWeight} g</span>
                                         </span>
                                     </div>
 

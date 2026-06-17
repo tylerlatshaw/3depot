@@ -12,6 +12,12 @@ export async function getFilamentWithHistory(): Promise<FilamentWithHistory[]> {
         snapshot.docs.map(async (doc) => {
             const data = doc.data();
 
+            const remainingWeight = data.remaining_weight ?? 0;
+            const spoolWeight = data.spool_weight ?? 0;
+
+            const currentWeight =
+                data.current_weight ?? remainingWeight + spoolWeight;
+
             const scanHistorySnapshot = await doc.ref
                 .collection("scan_history")
                 .orderBy("date_created", "desc")
@@ -44,9 +50,10 @@ export async function getFilamentWithHistory(): Promise<FilamentWithHistory[]> {
 
                 status: data.status,
                 percentRemaining: data.percent_remaining,
-                remainingWeight: data.remaining_weight,
+                remainingWeight,
+                currentWeight,
                 startingWeight: data.starting_weight,
-                spoolWeight: data.spool_weight,
+                spoolWeight,
 
                 lastScanned:
                     data.last_scanned?.toDate().toISOString() ?? "",
