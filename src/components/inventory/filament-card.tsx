@@ -56,7 +56,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                         </div>
 
                         <div className="flex flex-col w-full gap-1">
-                            <div className="flex flex-row w-full items-start">
+                            <div className="flex flex-row w-full items-start gap-1">
                                 <div className="grow">
                                     <span className="text-lg font-semibold leading-none">{brand + " " + color}</span>
                                 </div>
@@ -66,7 +66,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
 
                             <div className="flex flex-row text-xs font-light uppercase">
                                 {
-                                    tags.length > 0 && tags.join(" • ")
+                                    [id, ...tags].join(" • ")
                                 }
                             </div>
 
@@ -74,14 +74,12 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                     </div>
 
                     {/* Stats Row */}
-                    <div className="mt-4 flex flex-row items-center gap-4 w-full text-sm font-medium">
+                    <div className="mt-4 flex flex-row items-center gap-4 w-full text-sm font-medium text-nowrap">
                         <span className="flex gap-1 grow">
-                            <span>{id}</span>
-                            <span>&#x2022;</span>
                             <span>Last Scan:</span>
                             <span className="font-light">{dayjs(lastScanned).format("M/D/YY h:mm A")}</span>
                         </span>
-                        <span className={`flex flex-row gap-2 font-semibold ${statusTextColorMap[statusTextColor]}`}>
+                        <span className={`flex flex-row gap-1 font-semibold ${statusTextColorMap[statusTextColor]}`}>
                             <span>{remainingWeight} g</span>
                             <span>/</span>
                             <span>{startingWeight} g</span>

@@ -101,7 +101,7 @@ export const TermsOfUsePolicyText: PolicySection[] = [
         title: "Contact Information",
         details: [
             {
-                text: `If you have any questions regarding these Terms of Use, please contact us at <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">${process.env.NEXT_PUBLIC_CONTACT_EMAIL}</a>.`
+                text: `If you have any questions regarding these Terms of Use, please contact us at <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">${process.env.NEXT_PUBLIC_LEGAL_EMAIL}</a>.`
             }
         ]
     }

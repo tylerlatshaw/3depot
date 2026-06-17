@@ -13,7 +13,7 @@ export const PrivacyPolicyText: PolicySection[] = [
             },
             {
                 header: "Questions or concerns?",
-                text: `Reading this privacy policy will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please email us at <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">${process.env.NEXT_PUBLIC_CONTACT_EMAIL}</a>.`
+                text: `Reading this privacy policy will help you understand your privacy rights and choices. If you do not agree with our policies and practices, please do not use our Services. If you still have any questions or concerns, please email us at <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">${process.env.NEXT_PUBLIC_LEGAL_EMAIL}</a>.`
             }
         ]
     },
@@ -50,7 +50,7 @@ export const PrivacyPolicyText: PolicySection[] = [
             },
             {
                 header: "How do you exercise your rights?",
-                text: `The easiest way to exercise your rights is by submitting a <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">data subject access request</a>. We will consider and act upon any request as necessary.`
+                text: `The easiest way to exercise your rights is by submitting a <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">data subject access request</a>. We will consider and act upon any request as necessary.`
             },
             {
                 header: "How do I learn more?",
@@ -166,7 +166,7 @@ export const PrivacyPolicyText: PolicySection[] = [
                 text: `We do not knowingly collect, solicit, or process personal information from children under 13 years of age. If we become aware that we have collected personal information from a child under 13, we will take reasonable steps to delete such information promptly.`
             },
             {
-                text: `If you believe we may have collected information from a child under 13, please contact us at <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">${process.env.NEXT_PUBLIC_CONTACT_EMAIL}</a>.`
+                text: `If you believe we may have collected information from a child under 13, please contact us at <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">${process.env.NEXT_PUBLIC_LEGAL_EMAIL}</a>.`
             }
         ]
     },
@@ -178,7 +178,7 @@ export const PrivacyPolicyText: PolicySection[] = [
                 text: `Most web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove cookies and to reject cookies. If you choose to remove cookies or reject cookies, this could affect your use of certain website functions. You may also <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer">opt out of interest-based advertising</a> on the website.`
             },
             {
-                text: `If you have questions or comments about your privacy rights, you may email us at <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">${process.env.NEXT_PUBLIC_CONTACT_EMAIL}</a>.`
+                text: `If you have questions or comments about your privacy rights, you may email us at <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">${process.env.NEXT_PUBLIC_LEGAL_EMAIL}</a>.`
             },
         ]
     },
@@ -194,7 +194,7 @@ export const PrivacyPolicyText: PolicySection[] = [
         title: "Do California Residents Have Specific Privacy Rights",
         details: [
             {
-                text: `In accordance with CCPA laws, California residents may have certain rights regarding access to, correction of, and deletion of their personal information under applicable law. To exercise these rights, please contact us at <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">${process.env.NEXT_PUBLIC_CONTACT_EMAIL}</a>.`
+                text: `In accordance with CCPA laws, California residents may have certain rights regarding access to, correction of, and deletion of their personal information under applicable law. To exercise these rights, please contact us at <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">${process.env.NEXT_PUBLIC_LEGAL_EMAIL}</a>.`
             }
         ]
     },
@@ -210,7 +210,7 @@ export const PrivacyPolicyText: PolicySection[] = [
         title: "How Can You Contact Us About This Notice",
         details: [
             {
-                text: `If you have questions or comments about this notice, you may email us at <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">${process.env.NEXT_PUBLIC_CONTACT_EMAIL}</a>.`
+                text: `If you have questions or comments about this notice, you may email us at <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">${process.env.NEXT_PUBLIC_LEGAL_EMAIL}</a>.`
             }
         ]
     },
@@ -218,7 +218,7 @@ export const PrivacyPolicyText: PolicySection[] = [
         title: "How Can You Review, Updates, or Delete the Data We Collect From You",
         details: [
             {
-                text: `Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it. To request to review, update, or delete your personal information, please email us at <a href="mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}">${process.env.NEXT_PUBLIC_CONTACT_EMAIL}</a>.`
+                text: `Based on the applicable laws of your country, you may have the right to request access to the personal information we collect from you, change that information, or delete it. To request to review, update, or delete your personal information, please email us at <a href="mailto:${process.env.NEXT_PUBLIC_LEGAL_EMAIL}">${process.env.NEXT_PUBLIC_LEGAL_EMAIL}</a>.`
             }
         ]
     }

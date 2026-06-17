@@ -2,7 +2,6 @@
 
 import { usePageHeader } from "@/contexts/page-header-context";
 import { Button } from "../ui/button";
-import Link from "next/link";
 import { ScanLineIcon } from "lucide-react";
 import dayjs from "dayjs";
 
@@ -26,13 +25,13 @@ export default function PageHeader() {
         size="lg"
         asChild
       >
-        <Link
+        <a
           href="/dashboard/scan"
           className="flex items-center gap-2"
         >
           <ScanLineIcon />
           <span>Scan Filament</span>
-        </Link>
+        </a>
       </Button>
     </div>
   );

@@ -1,6 +1,4 @@
 import { BarChart3Icon, LayoutDashboardIcon, LucideIcon, QrCodeIcon, ScaleIcon } from "lucide-react";
-import { ChipVariantProps } from "../ui/chip";
-import { Progress } from "../ui/progress";
 
 type TileProps = {
     title: string;

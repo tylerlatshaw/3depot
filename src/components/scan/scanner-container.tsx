@@ -77,7 +77,7 @@ export default function ScannerContainer({
                                     className="w-fit"
                                 >
                                     {device.label}
-                                </DropdownMenuItem>
+                                </DropdownMenuItem>;
                             })
                         }
                     </DropdownMenuGroup>
