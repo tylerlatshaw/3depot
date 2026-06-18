@@ -8,6 +8,7 @@ import { flattenFilamentHistory } from "@/utilities/filament-functions";
 import { getRelativeTime } from "@/utilities/date-functions";
 import NoData from "../global/no-data";
 import { Fragment } from "react";
+import { getFilamentSwatchStyle } from "@/utilities/color-functions";
 
 export default function RecentActivityTile({
     inventory,
@@ -94,11 +95,13 @@ export default function RecentActivityTile({
 
                             {/* Desktop Layout */}
                             <div className="hidden md:flex md:flex-nowrap items-center gap-3 w-full p-2 pb-3">
+
                                 <div
-                                    className="h-14 w-14 shrink-0 rounded-full"
-                                    style={{
-                                        backgroundColor: x.filament.colorCode,
-                                    }}
+                                    className="h-14 w-14 rounded-full"
+                                    style={getFilamentSwatchStyle(
+                                        x.filament.colorCode,
+                                        x.filament.tags
+                                    )}
                                 />
 
                                 <div className="flex grow flex-col items-start justify-center gap-0 min-w-0">
@@ -128,11 +131,13 @@ export default function RecentActivityTile({
 
                             {/* Mobile Layout */}
                             <div className="flex md:hidden flex-wrap items-center gap-3 w-full p-2 pb-3">
+
                                 <div
-                                    className="h-14 w-14 shrink-0 rounded-full"
-                                    style={{
-                                        backgroundColor: x.filament.colorCode,
-                                    }}
+                                    className="h-14 w-14 rounded-full"
+                                    style={getFilamentSwatchStyle(
+                                        x.filament.colorCode,
+                                        x.filament.tags
+                                    )}
                                 />
 
                                 <div className="flex grow flex-col items-start justify-center gap-0 min-w-0">
