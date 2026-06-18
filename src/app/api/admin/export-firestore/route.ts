@@ -6,6 +6,19 @@ import {
     type FirestoreTransferPayload,
 } from "@/lib/firestore-transfer";
 
+const corsHeaders = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, x-api-key",
+};
+
+export async function OPTIONS() {
+    return new NextResponse(null, {
+        status: 204,
+        headers: corsHeaders,
+    });
+}
+
 async function exportSimpleCollection(collectionName: string) {
     const snapshot = await adminDb.collection(collectionName).get();
 
@@ -53,7 +66,10 @@ export async function GET(request: NextRequest) {
                 success: false,
                 error: "Invalid API key",
             },
-            { status: 401 }
+            {
+                status: 401,
+                headers: corsHeaders,
+            }
         );
     }
 
@@ -70,10 +86,15 @@ export async function GET(request: NextRequest) {
             },
         };
 
-        return NextResponse.json({
-            success: true,
-            data: payload,
-        });
+        return NextResponse.json(
+            {
+                success: true,
+                data: payload,
+            },
+            {
+                headers: corsHeaders,
+            }
+        );
     } catch (error) {
         console.error("Error exporting Firestore:", error);
 
@@ -82,7 +103,10 @@ export async function GET(request: NextRequest) {
                 success: false,
                 error: "Failed to export Firestore",
             },
-            { status: 500 }
+            {
+                status: 500,
+                headers: corsHeaders,
+            }
         );
     }
 }
