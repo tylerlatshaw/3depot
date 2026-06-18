@@ -2,7 +2,7 @@ import { Filament } from "@/lib/types";
 import { Chip } from "../ui/chip";
 import { Progress } from "../ui/progress";
 import dayjs from "dayjs";
-import { getContrastingColor, getStatusChipColor, getStatusTextColor, hexToRgba } from "@/utilities/color-functions";
+import { getContrastingColor, getFilamentSwatchStyle, getStatusChipColor, getStatusTextColor, hexToRgba } from "@/utilities/color-functions";
 import { QrCodeIcon, ReceiptIcon, ScanLineIcon, SpoolIcon, XIcon } from "lucide-react";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import Image from "next/image";
@@ -55,7 +55,13 @@ export default function ExternalFilamentCard({ filament }: { filament: Filament 
                     {/* Color Info Row */}
                     <div className="flex flex-row items-center gap-2 w-full">
                         <div className="p-2">
-                            <div className={"h-12 w-12 rounded-full"} style={{ backgroundColor: colorCode }}></div>
+                            <div
+                                className="h-14 w-14 rounded-full"
+                                style={getFilamentSwatchStyle(
+                                    colorCode,
+                                    tags
+                                )}
+                            />
                         </div>
 
                         <div className="flex min-w-0 w-full flex-col justify-center gap-1">

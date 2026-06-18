@@ -3,7 +3,7 @@
 import { Filament, FilamentWithHistory } from "@/lib/types";
 import { Progress } from "../ui/progress";
 import { Chip } from "../ui/chip";
-import { getStatusChipColor, getStatusTextColor } from "@/utilities/color-functions";
+import { getFilamentSwatchStyle, getStatusChipColor, getStatusTextColor } from "@/utilities/color-functions";
 import { cn } from "@/lib/utils";
 
 export default function FilamentProgressCard({
@@ -29,7 +29,13 @@ export default function FilamentProgressCard({
 
     return <div className="flex flex-row gap-3 items-center justify-center w-full md:p-2">
 
-        <div className={"h-14 w-14 aspect-square rounded-full"} style={{ backgroundColor: inventory.colorCode }}></div>
+        <div
+            className="h-14 w-14 aspect-square rounded-full"
+            style={getFilamentSwatchStyle(
+                inventory.colorCode,
+                inventory.tags
+            )}
+        />
 
         <div className="flex flex-col gap-2 w-full min-w-0">
 
