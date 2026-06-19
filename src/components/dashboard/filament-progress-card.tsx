@@ -32,6 +32,7 @@ export default function FilamentProgressCard({
         <div
             className="h-14 w-14 aspect-square rounded-full"
             style={getFilamentSwatchStyle(
+                inventory.color,
                 inventory.colorCode,
                 inventory.tags
             )}

@@ -99,6 +99,7 @@ export default function RecentActivityTile({
                                 <div
                                     className="h-14 w-14 rounded-full"
                                     style={getFilamentSwatchStyle(
+                                        x.filament.color,
                                         x.filament.colorCode,
                                         x.filament.tags
                                     )}
@@ -135,6 +136,7 @@ export default function RecentActivityTile({
                                 <div
                                     className="h-14 w-14 rounded-full"
                                     style={getFilamentSwatchStyle(
+                                        x.filament.color,
                                         x.filament.colorCode,
                                         x.filament.tags
                                     )}

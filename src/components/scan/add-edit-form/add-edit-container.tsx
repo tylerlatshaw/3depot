@@ -242,6 +242,7 @@ export default function AddEditContainer({
     const buttonActions = (
         <div className="flex w-full flex-row items-center justify-between pb-8">
             <Button
+                type="button"
                 size="lg"
                 onClick={() => setEntryMode("entry")}
                 variant="outline"
@@ -253,6 +254,7 @@ export default function AddEditContainer({
 
             <div className="flex w-full flex-row items-center justify-between gap-4 md:w-fit md:justify-center">
                 <Button
+                    type="button"
                     size="lg"
                     onClick={() => setEntryMode("entry")}
                     variant="outline"
@@ -264,7 +266,11 @@ export default function AddEditContainer({
 
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="lg" variant="default">
+                        <Button
+                            type="button"
+                            size="lg"
+                            variant="default"
+                        >
                             <span>Generate Label</span>
                             <QrCodeIcon />
                         </Button>
@@ -312,6 +318,7 @@ export default function AddEditContainer({
                                     </div>
 
                                     <Button
+                                        type="button"
                                         onClick={downloadLabel}
                                         variant="default"
                                         size="lg"
@@ -333,7 +340,7 @@ export default function AddEditContainer({
                 </Dialog>
 
                 <Button
-                    onClick={handleSubmit}
+                    type="submit"
                     className="w-fit bg-success"
                     variant="default"
                     size="lg"
@@ -372,7 +379,13 @@ export default function AddEditContainer({
             />
 
             <div className="flex h-full w-full flex-col gap-16 pt-0">
-                <div className="flex w-full flex-col gap-8 pb-8 md:flex-row md:gap-16 md:pb-0">
+                <form
+                    onSubmit={(event) => {
+                        event.preventDefault();
+                        handleSubmit();
+                    }}
+                    className="flex w-full flex-col gap-8 pb-8 md:flex-row md:gap-16 md:pb-0"
+                >
                     <div className="flex grow flex-col gap-14">
                         <FilamentForm
                             editedData={editedData}
@@ -385,7 +398,7 @@ export default function AddEditContainer({
                         <div className="hidden md:flex">{buttonActions}</div>
                     </div>
 
-                    <div className="flex min-w-96 flex-col gap-4 md:gap-8 pb-8">
+                    <div className="flex min-w-96 flex-col gap-4 pb-8 md:gap-8">
                         <FilamentWeightPanel
                             editedData={editedData}
                             updateField={updateField}
@@ -437,7 +450,7 @@ export default function AddEditContainer({
                     </div>
 
                     <div className="flex md:hidden">{buttonActions}</div>
-                </div>
+                </form>
             </div>
         </>
     );

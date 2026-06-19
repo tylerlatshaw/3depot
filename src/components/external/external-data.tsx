@@ -10,10 +10,10 @@ export default async function ExternalData() {
 
     return <>
         {/* Header */}
-        <div className="flex h-[86px] shrink-0 items-center justify-between border-b-2 border-accent bg-menu px-4 md:px-24">
+        <div className="grid h-[86px] w-full shrink-0 grid-cols-3 items-center border-b-2 border-accent bg-menu px-4 md:px-24">
             <Link
                 href="/"
-                className="group flex items-center gap-3"
+                className="group flex items-center gap-3 justify-self-start"
             >
                 <div className="aspect-square rounded-lg bg-primary p-2">
                     <Rotate3DIcon className="size-8 text-white" />
@@ -30,11 +30,13 @@ export default async function ExternalData() {
                 </div>
             </Link>
 
-            <div className="hidden md:flex">
+            <div className="hidden justify-self-center md:flex">
                 <QueryTiles inventory={inventory} />
             </div>
 
-            <DarkModeToggle />
+            <div className="justify-self-end">
+                <DarkModeToggle />
+            </div>
         </div>
 
         {/* Content */}

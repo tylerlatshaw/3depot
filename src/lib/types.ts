@@ -134,3 +134,11 @@ export type PolicySection = {
         text: string;
     }[];
 }
+
+export type InventorySection = {
+    title: string;
+    criteria: {
+        material?: string;
+        tags?: string[];
+    };
+};
