@@ -3,7 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/global/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Metadata } from "next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 
 const barlow = Barlow({
   subsets: ["latin"],
@@ -52,7 +52,7 @@ export default function RootLayout({
       className={`${barlow.variable} ${publicSans.variable} ${roboto.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <GoogleAnalytics gaId={process.env.GOOGLE_PROPERTY_ID!} />
+      <GoogleTagManager gtmId={process.env.GOOGLE_PROPERTY_ID!} />
       <body className="min-h-full flex flex-col bg-background w-full">
         <ThemeProvider
           attribute="class"
