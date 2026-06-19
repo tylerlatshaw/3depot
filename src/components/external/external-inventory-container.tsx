@@ -17,6 +17,9 @@ import { ToggleGroup, ToggleGroupItem } from "../ui/toggle-group";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import ExternalFilamentCard from "./external-filament-card";
+import { inventorySections } from "@/lib/inventory";
+import { matchesInventorySection } from "@/utilities/inventory-functions";
+import { hexToHue } from "@/utilities/color-functions";
 
 export default function ExternalInventoryContainer({
     inventory,
@@ -30,14 +33,11 @@ export default function ExternalInventoryContainer({
     const visibleInventory = showArchived
         ? inventory
         : inventory.filter(
-            (item) =>
-                item.status !== FILAMENT_STATUS.ARCHIVED
+            (item) => item.status !== FILAMENT_STATUS.ARCHIVED
         );
 
     const inventoryStatuses = [
-        ...new Set(
-            visibleInventory.map((item) => item.status)
-        ),
+        ...new Set(visibleInventory.map((item) => item.status)),
     ];
 
     const statusArray = [
@@ -47,35 +47,51 @@ export default function ExternalInventoryContainer({
         ),
     ];
 
-    const normalizedSearch =
-        searchText.trim().toLowerCase();
+    const normalizedSearch = searchText.trim().toLowerCase();
 
-    const filteredInventory = visibleInventory.filter(
-        (item) => {
-            const matchesStatus =
-                selectedStatus === "all" ||
-                item.status === selectedStatus;
+    const filteredInventory = visibleInventory.filter((item) => {
+        const matchesStatus =
+            selectedStatus === "all" || item.status === selectedStatus;
 
-            const matchesSearch =
-                !normalizedSearch ||
-                item.brand
-                    .toLowerCase()
-                    .includes(normalizedSearch) ||
-                item.color
-                    .toLowerCase()
-                    .includes(normalizedSearch) ||
-                item.id
-                    .toLowerCase()
-                    .includes(normalizedSearch);
+        const matchesSearch =
+            !normalizedSearch ||
+            item.brand.toLowerCase().includes(normalizedSearch) ||
+            item.color.toLowerCase().includes(normalizedSearch) ||
+            item.id.toLowerCase().includes(normalizedSearch) ||
+            item.material.toLowerCase().includes(normalizedSearch) ||
+            item.tags.some((tag) =>
+                tag.toLowerCase().includes(normalizedSearch)
+            );
 
-            return matchesStatus && matchesSearch;
-        }
+        return matchesStatus && matchesSearch;
+    });
+
+    const sectionedInventory = inventorySections.map((section) => ({
+        ...section,
+        inventory: filteredInventory
+            .filter((filament) =>
+                matchesInventorySection(filament, section)
+            )
+            .toSorted(
+                (a, b) =>
+                    hexToHue(a.colorCode) -
+                    hexToHue(b.colorCode)
+            ),
+    }));
+
+    const matchedIds = new Set(
+        sectionedInventory.flatMap((section) =>
+            section.inventory.map((filament) => filament.uuid)
+        )
+    );
+
+    const otherInventory = filteredInventory.filter(
+        (filament) => !matchedIds.has(filament.uuid)
     );
 
     return (
         <div className="flex flex-col gap-6 pt-2">
             <div className="flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-4">
-
                 <div className="flex min-w-0 grow flex-row items-center gap-2">
                     <div className="hidden md:flex">
                         <FilterIcon />
@@ -114,9 +130,7 @@ export default function ExternalInventoryContainer({
                             placeholder="Bambu"
                             value={searchText}
                             onChange={(event) =>
-                                setSearchText(
-                                    event.target.value
-                                )
+                                setSearchText(event.target.value)
                             }
                         />
 
@@ -134,8 +148,7 @@ export default function ExternalInventoryContainer({
                             id="show-archived"
                             checked={showArchived}
                             onCheckedChange={(checked) => {
-                                const nextValue =
-                                    checked === true;
+                                const nextValue = checked === true;
 
                                 setShowArchived(nextValue);
 
@@ -170,13 +183,59 @@ export default function ExternalInventoryContainer({
 
             <hr className="border border-accent" />
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                {filteredInventory.map((filament) => (
-                    <ExternalFilamentCard
-                        key={filament.id}
-                        filament={filament}
-                    />
-                ))}
+            <div className="flex flex-col gap-12">
+                {sectionedInventory.map((section) => {
+                    if (section.inventory.length === 0) return null;
+
+                    return (
+                        <section
+                            key={section.title}
+                            className="flex flex-col gap-4"
+                        >
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold uppercase">
+                                    {section.title}
+                                </h2>
+
+                                <span className="text-sm text-muted-foreground">
+                                    {section.inventory.length} Spools
+                                </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                                {section.inventory.map((filament) => (
+                                    <ExternalFilamentCard
+                                        key={filament.id}
+                                        filament={filament}
+                                    />
+                                ))}
+                            </div>
+                        </section>
+                    );
+                })}
+
+                {otherInventory.length > 0 && (
+                    <section className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                            <h2 className="text-xl font-bold uppercase">
+                                Other
+                            </h2>
+
+                            <span className="text-sm text-muted-foreground">
+                                {otherInventory.length} Spools
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            {otherInventory.map((filament) => (
+                                <ExternalFilamentCard
+                                    key={filament.id}
+                                    filament={filament}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                )}
             </div>
         </div>
     );

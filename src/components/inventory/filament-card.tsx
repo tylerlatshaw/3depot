@@ -47,6 +47,12 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
         danger: "bg-danger",
     } as const;
 
+    const swatchStyles = getFilamentSwatchStyle(
+        color,
+        colorCode,
+        tags
+    );
+
     return (
         <Dialog>
             <DialogTrigger asChild>
@@ -59,10 +65,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                         <div className="p-2">
                             <div
                                 className="h-14 w-14 rounded-full"
-                                style={getFilamentSwatchStyle(
-                                    colorCode,
-                                    tags
-                                )}
+                                style={swatchStyles}
                             />
                         </div>
                         <div className="flex flex-col w-full gap-1">
@@ -139,7 +142,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
                                                 <span className="text-lg font-bold leading-none">{color}</span>
                                             </div>
 
-                                            <div className="rounded-full h-12 w-12" style={{ background: colorCode, border: `2px solid ${getContrastingColor(colorCode)}` }}>&nbsp;</div>
+                                            <div className="rounded-full h-12 w-12" style={{ ...swatchStyles, border: `2px solid ${getContrastingColor(colorCode)}` }} />
                                         </div>
                                     </div>
                                 </div>

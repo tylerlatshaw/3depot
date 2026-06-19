@@ -58,6 +58,7 @@ export default function ExternalFilamentCard({ filament }: { filament: Filament 
                             <div
                                 className="h-14 w-14 rounded-full"
                                 style={getFilamentSwatchStyle(
+                                    color,
                                     colorCode,
                                     tags
                                 )}

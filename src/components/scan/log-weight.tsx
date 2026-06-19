@@ -129,7 +129,14 @@ export default function LogWeight({
                 <FilamentProgressCard inventory={selectedFilament} />
             </div>
 
-            <div className="flex w-full flex-col gap-6 md:w-lg">
+            <form
+                onSubmit={(event) => {
+                    event.preventDefault();
+
+                    handleSubmit(updatedWeight);
+                }}
+                className="flex w-full flex-col gap-6 md:w-lg"
+            >
                 <span className="text-base font-light uppercase">
                     Current Scale Weight (g)
                 </span>
@@ -234,6 +241,7 @@ export default function LogWeight({
 
                 <div className="flex w-full flex-row items-center justify-between">
                     <Button
+                        type="button"
                         size="lg"
                         onClick={() => setEntryMode("entry")}
                         variant="outline"
@@ -244,8 +252,8 @@ export default function LogWeight({
                     </Button>
 
                     <Button
+                        type="submit"
                         disabled={changedAmount === 0 || isInvalid}
-                        onClick={() => handleSubmit(updatedWeight)}
                         className="w-fit bg-success"
                         variant="default"
                         size="lg"
@@ -254,7 +262,7 @@ export default function LogWeight({
                         <ArrowRightIcon />
                     </Button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }

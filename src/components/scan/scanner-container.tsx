@@ -38,7 +38,7 @@ export default function ScannerContainer({
                     onFilamentIdSubmit(sanitized.value);
                 }}
                 onError={(error) => {
-                    console.log(error?.message);
+                    console.error(error?.message);
                     setError(error?.message ?? "Scanner error");
                 }}
                 formats={[
