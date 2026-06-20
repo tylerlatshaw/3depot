@@ -34,6 +34,7 @@ export default function FilamentProgressCard({
             style={getFilamentSwatchStyle(
                 inventory.color,
                 inventory.colorCode,
+                inventory.colorCodes,
                 inventory.tags
             )}
         />

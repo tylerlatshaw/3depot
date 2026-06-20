@@ -24,6 +24,7 @@ export async function getFilament(): Promise<Filament[]> {
             brand: data.brand,
             color: data.color,
             colorCode: data.color_code,
+            colorCodes: data.color_codes ?? [],
             tags: data.tags ?? [],
             material: data.material,
 

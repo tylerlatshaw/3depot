@@ -45,6 +45,7 @@ export async function getFilamentWithHistory(): Promise<FilamentWithHistory[]> {
                 brand: data.brand,
                 color: data.color,
                 colorCode: data.color_code,
+                colorCodes: data.color_codes ?? [],
                 tags: data.tags ?? [],
                 material: data.material,
 

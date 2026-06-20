@@ -62,7 +62,8 @@ export type Filament = {
 
     brand: string;
     color: string;
-    colorCode: string;
+    colorCode: string; // primary/fallback color
+    colorCodes?: string[]; // optional multi-color override
     tags: string[];
     material: string;
 

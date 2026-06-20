@@ -245,8 +245,8 @@ export default function FilamentWeightPanel({
 
                 <Input
                     id="percentRemaining"
-                    type="number"
-                    value={percentRemaining}
+                    type="text"
+                    value={percentRemaining + "%"}
                     disabled
                     className="px-4 py-6 text-base font-bold tracking-widest"
                 />
