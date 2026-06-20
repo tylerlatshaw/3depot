@@ -25,6 +25,7 @@ export default function buildInitialFilament({
         brand: "",
         color: "",
         colorCode: "#00DDFF",
+        colorCodes: [],
         tags: [],
         material: "",
 

@@ -9,7 +9,7 @@ export const inventorySections: InventorySection[] = [
                 "Basic",
                 "Matte",
                 "Silk",
-                "Metal"
+                "Metal",
             ],
         },
     },
@@ -26,6 +26,7 @@ export const inventorySections: InventorySection[] = [
                 "Gradient",
                 "Marble",
                 "Temperature Changing",
+                "Wood",
             ],
         },
     },

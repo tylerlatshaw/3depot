@@ -21,17 +21,19 @@ export default function LowStockTile({
             <span>Low Stock Alerts</span>
         </div>
 
-        {
-            lowStock.length > 0 && <div className="grid grid-cols-1 gap-2 divide-y divide-accent">
-                {
-                    lowStock.map(x => {
-                        return <div key={x.id} className="pb-1">
-                            <FilamentProgressCard inventory={x} />
-                        </div>;
-                    })
-                }
-            </div>
-        }
+        <div className="md:max-h-[845px] md:overflow-y-auto">
+            {
+                lowStock.length > 0 && <div className="grid grid-cols-1 gap-2 divide-y divide-accent">
+                    {
+                        lowStock.map(x => {
+                            return <div key={x.id} className="py-2 md:pt-0 md:pb-1">
+                                <FilamentProgressCard inventory={x} />
+                            </div>;
+                        })
+                    }
+                </div>
+            }
+        </div>
 
         {
             lowStock.length === 0 && <div className="flex w-full items-center justify-center pb-10 grow">

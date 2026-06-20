@@ -22,6 +22,62 @@ type Props = {
     existingTags: string[];
 };
 
+function ColorCodesInput({
+    colorCodes,
+    updateColorCodes,
+}: {
+    colorCodes: string[];
+    updateColorCodes: (values: string[]) => void;
+}) {
+    const [colorCodesText, setColorCodesText] = useState(
+        colorCodes.join(", ")
+    );
+
+    function parseColorCodes(value: string) {
+        return value
+            .split(",")
+            .map((item) => item.trim().toUpperCase())
+            .filter(Boolean);
+    }
+
+    return (
+        <Field className="flex flex-col gap-2 w-106">
+            <FieldLabel
+                className="font-semibold uppercase"
+                htmlFor="colorCodes"
+            >
+                Multi-Color Override:
+            </FieldLabel>
+
+            <Input
+                id="colorCodes"
+                type="text"
+                value={colorCodesText}
+                onChange={(event) => {
+                    const value = event.target.value;
+
+                    setColorCodesText(value);
+                    updateColorCodes(parseColorCodes(value));
+                }}
+                onBlur={() => {
+                    const values = parseColorCodes(colorCodesText);
+
+                    setColorCodesText(values.join(", "));
+                    updateColorCodes(values);
+                }}
+                placeholder="#FF0000, #000000, #FFFFFF"
+                className="w-full px-4 py-6 text-base font-bold uppercase tracking-widest"
+                autoComplete="one-time-code"
+            />
+
+            <FieldDescription>
+                Optional: Use for specialty filament such as dual color or
+                gradient. Colors will be shown in order.
+            </FieldDescription>
+        </Field>
+    );
+}
+
 export default function FilamentForm({
     editedData,
     updateField,
@@ -195,7 +251,7 @@ export default function FilamentForm({
                     </Field>
                 </div>
 
-                <Field className="flex w-full md:w-72 flex-1 flex-col gap-2">
+                <Field className="flex flex-col w-full md:w-72 max-w-106 flex-1 gap-2">
                     <FieldLabel className="font-semibold uppercase">
                         Tags:
                     </FieldLabel>
@@ -316,6 +372,55 @@ export default function FilamentForm({
                     </div>
                 </Field>
             </div>
+
+            {/* <Field className="flex flex-col gap-2 w-106">
+                <FieldLabel className="font-semibold uppercase" htmlFor="colorCodes">
+                    Multi-Color Override:
+                </FieldLabel>
+
+                <Input
+                    id="colorCodes"
+                    type="text"
+                    value={colorCodesText}
+                    onChange={(event) => {
+                        const value = event.target.value;
+
+                        setColorCodesText(value);
+
+                        const values = value
+                            .split(",")
+                            .map((item) => item.trim().toUpperCase())
+                            .filter(Boolean);
+
+                        updateField("colorCodes", values);
+                    }}
+                    onBlur={() => {
+                        const values = colorCodesText
+                            .split(",")
+                            .map((item) => item.trim().toUpperCase())
+                            .filter(Boolean);
+
+                        const normalizedText = values.join(", ");
+
+                        setColorCodesText(normalizedText);
+                        updateField("colorCodes", values);
+                    }}
+                    placeholder="#FF0000, #000000, #FFFFFF"
+                    className="w-full px-4 py-6 text-base font-bold uppercase tracking-widest"
+                    autoComplete="one-time-code"
+                />
+
+                <FieldDescription>
+                    Optional: Use for specialty filament such as dual color or gradient. Colors will be shown in order.
+                </FieldDescription>
+            </Field> */}
+            <ColorCodesInput
+                key={editedData.uuid ?? "new"}
+                colorCodes={editedData.colorCodes ?? []}
+                updateColorCodes={(values) =>
+                    updateField("colorCodes", values)
+                }
+            />
         </div>
     );
 }

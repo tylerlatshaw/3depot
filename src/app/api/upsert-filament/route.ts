@@ -236,10 +236,24 @@ export async function POST(request: NextRequest) {
             ? filament.tags
             : [];
 
+        const incomingColorCodes = Array.isArray(filament.colorCodes)
+            ? filament.colorCodes
+            : [];
+
+        const existingColorCodes = Array.isArray(existingData?.color_codes)
+            ? existingData.color_codes
+            : [];
+
         const tagsChanged =
             existingTags.length !== incomingTags.length ||
             existingTags.some(
                 (tag: string) => !incomingTags.includes(tag)
+            );
+
+        const colorCodesChanged =
+            existingColorCodes.length !== incomingColorCodes.length ||
+            existingColorCodes.some(
+                (colorCode: string) => !incomingColorCodes.includes(colorCode)
             );
 
         const newData: DocumentData = {
@@ -248,6 +262,7 @@ export async function POST(request: NextRequest) {
             brand: filament.brand ?? "",
             color: filament.color ?? "",
             color_code: filament.colorCode ?? "",
+            color_codes: incomingColorCodes,
             tags: incomingTags,
             material: filament.material ?? "",
 
@@ -306,6 +321,7 @@ export async function POST(request: NextRequest) {
                 existingData?.brand !== filament.brand ||
                 existingData?.color !== filament.color ||
                 existingData?.color_code !== filament.colorCode ||
+                colorCodesChanged ||
                 tagsChanged ||
                 existingData?.material !== filament.material ||
                 existingData?.status !== status ||

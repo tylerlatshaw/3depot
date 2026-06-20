@@ -16,6 +16,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
         id,
         color,
         colorCode,
+        colorCodes,
         remainingWeight,
         lastScanned,
         percentRemaining,
@@ -50,6 +51,7 @@ export default function FilamentCard({ filament }: { filament: Filament }) {
     const swatchStyles = getFilamentSwatchStyle(
         color,
         colorCode,
+        colorCodes,
         tags
     );
 

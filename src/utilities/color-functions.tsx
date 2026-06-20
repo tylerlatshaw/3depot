@@ -130,9 +130,26 @@ function buildMarbleTexture(colorCode: string) {
     };
 }
 
+function buildGradient(colors: string[]) {
+    const stops = colors.map((color, index) => {
+        const percent =
+            (index / (colors.length - 1)) * 90;
+
+        return `${color} ${percent}%`;
+    });
+
+    return `
+        linear-gradient(
+            135deg,
+            ${stops.join(",")}
+        )
+    `;
+}
+
 export function getFilamentSwatchStyle(
     color: string,
     colorCode: string,
+    colorCodes: string[] = [],
     tags: string[],
 ) {
     const normalizedTags = tags.map((tag) =>
@@ -173,6 +190,10 @@ export function getFilamentSwatchStyle(
 
     const isTemperature = normalizedTags.some((tag) =>
         tag.includes("temperature")
+    );
+
+    const isWood = normalizedTags.some((tag) =>
+        tag.includes("wood")
     );
 
     if (isMetal) {
@@ -228,12 +249,14 @@ export function getFilamentSwatchStyle(
     }
 
     if (isDualColor) {
-        const colors = color!
-            .split("/")
-            .map((part) =>
-                getColorCodeFromName(part)
-            )
-            .filter(Boolean);
+        const colors = colorCodes.length >= 2
+            ? colorCodes
+            : color!
+                .split("/")
+                .map((part) =>
+                    getColorCodeFromName(part)
+                )
+                .filter(Boolean);
 
         return {
             background: `
@@ -247,12 +270,14 @@ export function getFilamentSwatchStyle(
     }
 
     if (isTriColor) {
-        const colors = color!
-            .split("/")
-            .map((part) =>
-                getColorCodeFromName(part)
-            )
-            .filter(Boolean);
+        const colors = colorCodes.length >= 3
+            ? colorCodes
+            : color!
+                .split("/")
+                .map((part) =>
+                    getColorCodeFromName(part)
+                )
+                .filter(Boolean);
 
         return {
             background: `
@@ -275,28 +300,30 @@ export function getFilamentSwatchStyle(
     }
 
     if (isRainbow) {
+        const colors =
+            colorCodes?.length > 0
+                ? colorCodes
+                : [
+                    "#ff0080",
+                    "#ff8000",
+                    "#ffff00",
+                    "#00ff80",
+                    "#0080ff",
+                    "#8000ff",
+                ];
+
         return {
             background: `
-            linear-gradient(
-                135deg,
-                transparent 0%,
-                rgba(255,255,255,.35) 45%,
-                rgba(255,255,255,.6) 50%,
-                rgba(255,255,255,.35) 55%,
-                transparent 100%
-            ),
-            linear-gradient(
-                135deg,
-                #ff0080 0%,
-                #ff0080 10%,
-                #ff8000 20%,
-                #ffff00 40%,
-                #00ff80 60%,
-                #0080ff 80%,
-                #8000ff 90%,
-                #8000ff 100%
-            )
-            `
+                linear-gradient(
+                    135deg,
+                    transparent 0%,
+                    rgba(255,255,255,.35) 45%,
+                    rgba(255,255,255,.6) 50%,
+                    rgba(255,255,255,.35) 55%,
+                    transparent 100%
+                ),
+            ${buildGradient(colors)}
+        `
         };
     }
 
@@ -324,20 +351,63 @@ export function getFilamentSwatchStyle(
     }
 
     if (isTemperature) {
+        if (colorCodes.length >= 2) {
+            return {
+                background: `
+                    linear-gradient(
+                        90deg,
+                        rgba(255,255,255,.25) 0%,
+                        transparent 50%,
+                        rgba(255,255,255,.25) 100%
+                    ),
+                    linear-gradient(
+                        135deg,
+                        ${colorCodes[0]} 0%,
+                        ${colorCodes[1]} 90%
+                    )
+                `
+            };
+        } else {
+            return {
+                background: `
+                    linear-gradient(
+                        90deg,
+                        rgba(255,255,255,.25) 0%,
+                        transparent 50%,
+                        rgba(255,255,255,.25) 100%
+                    ),
+                    linear-gradient(
+                        135deg,
+                        ${colorCode} 0%,
+                        ${adjustColor(colorCode, 215)} 100%
+                    )
+                `
+            };
+        }
+    }
+
+    if (isWood) {
         return {
             background: `
-                linear-gradient(
-                    90deg,
-                    rgba(255,255,255,.25) 0%,
-                    transparent 50%,
-                    rgba(255,255,255,.25) 100%
+                repeating-linear-gradient(
+                    88deg,
+                    transparent 0px,
+                    transparent 4px,
+                    rgba(0,0,0,.08) 5px,
+                    transparent 7px,
+                    transparent 14px
                 ),
                 linear-gradient(
                     135deg,
-                    ${colorCode} 0%,
-                    ${adjustColor(colorCode, 215)} 100%
+                    ${adjustColor(colorCode, 12)} 0%,
+                    ${colorCode} 50%,
+                    ${adjustColor(colorCode, -15)} 100%
                 )
-            `
+            `,
+            boxShadow: `
+                inset 0 1px 2px rgba(255,255,255,.12),
+                inset 0 -2px 3px rgba(0,0,0,.12)
+            `,
         };
     }
 

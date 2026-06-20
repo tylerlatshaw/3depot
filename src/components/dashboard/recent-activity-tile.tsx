@@ -101,6 +101,7 @@ export default function RecentActivityTile({
                                     style={getFilamentSwatchStyle(
                                         x.filament.color,
                                         x.filament.colorCode,
+                                        x.filament.colorCodes,
                                         x.filament.tags
                                     )}
                                 />
@@ -138,13 +139,14 @@ export default function RecentActivityTile({
                                     style={getFilamentSwatchStyle(
                                         x.filament.color,
                                         x.filament.colorCode,
+                                        x.filament.colorCodes,
                                         x.filament.tags
                                     )}
                                 />
 
                                 <div className="flex grow flex-col items-start justify-center gap-0 min-w-0">
-                                    <div className="flex flex-row items-center w-full text-lg gap-2">
-                                        <span className="font-bold">
+                                    <div className="flex min-w-0 flex-1 flex-row gap-2 overflow-hidden">
+                                        <span className="block min-w-0 flex-1 md:flex-none truncate font-bold">
                                             {x.filament.brand} {x.filament.color}
                                         </span>
 
