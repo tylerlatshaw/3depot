@@ -143,3 +143,18 @@ export type InventorySection = {
         tags?: string[];
     };
 };
+
+export type ColorGroup =
+    | "Multicolor"
+    | "Translucent"
+    | "Black"
+    | "White"
+    | "Gray"
+    | "Red"
+    | "Orange"
+    | "Yellow"
+    | "Green"
+    | "Blue"
+    | "Purple"
+    | "Pink"
+    | "Brown";

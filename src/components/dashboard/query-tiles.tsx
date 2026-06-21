@@ -3,49 +3,12 @@
 import { FilamentWithHistory } from "@/lib/types";
 import { flattenFilamentHistory } from "@/utilities/filament-functions";
 import {
-    LucideIcon,
     PackageIcon,
     ScanLineIcon,
     SpoolIcon,
     TrendingDownIcon,
 } from "lucide-react";
-
-type TileProps = {
-    title: string;
-    value: string | number;
-    subtitle: string;
-    icon: LucideIcon;
-    iconColor: string;
-};
-
-function Tile({
-    title,
-    value,
-    subtitle,
-    icon: Icon,
-    iconColor,
-}: TileProps) {
-    return (
-        <div className="flex flex-col gap-4 rounded-xl bg-card p-6 shadow-md">
-            <div className="flex flex-row items-center justify-between">
-
-                <Icon className={`h-8 w-8 text-${iconColor}`} />
-
-                <span className="text-sm font-light uppercase">
-                    {title}
-                </span>
-            </div>
-
-            <span className="text-5xl font-bold">
-                {value}
-            </span>
-
-            <span className="text-sm font-light">
-                {subtitle}
-            </span>
-        </div>
-    );
-}
+import { DashboardQueryTile } from "../global/dashboard-query-tile";
 
 export default function QueryTiles({
     inventory,
@@ -83,7 +46,7 @@ export default function QueryTiles({
 
     return (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            <Tile
+            <DashboardQueryTile
                 title="Total Spools"
                 value={
                     inventory.filter(
@@ -98,7 +61,7 @@ export default function QueryTiles({
                 iconColor="info"
             />
 
-            <Tile
+            <DashboardQueryTile
                 title="Low Stock"
                 value={
                     inventory.filter(
@@ -112,7 +75,7 @@ export default function QueryTiles({
                 iconColor="danger"
             />
 
-            <Tile
+            <DashboardQueryTile
                 title="Spools used"
                 value={spoolsUsedLast30Days.length}
                 subtitle="Last 30 days"
@@ -120,7 +83,7 @@ export default function QueryTiles({
                 iconColor="success"
             />
 
-            <Tile
+            <DashboardQueryTile
                 title="Scans"
                 value={scansLast30Days.length}
                 subtitle="Last 30 days"

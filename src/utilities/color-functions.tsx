@@ -1,6 +1,6 @@
 import { ChipVariantProps } from "@/components/ui/chip";
 import { FILAMENT_COLORS } from "@/lib/colors";
-import { Filament, FilamentStatus } from "@/lib/types";
+import { ColorGroup, Filament, FilamentStatus, FilamentWithHistory } from "@/lib/types";
 
 export function getContrastingColor(hex: string): string {
     const cleanHex = hex.replace("#", "");
@@ -443,4 +443,184 @@ export function hexToHue(hex: string): number {
     }
 
     return Math.round(hue * 60);
+}
+
+export const INVENTORY_COLOR_GROUP_COLORS: Record<
+    ColorGroup,
+    string
+> = {
+    Multicolor: "#FF4FC3",
+    Translucent: "#b8e0ff",
+    Black: "#111111",
+    White: "#F5F5F5",
+    Gray: "#8A8A8A",
+    Red: "#E53935",
+    Orange: "#FB8C00",
+    Yellow: "#FDD835",
+    Green: "#43A047",
+    Blue: "#1565C0",
+    Purple: "#8E24AA",
+    Pink: "#ff9de0",
+    Brown: "#6d3c00",
+};
+
+export function getInventoryColorGroup(
+    filament: FilamentWithHistory
+): ColorGroup {
+    if ((filament.colorCodes?.length ?? 0) > 1) {
+        return "Multicolor";
+    }
+
+    if (hasTranslucentTag(filament.tags ?? [])) {
+        return "Translucent";
+    }
+
+    return getGeneralColorGroup(filament.colorCode, filament.color);
+}
+
+function hasTranslucentTag(tags: string[]) {
+    return tags.some((tag) => {
+        const value = tag.trim().toLowerCase();
+
+        return (
+            value.includes("clear") ||
+            value.includes("translucent") ||
+            value.includes("transparent")
+        );
+    });
+}
+
+function getGeneralColorGroup(
+    hex: string,
+    colorName?: string
+): ColorGroup {
+    const name = colorName?.toLowerCase() ?? "";
+
+    if (
+        name.includes("black") ||
+        name.includes("charcoal")
+    ) {
+        return "Black";
+    }
+
+    if (
+        name.includes("white") ||
+        name.includes("bone") ||
+        name.includes("ivory") ||
+        name.includes("cream") ||
+        name.includes("pearl")
+    ) {
+        return "White";
+    }
+
+    if (
+        name.includes("silver") ||
+        name.includes("gray") ||
+        name.includes("grey") ||
+        name.includes("gunmetal") ||
+        name.includes("titanium")
+    ) {
+        return "Gray";
+    }
+
+    if (
+        name.includes("red")
+    ) {
+        return "Red";
+    }
+
+    if (
+        name.includes("orange")
+    ) {
+        return "Orange";
+    }
+
+    if (
+        name.includes("yellow") ||
+        name.includes("gold")
+    ) {
+        return "Yellow";
+    }
+
+    if (
+        name.includes("teal") ||
+        name.includes("mint") ||
+        name.includes("seafoam") ||
+        name.includes("lime") ||
+        name.includes("olive")
+    ) {
+        return "Green";
+    }
+
+    if (
+        name.includes("blue") ||
+        name.includes("cyan")
+    ) {
+        return "Blue";
+    }
+
+    if (
+        name.includes("violet") ||
+        name.includes("lavender") ||
+        name.includes("plum")
+    ) {
+        return "Purple";
+    }
+
+    if (
+        name.includes("pink") ||
+        name.includes("magenta") ||
+        name.includes("rose") ||
+        name.includes("fuchsia")
+    ) {
+        return "Pink";
+    }
+
+    if (
+        name.includes("brown") ||
+        name.includes("tan") ||
+        name.includes("terracotta")
+    ) {
+        return "Brown";
+    }
+
+    const clean = hex.replace("#", "");
+
+    const r = parseInt(clean.slice(0, 2), 16) / 255;
+    const g = parseInt(clean.slice(2, 4), 16) / 255;
+    const b = parseInt(clean.slice(4, 6), 16) / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const delta = max - min;
+    const lightness = (max + min) / 2;
+    const saturation =
+        delta === 0
+            ? 0
+            : delta / (1 - Math.abs(2 * lightness - 1));
+
+    if (lightness < 0.14) return "Black";
+    if (lightness > 0.75 && saturation < 0.25) { return "White"; }
+    if (saturation < 0.16) return "Gray";
+
+    let hue = 0;
+
+    if (max === r) {
+        hue = ((g - b) / delta) % 6;
+    } else if (max === g) {
+        hue = (b - r) / delta + 2;
+    } else {
+        hue = (r - g) / delta + 4;
+    }
+
+    hue = Math.round(hue * 60);
+
+    if (hue < 0) hue += 360;
+
+    if (hue >= 345 || hue < 15) return "Red";
+    if (hue < 45) return "Orange";
+    if (hue < 70) return "Yellow";
+    if (hue < 190) return "Green";
+    if (hue < 250) return "Blue";
+    return "Purple";
 }
