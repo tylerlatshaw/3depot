@@ -59,9 +59,10 @@ export async function getFilamentWithHistory(): Promise<FilamentWithHistory[]> {
                 lastScanned:
                     data.last_scanned?.toDate().toISOString() ?? "",
 
-                datePurchased: data.date_purchased
-                    ? data.date_purchased.toDate().toISOString()
-                    : undefined,
+                datePurchased:
+                    typeof data.date_purchased === "string"
+                        ? data.date_purchased
+                        : "",
 
                 scanHistory,
 

@@ -36,9 +36,11 @@ export async function getFilament(): Promise<Filament[]> {
             spoolWeight,
             lastScanned:
                 data.last_scanned?.toDate().toISOString() ?? "",
-            datePurchased: data.date_purchased
-                ? data.date_purchased.toDate().toISOString()
-                : undefined,
+
+            datePurchased:
+                typeof data.date_purchased === "string"
+                    ? data.date_purchased
+                    : "",
 
             swatch: data.swatch,
             swatchImageUrl: data.swatch_image_url,
