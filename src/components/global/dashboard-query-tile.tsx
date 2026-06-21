@@ -17,7 +17,7 @@ export function DashboardQueryTile({
 }: TileProps) {
     return (
         <div className="flex flex-col gap-4 rounded-xl bg-card p-6 shadow-md">
-            <div className="flex flex-row items-center justify-between">
+            <div className="flex flex-row gap-2 items-center justify-between">
 
                 <Icon className={`h-8 w-8 text-${iconColor}`} />
 

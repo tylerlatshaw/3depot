@@ -156,7 +156,7 @@ export default function ConsumptionTrendChart({
                 callbacks: {
                     label(context) {
                         return `${context.dataset.label}: ${Number(
-                            context.parsed.x
+                            context.parsed.y
                         ).toFixed(2)} kg`;
                     },
                     labelColor() {
@@ -199,7 +199,7 @@ export default function ConsumptionTrendChart({
     };
 
     return (
-        <div className="col-span-5 flex flex-col items-center justify-center gap-4 rounded-xl bg-card p-4 md:gap-6 md:p-8 shadow-md">
+        <div className="col-span-1 md:col-span-5 flex flex-col items-center justify-center gap-4 rounded-xl bg-card p-4 md:gap-6 md:p-8 shadow-md">
             <span className="text-xl font-bold">
                 Filament Consumption By Month
             </span>

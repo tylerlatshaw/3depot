@@ -144,15 +144,15 @@ export default function RecentActivityTile({
                                     )}
                                 />
 
-                                <div className="flex grow flex-col items-start justify-center gap-0 min-w-0">
-                                    <div className="flex min-w-0 flex-1 flex-row gap-2 overflow-hidden">
-                                        <span className="block min-w-0 flex-1 md:flex-none truncate font-bold">
+                                <div className="flex min-w-0 flex-1 grow flex-col items-start justify-center gap-0 overflow-hidden">
+                                    <div className="flex min-w-0 w-full flex-1 flex-row gap-2 md:flex-none">
+                                        <span className="block min-w-0 flex-1 md:flex-none text-nowrap truncate font-bold">
                                             {x.filament.brand} {x.filament.color}
                                         </span>
 
                                         <span>•</span>
 
-                                        <div className="text-base font-light">
+                                        <div className="text-base font-light w-fit">
                                             <span>{x.filament.id}</span>
                                         </div>
                                     </div>

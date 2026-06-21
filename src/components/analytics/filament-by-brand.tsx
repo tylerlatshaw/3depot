@@ -224,7 +224,7 @@ export default function FilamentByBrandChart({
     };
 
     return (
-        <div className="col-span-3 flex flex-col items-center justify-center gap-4 rounded-xl bg-card p-4 md:gap-6 md:px-4 md:py-8 shadow-md">
+        <div className="col-span-1 md:col-span-3 flex flex-col items-center justify-center gap-4 rounded-xl bg-card p-4 md:gap-6 md:px-4 md:py-8 shadow-md">
             <span className="text-xl font-bold">
                 Filament by Brand (Top 10)
             </span>

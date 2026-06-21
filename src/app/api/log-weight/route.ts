@@ -24,23 +24,25 @@ export async function POST(request: NextRequest) {
         const {
             filamentId,
             currentWeight,
+            updatedWeight,
             notes,
         } = await request.json();
 
-        if (!filamentId || typeof currentWeight !== "number") {
+        if (
+            !filamentId ||
+            typeof currentWeight !== "number" ||
+            typeof updatedWeight !== "number"
+        ) {
             return NextResponse.json(
                 {
                     success: false,
-                    error: "filamentId and currentWeight are required",
+                    error: "filamentId, currentWeight, and updatedWeight are required",
                 },
                 { status: 400 }
             );
         }
 
-        const filamentRef = adminDb
-            .collection("filament")
-            .doc(filamentId);
-
+        const filamentRef = adminDb.collection("filament").doc(filamentId);
         const filamentDoc = await filamentRef.get();
 
         if (!filamentDoc.exists) {
@@ -55,8 +57,8 @@ export async function POST(request: NextRequest) {
 
         const data = filamentDoc.data();
 
-        const startingWeight = data?.starting_weight ?? 0;
-        const spoolWeight = data?.spool_weight ?? 0;
+        const startingWeight = Number(data?.starting_weight ?? 0);
+        const spoolWeight = Number(data?.spool_weight ?? 0);
 
         if (startingWeight <= 0) {
             return NextResponse.json(
@@ -113,30 +115,45 @@ export async function POST(request: NextRequest) {
             0
         );
 
-        const remainingWeight = Math.max(
+        const remainingWeight = Math.max(updatedWeight, 0);
+
+        if (remainingWeight > originalFilamentWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Remaining filament weight cannot exceed original filament weight",
+                },
+                { status: 400 }
+            );
+        }
+
+        const expectedRemainingWeight = Math.max(
             currentWeight - spoolWeight,
             0
         );
+
+        if (remainingWeight !== expectedRemainingWeight) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    error: "Updated filament weight does not match current scale weight minus spool weight",
+                },
+                { status: 400 }
+            );
+        }
 
         const rawPercent =
             originalFilamentWeight > 0
                 ? (remainingWeight / originalFilamentWeight) * 100
                 : 0;
 
-        const percentRemaining = Math.min(
-            100,
-            Math.max(0, rawPercent)
-        );
-
+        const percentRemaining = Math.min(100, Math.max(0, rawPercent));
         const status = getFilamentStatus(percentRemaining);
 
         const now = FieldValue.serverTimestamp();
-
-        const historyId = new Date().toISOString();
-
         const historyRef = filamentRef
             .collection("scan_history")
-            .doc(historyId);
+            .doc(new Date().toISOString());
 
         const batch = adminDb.batch();
 
@@ -151,9 +168,15 @@ export async function POST(request: NextRequest) {
 
         batch.set(historyRef, {
             action: "log weight",
+
+            // keep this for your existing FilamentHistoryItem.weight
+            weight: remainingWeight,
+
+            // richer fields for newer charts/details
             current_weight: currentWeight,
             remaining_weight: remainingWeight,
             percent_remaining: percentRemaining,
+
             notes: notes ?? "",
             date_created: now,
             date_modified: now,

@@ -275,9 +275,7 @@ export async function POST(request: NextRequest) {
 
             last_scanned: existingData?.last_scanned ?? now,
 
-            date_purchased: filament.datePurchased
-                ? new Date(filament.datePurchased)
-                : null,
+            date_purchased: filament.datePurchased ?? "",
 
             swatch: Boolean(filament.swatch),
             swatch_image_url: swatchImageUrl,
